@@ -1,0 +1,3 @@
+.direnv/
+influxdb_token.txt
+db_session_key.txt

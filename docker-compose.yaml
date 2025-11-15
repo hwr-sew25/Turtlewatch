@@ -1,0 +1,60 @@
+services:
+  influxdb3-core:
+    container_name: influxdb3-core
+    image: influxdb:3-core
+    ports:
+      - 8181:8181
+    command:
+      - influxdb3
+      - servej
+      - --node-id=node0
+      - --object-store=file
+      - --data-dir=/var/lib/influxdb3
+    volumes:
+      - influxdb_data:/var/lib/influxdb3
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f -H 'Authorization: Bearer $(cat /run/secrets/influxdb_token)' http://localhost:8181/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    secrets:
+        - influxdb_token
+
+  explorer:
+    image: influxdata/influxdb3-ui:1.4.0
+    container_name: influxdb3-explorer
+    pull_policy: always
+    command: ["--mode=admin"]
+    ports:
+      - "8888:80"
+    volumes:
+      - influxdb_data:/db:rw
+      - ./influxdb3_explorer/config:/app-root/config:ro
+      - ./influxdb3_explorer/ssl:/etc/nginx/ssl:ro
+    environment:
+      SESSION_SECRET_KEY_FILE: /run/secrets/db_session_key
+    restart: unless-stopped
+    secrets:
+        - db_session_key
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    user: "0"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - influxdb3-core
+    restart: unless-stopped
+
+volumes:
+  influxdb_data:
+  grafana_data:
+
+secrets:
+    db_session_key:
+        file: ./db_session_key.txt
+    influxdb_token:
+        file: ./influxdb_token.txt
