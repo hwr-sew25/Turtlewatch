@@ -51,8 +51,8 @@ Token: Copy and paste the token from your `influxdb_token.txt` \
 
 ### 6. Setup Login to Grafan
 Go to `http://localhost:300` and login with: \
-Username: `admin`
-Password: `admin`
+Username: `admin` \
+Password: `admin` \
 You can change the password or just set it to admin again.
 
 #### Add InfluxDB datasource
