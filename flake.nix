@@ -27,9 +27,9 @@
             fishPlugins.bass
             colcon
             virt-viewer
-            python312Packages.pyopenssl
-            python312Packages.pymongo
-            python312Packages.service-identity
+            (pkgs.python312.withPackages (python-pkgs: with python-pkgs; [
+              influxdb3-python
+            ]))            
             (
               with rosPackages.noetic;
               buildEnv {

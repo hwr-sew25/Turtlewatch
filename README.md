@@ -66,14 +66,13 @@ You can change the password or just set it to admin again.
 
 
 ## Run the example
-**This is a 100% LLM generated a proof of concept and will be thrown away**
 1. Start `roscore`
 2. Start `gazebo` (e.g. `roslaunch turtlebot3_gazebo turtlebot3_world.launch`)
 3. Start python project 
 This assumes that you are in the `turtlewatch/` dir and the database name is `dev`.
 ``` bash
 cd turtlewatch
-uv run python src/main.py
+uv run python -m bridge.main
 ```
 4. Go to your influxdb explorer (`http://localhost:8888`)
 5. On the left side click `Query Data` and then `Data Explorer`
