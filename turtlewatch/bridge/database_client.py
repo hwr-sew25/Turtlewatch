@@ -1,6 +1,5 @@
 from influxdb_client_3 import InfluxDBClient3
 
-
 class DatabaseClient:
     _client_instance: InfluxDBClient3 | None = None
 
