@@ -38,36 +38,3 @@ def ros_msg_to_influx_point(
         "fields": flat_msg,
         "time": int(time.time()),
     }
-
-
-# Create a simple test message
-msg = Odometry()
-
-# Header
-msg.header.frame_id = "odom"
-msg.child_frame_id = "base_link"
-
-# Pose
-msg.pose.pose.position.x = 1.0
-msg.pose.pose.position.y = 2.0
-msg.pose.pose.position.z = 0.0
-msg.pose.pose.orientation.w = 1.0  # Identity quaternion
-
-# Twist (velocity)
-msg.twist.twist.linear.x = 0.5  # Moving forward at 0.5 m/s
-msg.twist.twist.angular.z = 0.1  # Rotating at 0.1 rad/s
-pose = Pose()
-
-# Set position
-pose.position.x = 1.0
-pose.position.y = 2.0
-pose.position.z = 0.5
-
-# Set orientation (identity quaternion = no rotation)
-pose.orientation.x = 0.0
-pose.orientation.y = 0.0
-pose.orientation.z = 0.0
-pose.orientation.w = 1.0
-
-print(flatten_ros_message(pose))
-print(ros_msg_to_influx_point(pose, "Pose", ["pose-tag"]))
