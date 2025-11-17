@@ -41,12 +41,12 @@ def test_ros_msg_to_influx_point(monkeypatch):
     pose.orientation.z = 0.0
     pose.orientation.w = 1.0
 
-    tags = ["orientation", "robot"]
+    tags = {"type", "robot"}
     point = ros_msg_to_influx_point(pose, "pose", tags)
 
     point_correct = {
-        "measurment": "pose",
-        "tags": ["orientation", "robot"],
+        "measurement": "pose",
+        "tags": {"type", "robot"},
         "fields": {
             "position_x": 1.0,
             "position_y": 2.0,
