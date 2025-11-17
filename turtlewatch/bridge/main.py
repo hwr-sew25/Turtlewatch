@@ -47,7 +47,7 @@ def main():
 
 def cmd_vel_callback(msg: Twist):
     try:
-        point = ros_msg_to_influx_point(msg=msg, measurement_name="cmd_vel", tags={})
+        point = ros_msg_to_influx_point(msg=msg, measurement_name="velocity", tags={})
         logger.info(point)
         client = DatabaseClient.get_instance()
         client.write(point)
@@ -59,7 +59,7 @@ def cmd_vel_callback(msg: Twist):
 def odom_callback(msg: Odometry):
     """Write odometry data to InfluxDB"""
     try:
-        point = ros_msg_to_influx_point(msg=msg, measurement_name="odom", tags={})
+        point = ros_msg_to_influx_point(msg=msg, measurement_name="odometry", tags={})
         logger.info(point)
         client = DatabaseClient.get_instance()
         client.write(point)
