@@ -2,7 +2,7 @@
 
 ## Requirements
 1. Install uv (https://docs.astral.sh/uv/getting-started/installation/)
-2. Docker + docker compose (e.g. through Docker Desktop: https://docs.docker.com/get-started/get-docker/)
+2. Docker + docker compose (e.g. through Docker Engine or Docker Desktop: https://docs.docker.com/get-started/get-docker/)
 3. The ROS stuff
 
 ## Setup Infra
@@ -50,7 +50,7 @@ Token: Copy and paste the token from your `influxdb_token.txt` \
 4. Name it something e.g. `dev` and create it.
 
 ### 6. Setup Login to Grafan
-Go to `http://localhost:300` and login with: \
+Go to `http://localhost:3000` and login with: \
 Username: `admin` \
 Password: `admin` \
 You can change the password or just set it to admin again.
