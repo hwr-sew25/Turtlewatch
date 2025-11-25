@@ -1,18 +1,21 @@
-from typing import Callable, Type, TypeVar
+from typing import Callable, Generic, Type, TypeVar
+
 import genpy
 import rospy
 
+MsgType = TypeVar('MsgType', bound=genpy.Message)
 
-class ThrottledSubscriber[MsgType: genpy.Message]:
+
+class ThrottledSubscriber(Generic[MsgType]):
     def __init__(
         self,
         topic_name: str,
-        msg_class: type[MsgType],
+        msg_class: Type[MsgType],
         callback: Callable[[MsgType], None],
         interval: rospy.Duration,
     ):
         self.topic_name: str = topic_name
-        self.msg_class: type[MsgType] = msg_class
+        self.msg_class: Type[MsgType] = msg_class
         self.callback: Callable[[MsgType], None] = callback
         self.last_time: rospy.Time = rospy.Time.now()
         self.interval: rospy.Duration = interval

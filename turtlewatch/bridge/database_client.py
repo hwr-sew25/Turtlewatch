@@ -1,7 +1,9 @@
+from typing import Optional
+
 from influxdb_client_3 import InfluxDBClient3
 
 class DatabaseClient:
-    _client_instance: InfluxDBClient3 | None = None
+    _client_instance: Optional[InfluxDBClient3] = None
 
     @classmethod
     def intialize(cls, host: str, database: str, token: str) -> None:
