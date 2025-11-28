@@ -49,6 +49,7 @@ services:
       - influxdb3-core
     environment:
       - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=1s
+      - GF_INSTALL_PLUGINS=ae3e-plotly-panel
     restart: unless-stopped
 
 volumes:

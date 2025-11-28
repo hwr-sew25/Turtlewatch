@@ -36,5 +36,5 @@ def ros_msg_to_influx_point(
         "measurement": measurement_name,
         "tags": tags,
         "fields": flat_msg,
-        "time": int(time.time()),
+        "time": time.time_ns(),  # Nanosekunden für InfluxDB
     }

@@ -55,6 +55,7 @@ Username: `admin` \
 Password: `admin` \
 You can change the password or just set it to admin again.
 
+
 #### Add InfluxDB datasource
 1. In the middle of the screen, click on **Add your first Datasource**.
 2. Select or search for **influxdb**
@@ -64,11 +65,36 @@ You can change the password or just set it to admin again.
 6. Insecure Connection: toggle to true
 7. Click **Save and Test** it should say "OK", now you can start using it
 
+#### Import Dashboard
+1. Go to **Dashboards** → **New** → **Import**
+2. Click **Upload JSON file** and select `grafana/dashboards/turtlebot3_monitoring.json`
+3. Select your InfluxDB datasource
+4. Click **Import**
+
+The dashboard includes:
+- Live-Map with robot position and path visualization
+- Velocity gauges (speed and rotation)
+- Odometry and velocity history tables
+
+**Note:** The Plotly plugin is automatically installed via docker-compose.
+
 
 ## Run the example
-1. Start `roscore`
-2. Start `gazebo` (e.g. `roslaunch turtlebot3_gazebo turtlebot3_world.launch`)
-3. Start python project 
+
+### 1. Start ROS Core
+``` bash
+roscore
+```
+
+### 2. Start Gazebo with TurtleBot3 World
+**Important:** You must use the `turtlebot3_world` map so that the Grafana Live-Map matches the simulation.
+
+``` bash
+export TURTLEBOT3_MODEL=waffle
+roslaunch turtlebot3_gazebo turtlebot3_world.launch
+```
+
+### 3. Start Python Bridge
 This assumes that you are in the `turtlewatch/` dir and the database name is `dev`.
 ``` bash
 cd turtlewatch
