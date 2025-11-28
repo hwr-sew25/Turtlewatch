@@ -55,6 +55,7 @@ Username: `admin` \
 Password: `admin` \
 You can change the password or just set it to admin again.
 
+
 #### Add InfluxDB datasource
 1. In the middle of the screen, click on **Add your first Datasource**.
 2. Select or search for **influxdb**
