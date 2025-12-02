@@ -1,6 +1,11 @@
-from typing import Callable, Type, TypeVar
+import os
+import time
+from typing import Callable, TypeAlias
 import genpy
 import rospy
+
+from bridge.mock import mock_sub
+from bridge.types import Seconds
 
 
 class ThrottledSubscriber[MsgType: genpy.Message]:
@@ -9,19 +14,24 @@ class ThrottledSubscriber[MsgType: genpy.Message]:
         topic_name: str,
         msg_class: type[MsgType],
         callback: Callable[[MsgType], None],
-        interval: rospy.Duration,
+        interval: Seconds,
     ):
         self.topic_name: str = topic_name
         self.msg_class: type[MsgType] = msg_class
         self.callback: Callable[[MsgType], None] = callback
-        self.last_time: rospy.Time = rospy.Time.now()
-        self.interval: rospy.Duration = interval
+        self.last_time: float = time.time()
+        self.interval: Seconds = interval
 
-        _ = rospy.Subscriber(topic_name, msg_class, self._internal_callback)
+        mock = os.getenv("MOCK")
+        if mock and mock.lower() == "true":
+            # NOTE pass the real callback so we don't throttle again
+            mock_sub(topic_name, msg_class, callback, interval) 
+        else:
+            _ = rospy.Subscriber(topic_name, msg_class, self._internal_callback)
 
     def should_run(self) -> bool:
-        """Returns True if the action should run again"""
-        now = rospy.Time.now()
+        """Returns True if the action should run again based on system time."""
+        now = time.time()
         if now - self.last_time >= self.interval:
             self.last_time = now
             return True

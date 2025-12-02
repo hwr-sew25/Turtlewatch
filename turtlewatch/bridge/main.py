@@ -1,4 +1,5 @@
-from fileinput import filelineno
+import os
+import threading
 import rospy
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
@@ -6,19 +7,11 @@ import logging
 from bridge.database_client import DatabaseClient
 from bridge.throttled_subscriber import ThrottledSubscriber
 from bridge.utils import ros_msg_to_influx_point
+from bridge.types import Seconds
 
-# Setup Python logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-logger = logging.getLogger("InfluxLogger")
-
+logger = logging.getLogger("BridgeLogger")
 
 def main():
-    rospy.init_node("turtlewatch", anonymous=True)
-
     logger.info("Connecting to InfluxDB...")
 
     with open("../influxdb_token.txt", "r") as file:
@@ -33,24 +26,23 @@ def main():
         topic_name="/cmd_vel",
         msg_class=Twist,
         callback=cmd_vel_callback,
-        interval=rospy.Duration(1),
+        interval=Seconds(0.2),
     )
 
-    cmd_vel_sub = ThrottledSubscriber(
+    odom_sub = ThrottledSubscriber(
         topic_name="/odom",
         msg_class=Odometry,
         callback=odom_callback,
-        interval=rospy.Duration(1),
+        interval=Seconds(0.2),
     )
-
 
 
 def cmd_vel_callback(msg: Twist):
     try:
         point = ros_msg_to_influx_point(msg=msg, measurement_name="velocity", tags={})
-        logger.info(point)
         client = DatabaseClient.get_instance()
         client.write(point)
+        logger.info("Send cmd_vel")
 
     except Exception as e:
         logger.error(f"[CMD_VEL] ✗ Failed to write: {e}", exc_info=True)
@@ -60,14 +52,28 @@ def odom_callback(msg: Odometry):
     """Write odometry data to InfluxDB"""
     try:
         point = ros_msg_to_influx_point(msg=msg, measurement_name="odometry", tags={})
-        logger.info(point)
         client = DatabaseClient.get_instance()
         client.write(point)
+        logger.info("Send odometry")
 
     except Exception as e:
         logger.error(f"[CMD_VEL] ✗ Failed to write: {e}", exc_info=True)
 
 
 if __name__ == "__main__":
-    main()
-    rospy.spin()
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        # datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    mock = os.getenv("MOCK")
+    if mock and mock.lower() == "true":
+        main()
+        try:
+            threading.Event().wait()
+        except KeyboardInterrupt:
+            print("Stopping...")
+    else:
+        rospy.init_node("turtlewatch", anonymous=True)
+        main()
+        rospy.spin()
