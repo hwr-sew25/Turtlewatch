@@ -30,6 +30,7 @@ def dispatcher(topic_name:str, msg_class: type[genpy.Message], callback: Callabl
     else:
         topics[topic_name](msg_class, callback, interval)
 
+# TODO check if we can remove the timing stuff from the handlers (no hot looping)
 def cmd_vel_handler(msg_class: type[genpy.Message], callback: Callable[[genpy.Message], None],interval: Seconds) -> None:
     """Simulates a robot moving forward and turning slightly."""
     iteration = 0

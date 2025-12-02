@@ -26,14 +26,14 @@ def main():
         topic_name="/cmd_vel",
         msg_class=Twist,
         callback=cmd_vel_callback,
-        interval=Seconds(0.2),
+        interval=Seconds(0.25),
     )
 
     odom_sub = ThrottledSubscriber(
         topic_name="/odom",
         msg_class=Odometry,
         callback=odom_callback,
-        interval=Seconds(0.2),
+        interval=Seconds(0.25),
     )
 
 
