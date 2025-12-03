@@ -11,6 +11,7 @@ from bridge.types import Seconds
 
 logger = logging.getLogger("BridgeLogger")
 
+
 def main():
     logger.info("Connecting to InfluxDB...")
 

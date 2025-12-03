@@ -24,8 +24,8 @@ class ThrottledSubscriber[MsgType: genpy.Message]:
 
         mock = os.getenv("MOCK")
         if mock and mock.lower() == "true":
-            # NOTE we pass the real callback so we don't throttle twice 
-            mock_sub(topic_name, msg_class, callback, interval) 
+            # NOTE we pass the real callback so we don't throttle twice
+            mock_sub(topic_name, msg_class, callback, interval)
         else:
             _ = rospy.Subscriber(topic_name, msg_class, self._internal_callback)
 
