@@ -46,7 +46,7 @@ def dispatcher(
     else:
         iteration = 0
         start_time = time.time()
-        state: dict[str,Any] = {}
+        state: dict[str, Any] = {}
         while True:
             # This takes the function out of the topics dict and calls it
             (msg, state) = topics[topic_name](state)
@@ -59,9 +59,7 @@ def dispatcher(
                 time.sleep(sleep_duration)
 
 
-def cmd_vel_handler(
-    state: dict[str,Any]
-) -> tuple[Twist, dict[str, Any]]:
+def cmd_vel_handler(state: dict[str, Any]) -> tuple[Twist, dict[str, Any]]:
     """Simulates a robot moving forward and turning slightly."""
     msg = Twist()
     msg.linear.x = 0.5 + random.uniform(-0.05, 0.05)
