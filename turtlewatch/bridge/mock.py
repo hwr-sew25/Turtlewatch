@@ -49,7 +49,7 @@ def dispatcher(
         state: dict[str,Any] = {}
         while True:
             # This takes the function out of the topics dict and calls it
-            (msg, state) = topics[topic_name](state, msg_class, callback, interval)
+            (msg, state) = topics[topic_name](state)
             callback(msg)
 
             iteration += 1
@@ -60,10 +60,7 @@ def dispatcher(
 
 
 def cmd_vel_handler(
-    state,
-    msg_class: type[genpy.Message],
-    callback: Callable[[genpy.Message], None],
-    interval: Seconds,
+    state: dict[str,Any]
 ) -> tuple[Twist, dict[str, Any]]:
     """Simulates a robot moving forward and turning slightly."""
     msg = Twist()
@@ -79,9 +76,6 @@ def cmd_vel_handler(
 
 def odom_handler(
     state: dict[str, Any],
-    msg_class: type[genpy.Message],
-    callback: Callable[[genpy.Message], None],
-    interval: Seconds,
 ) -> tuple[Odometry, dict[str, Any]]:
     """Simulates odometry data (position and velocity)."""
 
