@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "hypothesis>=6.148.6",
     "influxdb3-python>=0.16.0",
     "pytest>=9.0.1",
     "pyyaml>=6.0.3",
