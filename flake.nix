@@ -24,6 +24,7 @@
         devShells.default = pkgs.mkShell {
           name = "ROS";
           packages = with pkgs; [
+            basedpyright
             fishPlugins.bass
             colcon
             virt-viewer
@@ -62,6 +63,14 @@
             CATKIN_SHELL = "fish";
             MOCK = "TRUE";
           };
+          shellHook = ''
+            # Create .pth file to include ROS packages in venv for basedpyright
+            VENV_PTH="turtlewatch/.venv/lib/python3.12/site-packages/ros.pth"
+            if [ -d "turtlewatch/.venv/lib/python3.12/site-packages" ]; then
+              echo "$PYTHONPATH" | tr ':' '\n' | grep -v "^$" > "$VENV_PTH"
+              echo "✓ Updated $VENV_PTH with ROS package paths"
+            fi
+          '';
         };
       }
     );
