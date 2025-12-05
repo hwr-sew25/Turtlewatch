@@ -1,5 +1,7 @@
 import os
 import threading
+from typing import Callable
+import genpy
 import rospy
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
@@ -23,42 +25,45 @@ def main():
     )
     logger.info("Successfully connected to InfluxDB (database: dev)")
 
-    cmd_vel_sub = ThrottledSubscriber(
-        topic_name="/cmd_vel",
-        msg_class=Twist,
-        callback=cmd_vel_callback,
-        interval=Seconds(0.25),
-    )
+    topics: dict[str, Callable[[genpy.Message, str, dict[str, str] | None], None]] = {
+        "/cmd_vel": generic_callback,
+        "/odom": generic_callback,
+    }
 
-    odom_sub = ThrottledSubscriber(
-        topic_name="/odom",
-        msg_class=Odometry,
-        callback=odom_callback,
-        interval=Seconds(0.25),
-    )
+    for topic_name, callback_handler in topics.items():
+        cmd_vel_sub = ThrottledSubscriber(
+            topic_name=topic_name,
+            msg_class=Twist,
+            callback=callback_handler,
+            interval=Seconds(0.25),
+        )
 
 
-def cmd_vel_callback(msg: Twist):
+def generic_callback(
+    msg: genpy.Message, measurement_name: str, tags: dict[str, str] | None
+):
     try:
-        point = ros_msg_to_influx_point(msg=msg, measurement_name="velocity", tags={})
+        point = ros_msg_to_influx_point(
+            msg=msg, measurement_name=measurement_name, tags=tags
+        )
         client = DatabaseClient.get_instance()
         client.write(point)
-        logger.info("Send cmd_vel")
+        logger.info(f"Send: {measurement_name}")
 
     except Exception as e:
-        logger.error(f"[CMD_VEL] ✗ Failed to write: {e}", exc_info=True)
+        logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
 
 
-def odom_callback(msg: Odometry):
-    """Write odometry data to InfluxDB"""
-    try:
-        point = ros_msg_to_influx_point(msg=msg, measurement_name="odometry", tags={})
-        client = DatabaseClient.get_instance()
-        client.write(point)
-        logger.info("Send odometry")
+# NOTE Handler example
+# def cmd_vel_callback(msg: Twist, measurement_name: str, tags: dict[str, str] | None):
+#     try:
+#         point = ros_msg_to_influx_point(msg=msg, measurement_name="velocity", tags={})
+#         client = DatabaseClient.get_instance()
+#         client.write(point)
+#         logger.info("Send cmd_vel")
 
-    except Exception as e:
-        logger.error(f"[CMD_VEL] ✗ Failed to write: {e}", exc_info=True)
+#     except Exception as e:
+#         logger.error(f"[CMD_VEL] ✗ Failed to write: {e}", exc_info=True)
 
 
 if __name__ == "__main__":
