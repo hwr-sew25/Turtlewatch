@@ -13,15 +13,16 @@ class ThrottledSubscriber[MsgType: genpy.Message]:
         self,
         topic_name: str,
         msg_class: type[MsgType],
-        callback: Callable[[genpy.Message, str, dict[str, str] | None]None],
+        callback: Callable[[MsgType, str, dict[str, str] | None], None],
         interval: Seconds,
-        tags: dict[str,str] | None
+        tags: dict[str, str] | None = None,
     ):
         self.topic_name: str = topic_name
         self.msg_class: type[MsgType] = msg_class
-        self.callback: Callable[[genpy.Message, str, dict[str, str] | None]
+        self.callback: Callable[[MsgType, str, dict[str, str] | None], None] = callback
         self.last_time: float = time.time()
         self.interval: Seconds = interval
+        self.tags: dict[str, str] | None = tags
 
         mock = os.getenv("MOCK")
         if mock and mock.lower() == "true":
@@ -40,4 +41,4 @@ class ThrottledSubscriber[MsgType: genpy.Message]:
 
     def _internal_callback(self, msg: MsgType) -> None:
         if self.should_run():
-            self.callback(msg)
+            self.callback(msg, self.topic_name, self.tags)

@@ -29,8 +29,10 @@ def flatten_ros_message(msg: rospy.Message, prefix="") -> dict[str, Any]:
 
 
 def ros_msg_to_influx_point(
-    msg: rospy.Message, measurement_name: str, tags: dict[str, str]
+    msg: rospy.Message, measurement_name: str, tags: dict[str, str] | None
 ) -> dict[str, Any]:
+    if tags == None:
+        tags = {}
     flat_msg = flatten_ros_message(msg)
     return {
         "measurement": measurement_name,

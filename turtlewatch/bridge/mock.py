@@ -14,10 +14,10 @@ from bridge.types import Seconds
 logger = logging.getLogger("BridgeLogger")
 
 
-def mock_sub(
+def mock_sub[MsgType: genpy.Message](
     topic_name: str,
     msg_class: type[genpy.Message],
-    callback: Callable[[genpy.Message], None],
+    callback: Callable[[MsgType, str, dict[str, str] | None], None],
     interval: Seconds,
 ) -> None:
     # NOTE it would be more efficient if these could be asyncio coroutines
@@ -32,7 +32,7 @@ def mock_sub(
 def dispatcher(
     topic_name: str,
     msg_class: type[genpy.Message],
-    callback: Callable[[genpy.Message], None],
+    callback: Callable[[genpy.Message, str, dict[str, str] | None], None],
     interval: Seconds,
 ) -> None:
     topics = {
@@ -41,6 +41,7 @@ def dispatcher(
     }
 
     handler = topics.get(topic_name)
+    tags = {}
     if not handler:
         logger.error(f"Mock handler for {topic_name} not implemented yet")
     else:
@@ -50,7 +51,7 @@ def dispatcher(
         while True:
             # This takes the function out of the topics dict and calls it
             (msg, state) = topics[topic_name](state)
-            callback(msg)
+            callback(msg, topic_name, tags)
 
             iteration += 1
             next_time = start_time + (iteration * interval)
