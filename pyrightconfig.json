@@ -1,0 +1,6 @@
+{
+  "include": ["turtlewatch"],
+  "venvPath": "turtlewatch",
+  "venv": ".venv",
+  "reportMissingTypeStubs": false
+}
