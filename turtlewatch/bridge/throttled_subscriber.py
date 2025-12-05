@@ -13,12 +13,13 @@ class ThrottledSubscriber[MsgType: genpy.Message]:
         self,
         topic_name: str,
         msg_class: type[MsgType],
-        callback: Callable[[MsgType], None],
+        callback: Callable[[genpy.Message, str, dict[str, str] | None]None],
         interval: Seconds,
+        tags: dict[str,str] | None
     ):
         self.topic_name: str = topic_name
         self.msg_class: type[MsgType] = msg_class
-        self.callback: Callable[[MsgType], None] = callback
+        self.callback: Callable[[genpy.Message, str, dict[str, str] | None]
         self.last_time: float = time.time()
         self.interval: Seconds = interval
 
