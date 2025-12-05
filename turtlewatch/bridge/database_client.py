@@ -1,4 +1,5 @@
-from influxdb_client_3 import InfluxDBClient3
+from influxdb_client_3 import InfluxDBClient3, write_client_options, WriteOptions
+
 
 class DatabaseClient:
     _client_instance: InfluxDBClient3 | None = None
@@ -7,8 +8,12 @@ class DatabaseClient:
     def intialize(cls, host: str, database: str, token: str) -> None:
         if cls._client_instance is not None:
             raise RuntimeError("Already initialized")
+
+        write_options = WriteOptions(batch_size=2)
+        wco = write_client_options(write_options=write_options)
+
         cls._client_instance = InfluxDBClient3(
-            host=host, database=database, token=token
+            host=host, database=database, token=token, write_client_options=wco
         )
 
     @classmethod
