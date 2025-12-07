@@ -62,8 +62,9 @@ You can change the password or just set it to admin again.
 3. Query language: `SQL`
 4. HTTP->URL: `http://influxdb3-core:8181`
 5. InfluxDB Details->Database: {the database name you created in the explorer e.g. `dev`}
-6. Insecure Connection: toggle to true
-7. Click **Save and Test** it should say "OK", now you can start using it
+6. Paste the Token from `influxdb_token.txt` in the Token field
+7. Insecure Connection: toggle to true
+8. Click **Save and Test** it should say "OK", now you can start using it
 
 #### Import Dashboard
 1. Go to **Dashboards** → **New** → **Import**
