@@ -1,4 +1,5 @@
 import os
+import sys
 import threading
 from typing import Callable
 import genpy
@@ -13,6 +14,18 @@ from bridge.types import Seconds
 
 logger = logging.getLogger("BridgeLogger")
 
+def setup_logger():
+    logger.setLevel(logging.INFO)
+
+    handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    # I guess this keeps it logging to /rosout
+    logger.propagate = True
 
 def main():
     logger.info("Connecting to InfluxDB...")
@@ -67,11 +80,7 @@ def generic_callback(
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        # datefmt="%Y-%m-%d %H:%M:%S",
-    )
+    setup_logger()
     mock = os.getenv("MOCK")
     if mock and mock.lower() == "true":
         main()
