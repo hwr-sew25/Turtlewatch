@@ -53,8 +53,9 @@ def main():
 
 
 def generic_callback(
-    msg: genpy.Message, measurement_name: str, tags: dict[str, str] | None
+    msg: genpy.Message, topic_name: str, tags: dict[str, str] | None
 ):
+    measurement_name = topic_name.removeprefix("/")
     try:
         point = ros_msg_to_influx_point(
             msg=msg, measurement_name=measurement_name, tags=tags

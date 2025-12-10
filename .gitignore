@@ -1,5 +1,8 @@
 .direnv/
+influxdb3_explorer/db
+influxdb3_explorer/ssl
 influxdb_token.txt
 db_session_key.txt
 **/__pycache__
 **/.ruff_cache
+
