@@ -117,3 +117,12 @@ uv run python -m bridge.main
 select * from odometry
 ```
 
+
+
+### Generate Message files
+
+``` bash
+uv run python scripts/generate_messages.py
+```
+Output is in `libs/ros_msgs`
+
