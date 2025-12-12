@@ -11,10 +11,11 @@ from pathlib import Path
 
 # Base paths
 BASE_DIR = Path(__file__).parent
-COMMON_MSGS_DIR = BASE_DIR / "common_msgs"
-ROS_MESSAGES_DIR = BASE_DIR / "ros_messages"
-GENPY_SCRIPT_MSG = BASE_DIR / "genpy" / "scripts" / "genmsg_py.py"
-GENPY_SCRIPT_SRV = BASE_DIR / "genpy" / "scripts" / "gensrv_py.py"
+LIBS = "../libs"
+COMMON_MSGS_DIR = BASE_DIR  / LIBS / "common_msgs"
+ROS_MESSAGES_DIR = BASE_DIR / LIBS  / "ros_messages"
+GENPY_SCRIPT_MSG = BASE_DIR / LIBS  / "genpy" / "scripts" / "genmsg_py.py"
+GENPY_SCRIPT_SRV = BASE_DIR / LIBS  / "genpy" / "scripts" / "gensrv_py.py"
 
 # Package processing order (dependencies first)
 PACKAGE_ORDER = [
