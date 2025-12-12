@@ -11,11 +11,11 @@ from pathlib import Path
 
 # Base paths
 BASE_DIR = Path(__file__).parent
-LIBS = "../libs"
-COMMON_MSGS_DIR = BASE_DIR  / LIBS / "common_msgs"
-ROS_MESSAGES_DIR = BASE_DIR / LIBS  / "ros_messages"
-GENPY_SCRIPT_MSG = BASE_DIR / LIBS  / "genpy" / "scripts" / "genmsg_py.py"
-GENPY_SCRIPT_SRV = BASE_DIR / LIBS  / "genpy" / "scripts" / "gensrv_py.py"
+LIBS_DIR = BASE_DIR / ".." / "libs"
+COMMON_MSGS_DIR = LIBS_DIR / "common_msgs"
+ROS_MESSAGES_DIR = LIBS_DIR / ".." / "ros_msgs"
+GENPY_SCRIPT_MSG = LIBS_DIR / "genpy" / "scripts" / "genmsg_py.py"
+GENPY_SCRIPT_SRV = LIBS_DIR / "genpy" / "scripts" / "gensrv_py.py"
 
 # Package processing order (dependencies first)
 PACKAGE_ORDER = [
@@ -32,11 +32,18 @@ PACKAGE_ORDER = [
 ]
 
 
-def check_std_msgs():
-    """Check if std_msgs exists locally."""
-    std_msgs_dir = COMMON_MSGS_DIR / "std_msgs" / "msg"
-    if std_msgs_dir.exists() and (std_msgs_dir / "Header.msg").exists():
-        return std_msgs_dir
+def find_package_dir(package_name):
+    """Find package directory in libs/common_msgs or libs/ directly."""
+    # First check in common_msgs
+    pkg_dir = COMMON_MSGS_DIR / package_name
+    if pkg_dir.exists():
+        return pkg_dir
+
+    # Then check in libs directly (for std_msgs)
+    pkg_dir = LIBS_DIR / package_name
+    if pkg_dir.exists():
+        return pkg_dir
+
     return None
 
 
@@ -146,32 +153,25 @@ def main():
     print("ROS Message Python Code Generator")
     print("==================================\n")
 
-    # Check for std_msgs locally
-    std_msgs_path = check_std_msgs()
-    if std_msgs_path:
-        print(f"✓ Found std_msgs at: {std_msgs_path}")
-    else:
-        print("⚠ Warning: std_msgs not found in common_msgs/")
-        print("  Messages using Header will fail.")
-
     # Build include paths (accumulate as we process packages)
     include_paths = {}
-    if std_msgs_path:
-        include_paths["std_msgs"] = str(std_msgs_path)
 
     # Process each package
     for package_name in PACKAGE_ORDER:
-        package_dir = COMMON_MSGS_DIR / package_name
+        package_dir = find_package_dir(package_name)
 
-        if not package_dir.exists():
+        if not package_dir:
             print(f"⚠ Skipping {package_name} (not found)")
             continue
+
+        print(f"Found {package_name} at: {package_dir}")
 
         msg_dir = package_dir / "msg"
         srv_dir = package_dir / "srv"
         output_dir = ROS_MESSAGES_DIR / package_name
 
-        # Add current package to include paths
+        # Add current package to include paths BEFORE generating
+        # (so dependencies can find it)
         if msg_dir.exists():
             include_paths[package_name] = str(msg_dir)
 

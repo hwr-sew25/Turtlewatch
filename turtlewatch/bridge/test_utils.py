@@ -1,5 +1,5 @@
-from geometry_msgs.msg import Pose
-from utils import flatten_ros_message, ros_msg_to_influx_point
+from ros_msgs.geometry_msgs.msg import Pose
+from bridge.utils import flatten_ros_message, ros_msg_to_influx_point
 
 
 def test_flatten_ros_message():
@@ -41,12 +41,12 @@ def test_ros_msg_to_influx_point(monkeypatch):
     pose.orientation.z = 0.0
     pose.orientation.w = 1.0
 
-    tags = {"type", "robot"}
+    tags = {"type": "robot"}
     point = ros_msg_to_influx_point(pose, "pose", tags)
 
     point_correct = {
         "measurement": "pose",
-        "tags": {"type", "robot"},
+        "tags": {"type": "robot"},
         "fields": {
             "position_x": 1.0,
             "position_y": 2.0,

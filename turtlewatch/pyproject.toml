@@ -16,3 +16,8 @@ dev = [
     "basedpyright>=1.35.0",
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["bridge"]
+norecursedirs = ["libs", ".venv", ".git"]
+
+

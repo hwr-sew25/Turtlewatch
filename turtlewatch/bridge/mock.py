@@ -5,9 +5,9 @@ import time
 from typing import Any, Callable
 
 import genpy
-from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
-from std_msgs.msg import Header
+from ros_msgs.geometry_msgs.msg import Twist
+from ros_msgs.nav_msgs.msg import Odometry
+from ros_msgs.std_msgs.msg import Header
 
 from bridge.types import Seconds
 

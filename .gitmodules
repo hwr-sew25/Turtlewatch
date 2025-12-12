@@ -4,3 +4,9 @@
 [submodule "turtlewatch/libs/genpy"]
 	path = turtlewatch/libs/genpy
 	url = git@github.com:ros/genpy.git
+[submodule "turtlewatch/libs/genmsg"]
+	path = turtlewatch/libs/genmsg
+	url = git@github.com:ros/genmsg.git
+[submodule "turtlewatch/libs/std_msgs"]
+	path = turtlewatch/libs/std_msgs
+	url = git@github.com:ros/std_msgs.git
