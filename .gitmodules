@@ -1,0 +1,6 @@
+[submodule "turtlewatch/libs/common_msgs"]
+	path = turtlewatch/libs/common_msgs
+	url = git@github.com:ros/common_msgs.git
+[submodule "turtlewatch/libs/genpy"]
+	path = turtlewatch/libs/genpy
+	url = git@github.com:ros/genpy.git

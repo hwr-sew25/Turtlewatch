@@ -4,8 +4,8 @@ import threading
 from typing import Callable
 import genpy
 import rospy
-from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
+from ros_msg.geometry_msgs.msg import Twist
+from ros_msg.nav_msgs.msg import Odometry
 import logging
 from bridge.database_client import DatabaseClient
 from bridge.throttled_subscriber import ThrottledSubscriber
