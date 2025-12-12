@@ -28,7 +28,7 @@ def test_flatten_ros_message():
 
 
 def test_ros_msg_to_influx_point(monkeypatch):
-    monkeypatch.setattr("time.time", lambda: 1763367606)
+    monkeypatch.setattr("time.time_ns", lambda: 1765540015249344480)
 
     pose = Pose()
 
@@ -56,6 +56,6 @@ def test_ros_msg_to_influx_point(monkeypatch):
             "orientation_z": 0.0,
             "orientation_w": 1.0,
         },
-        "time": 1763367606,
+        "time": 1765540015249344480,
     }
     assert point == point_correct

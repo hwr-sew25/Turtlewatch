@@ -9,7 +9,7 @@ class DatabaseClient:
         if cls._client_instance is not None:
             raise RuntimeError("Already initialized")
 
-        write_options = WriteOptions(batch_size=2)
+        write_options = WriteOptions(batch_size=4)
         wco = write_client_options(write_options=write_options)
 
         cls._client_instance = InfluxDBClient3(
