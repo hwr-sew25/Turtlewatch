@@ -6,9 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import geometry_msgs.msg
-import std_msgs.msg
-
+from ... import *
+from ...std_msgs.msg import *
 class PolygonStamped(genpy.Message):
   _md5sum = "c6be8f7dc3bee7fe9e8d296070f53340"
   _type = "geometry_msgs/PolygonStamped"

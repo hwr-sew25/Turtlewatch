@@ -7,8 +7,7 @@ import genpy
 import struct
 
 import genpy
-import geometry_msgs.msg
-
+from ...geometry_msgs.msg import *
 class MapMetaData(genpy.Message):
   _md5sum = "10cfc8a2818024d3248802c00c95f11b"
   _type = "nav_msgs/MapMetaData"

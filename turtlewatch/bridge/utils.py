@@ -1,5 +1,3 @@
-from geometry_msgs.msg import Pose
-from nav_msgs.msg import Odometry
 import rospy
 import time
 from typing import Any

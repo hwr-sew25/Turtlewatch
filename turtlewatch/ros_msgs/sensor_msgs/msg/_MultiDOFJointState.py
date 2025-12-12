@@ -6,9 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import geometry_msgs.msg
-import std_msgs.msg
-
+from ...geometry_msgs.msg import *
+from ...std_msgs.msg import *
 class MultiDOFJointState(genpy.Message):
   _md5sum = "690f272f0640d2631c305eeb8301e59d"
   _type = "sensor_msgs/MultiDOFJointState"

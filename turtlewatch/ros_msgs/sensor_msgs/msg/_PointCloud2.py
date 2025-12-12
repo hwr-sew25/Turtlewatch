@@ -6,9 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import sensor_msgs.msg
-import std_msgs.msg
-
+from ... import *
+from ...std_msgs.msg import *
 class PointCloud2(genpy.Message):
   _md5sum = "1158d486dd51d683ce2f1be655c3c181"
   _type = "sensor_msgs/PointCloud2"

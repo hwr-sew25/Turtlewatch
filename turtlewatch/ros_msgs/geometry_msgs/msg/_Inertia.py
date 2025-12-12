@@ -6,8 +6,7 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import geometry_msgs.msg
-
+from ... import *
 class Inertia(genpy.Message):
   _md5sum = "1d26e4bb6c83ff141c5cf0d883c2b0fe"
   _type = "geometry_msgs/Inertia"

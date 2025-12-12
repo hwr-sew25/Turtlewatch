@@ -6,9 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import diagnostic_msgs.msg
-import std_msgs.msg
-
+from ... import *
+from ...std_msgs.msg import *
 class DiagnosticArray(genpy.Message):
   _md5sum = "60810da900de1dd6ddd437c3503511da"
   _type = "diagnostic_msgs/DiagnosticArray"

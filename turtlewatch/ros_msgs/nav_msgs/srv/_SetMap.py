@@ -7,10 +7,9 @@ import genpy
 import struct
 
 import genpy
-import geometry_msgs.msg
-import nav_msgs.msg
-import std_msgs.msg
-
+from ...geometry_msgs.msg import *
+from ... import *
+from ...std_msgs.msg import *
 class SetMapRequest(genpy.Message):
   _md5sum = "91149a20d7be299b87c340df8cc94fd4"
   _type = "nav_msgs/SetMapRequest"

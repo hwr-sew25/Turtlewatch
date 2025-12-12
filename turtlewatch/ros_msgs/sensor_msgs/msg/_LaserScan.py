@@ -6,8 +6,7 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import std_msgs.msg
-
+from ...std_msgs.msg import *
 class LaserScan(genpy.Message):
   _md5sum = "90c7ef2dc6895d81024acba2ac42f369"
   _type = "sensor_msgs/LaserScan"

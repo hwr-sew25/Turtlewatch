@@ -7,10 +7,9 @@ import genpy
 import struct
 
 import genpy
-import geometry_msgs.msg
-import std_msgs.msg
-import visualization_msgs.msg
-
+from ...geometry_msgs.msg import *
+from ...std_msgs.msg import *
+from ... import *
 class MarkerArray(genpy.Message):
   _md5sum = "d155b9ce5188fbaf89745847fd5882d7"
   _type = "visualization_msgs/MarkerArray"

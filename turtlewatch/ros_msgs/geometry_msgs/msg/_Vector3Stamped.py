@@ -6,9 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import geometry_msgs.msg
-import std_msgs.msg
-
+from ... import *
+from ...std_msgs.msg import *
 class Vector3Stamped(genpy.Message):
   _md5sum = "7b324c7325e683bf02a9b14b01090ec7"
   _type = "geometry_msgs/Vector3Stamped"

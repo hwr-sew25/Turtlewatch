@@ -28,7 +28,6 @@ jobs:
       - name: Install dependencies
         working-directory: turtlewatch
         run: |
-          uv add --editable ./libs/genpy
           uv sync --dev
 
       - name: Run pytest

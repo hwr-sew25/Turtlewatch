@@ -6,9 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import geometry_msgs.msg
-import std_msgs.msg
-
+from ... import *
+from ...std_msgs.msg import *
 class PointStamped(genpy.Message):
   _md5sum = "c63aecb41bfdfd6b7e1fac37c7cbe7bf"
   _type = "geometry_msgs/PointStamped"

@@ -20,4 +20,5 @@ dev = [
 testpaths = ["bridge"]
 norecursedirs = ["libs", ".venv", ".git"]
 
-
+[tool.uv.extra-build-dependencies]
+file = ["catkin_pkg"]

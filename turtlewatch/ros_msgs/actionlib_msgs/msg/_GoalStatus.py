@@ -6,7 +6,7 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import actionlib_msgs.msg
+from ... import *
 import genpy
 
 class GoalStatus(genpy.Message):

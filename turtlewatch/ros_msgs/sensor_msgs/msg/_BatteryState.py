@@ -6,8 +6,7 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import std_msgs.msg
-
+from ...std_msgs.msg import *
 class BatteryState(genpy.Message):
   _md5sum = "4ddae7f048e32fda22cac764685e3974"
   _type = "sensor_msgs/BatteryState"

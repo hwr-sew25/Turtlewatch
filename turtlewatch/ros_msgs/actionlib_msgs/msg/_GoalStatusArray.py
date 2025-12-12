@@ -6,10 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import actionlib_msgs.msg
+from ... import *
 import genpy
-import std_msgs.msg
-
+from ...std_msgs.msg import *
 class GoalStatusArray(genpy.Message):
   _md5sum = "8b2b82f13216d0a8ea88bd3af735e619"
   _type = "actionlib_msgs/GoalStatusArray"

@@ -7,9 +7,8 @@ import genpy
 import struct
 
 import genpy
-import std_msgs.msg
-import trajectory_msgs.msg
-
+from ...std_msgs.msg import *
+from ... import *
 class JointTrajectory(genpy.Message):
   _md5sum = "65b4f94a94d1ed67169da35a02f33d3f"
   _type = "trajectory_msgs/JointTrajectory"

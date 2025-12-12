@@ -6,9 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import geometry_msgs.msg
-import std_msgs.msg
-
+from ...geometry_msgs.msg import *
+from ...std_msgs.msg import *
 class GetPlanRequest(genpy.Message):
   _md5sum = "e25a43e0752bcca599a8c2eef8282df8"
   _type = "nav_msgs/GetPlanRequest"
@@ -287,10 +286,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import geometry_msgs.msg
-import nav_msgs.msg
-import std_msgs.msg
-
+from ...geometry_msgs.msg import *
+from ... import *
+from ...std_msgs.msg import *
 class GetPlanResponse(genpy.Message):
   _md5sum = "0002bc113c0259d71f6cf8cbc9430e18"
   _type = "nav_msgs/GetPlanResponse"

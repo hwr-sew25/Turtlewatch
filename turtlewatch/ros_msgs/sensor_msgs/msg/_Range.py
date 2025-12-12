@@ -6,8 +6,7 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import std_msgs.msg
-
+from ...std_msgs.msg import *
 class Range(genpy.Message):
   _md5sum = "c005c34273dc426c67a020a87bc24148"
   _type = "sensor_msgs/Range"

@@ -7,10 +7,9 @@ import genpy
 import struct
 
 import genpy
-import geometry_msgs.msg
-import std_msgs.msg
-import trajectory_msgs.msg
-
+from ...geometry_msgs.msg import *
+from ...std_msgs.msg import *
+from ... import *
 class MultiDOFJointTrajectory(genpy.Message):
   _md5sum = "ef145a45a5f47b77b7f5cdde4b16c942"
   _type = "trajectory_msgs/MultiDOFJointTrajectory"

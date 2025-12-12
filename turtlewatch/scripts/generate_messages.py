@@ -5,6 +5,7 @@ Disclaimer: Fully LLM generated
 """
 
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -30,6 +31,61 @@ PACKAGE_ORDER = [
     "trajectory_msgs",
     "visualization_msgs",
 ]
+
+
+def fix_imports_in_directory(directory, package_name):
+    """Fix imports in generated Python files to use relative imports."""
+    print(f"Fixing imports in {directory}...")
+
+    for py_file in directory.glob("_*.py"):
+        content = py_file.read_text()
+
+        # Replace imports like "import geometry_msgs.msg" with relative imports
+        # When we're in a file in package_name/msg/, imports of the same package should be relative
+        if package_name == "std_msgs":
+            # std_msgs doesn't have sub-packages
+            content = re.sub(
+                r"^import std_msgs\.msg\s*$",
+                "from . import *",
+                content,
+                flags=re.MULTILINE,
+            )
+        else:
+            # For other packages, replace imports of the same package with relative imports
+            content = re.sub(
+                rf"^import {re.escape(package_name)}\.msg\s*$",
+                "from ... import *",
+                content,
+                flags=re.MULTILINE,
+            )
+
+            # For imports of other packages, map them to relative paths
+            package_imports = {
+                "std_msgs": "...std_msgs.msg",
+                "geometry_msgs": "...geometry_msgs.msg",
+                "sensor_msgs": "...sensor_msgs.msg",
+                "nav_msgs": "...nav_msgs.msg",
+                "diagnostic_msgs": "...diagnostic_msgs.msg",
+                "actionlib_msgs": "...actionlib_msgs.msg",
+                "shape_msgs": "...shape_msgs.msg",
+                "stereo_msgs": "...stereo_msgs.msg",
+                "trajectory_msgs": "...trajectory_msgs.msg",
+                "visualization_msgs": "...visualization_msgs.msg",
+            }
+
+            # Replace imports of other packages
+            for pkg, import_path in package_imports.items():
+                if pkg != package_name:
+                    content = re.sub(
+                        rf"^import {re.escape(pkg)}\.msg\s*$",
+                        f"from {import_path} import *",
+                        content,
+                        flags=re.MULTILINE,
+                    )
+
+        py_file.write_text(content)
+
+    print(f"✓ Fixed imports in {directory}")
 
 
 def find_package_dir(package_name):
@@ -104,6 +160,9 @@ def generate_package_messages(
                 subprocess.run(init_cmd, capture_output=True)
                 print(f"✓ Generated __init__.py")
 
+                # Fix imports in generated files to use relative imports
+                fix_imports_in_directory(msg_output, package_name)
+
     # Generate services
     if srv_dir and srv_dir.exists():
         srv_files = list(srv_dir.glob("*.srv"))
@@ -145,6 +204,9 @@ def generate_package_messages(
                 ]
                 subprocess.run(init_cmd, capture_output=True)
                 print(f"✓ Generated __init__.py")
+
+                # Fix imports in generated files to use relative imports
+                fix_imports_in_directory(srv_output, package_name)
 
     return success
 

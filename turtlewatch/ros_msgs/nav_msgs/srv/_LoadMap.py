@@ -137,10 +137,9 @@ import genpy
 import struct
 
 import genpy
-import geometry_msgs.msg
-import nav_msgs.msg
-import std_msgs.msg
-
+from ...geometry_msgs.msg import *
+from ... import *
+from ...std_msgs.msg import *
 class LoadMapResponse(genpy.Message):
   _md5sum = "079b9c828e9f7c1918bf86932fd7267e"
   _type = "nav_msgs/LoadMapResponse"

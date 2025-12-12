@@ -7,8 +7,7 @@ import genpy
 import struct
 
 import genpy
-import std_msgs.msg
-
+from ...std_msgs.msg import *
 class TimeReference(genpy.Message):
   _md5sum = "fded64a0265108ba86c3d38fb11c0c16"
   _type = "sensor_msgs/TimeReference"

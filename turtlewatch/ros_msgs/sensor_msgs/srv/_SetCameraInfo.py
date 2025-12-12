@@ -6,9 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import sensor_msgs.msg
-import std_msgs.msg
-
+from ... import *
+from ...std_msgs.msg import *
 class SetCameraInfoRequest(genpy.Message):
   _md5sum = "ee34be01fdeee563d0d99cd594d5581d"
   _type = "sensor_msgs/SetCameraInfoRequest"

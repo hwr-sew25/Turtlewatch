@@ -6,8 +6,7 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import std_msgs.msg
-
+from . import *
 class MultiArrayLayout(genpy.Message):
   _md5sum = "0fed2a11c13e11c5571b4e2a995a91a3"
   _type = "std_msgs/MultiArrayLayout"
