@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "influxdb3-python>=0.16.0",
+    "netifaces>=0.11.0",
     "pytest>=9.0.1",
     "pyyaml>=6.0.3",
     "rospkg>=1.6.0",
