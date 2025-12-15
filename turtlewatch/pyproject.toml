@@ -23,3 +23,7 @@ norecursedirs = ["libs", ".venv", ".git"]
 
 [tool.uv.extra-build-dependencies]
 file = ["catkin_pkg"]
+
+[tool.ruff]
+# Add "migrations" and "my_custom_folder" to the default ignore list
+extend-exclude = ["libs", "ros_msgs"]

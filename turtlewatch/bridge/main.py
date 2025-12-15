@@ -5,7 +5,6 @@ from typing import Callable
 import genpy
 import rospy
 from ros_msgs.geometry_msgs.msg import Twist
-from ros_msgs.nav_msgs.msg import Odometry
 import logging
 from bridge.database_client import DatabaseClient
 from bridge.throttled_subscriber import ThrottledSubscriber
@@ -46,7 +45,7 @@ def main():
     }
 
     for topic_name, callback_handler in topics.items():
-        cmd_vel_sub = ThrottledSubscriber(
+        _ = ThrottledSubscriber(
             topic_name=topic_name,
             msg_class=Twist,
             callback=callback_handler,

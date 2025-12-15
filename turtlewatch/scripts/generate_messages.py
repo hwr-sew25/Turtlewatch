@@ -4,7 +4,6 @@ This script processes all message packages in common_msgs/ without requiring cat
 Disclaimer: Fully LLM generated
 """
 
-import os
 import re
 import subprocess
 import sys
@@ -104,9 +103,9 @@ def generate_package_messages(
     package_name, msg_dir, srv_dir, output_dir, include_paths
 ):
     """Generate Python code for a single package's messages and services."""
-    print(f"\n{'=' * 60}")
+    print("\n{'=' * 60}")
     print(f"Processing package: {package_name}")
-    print(f"{'=' * 60}")
+    print("{'=' * 60}")
 
     success = True
 
@@ -140,7 +139,7 @@ def generate_package_messages(
             result = subprocess.run(cmd, capture_output=True, text=True)
 
             if result.returncode != 0:
-                print(f"ERROR generating messages:")
+                print("ERROR generating messages:")
                 print(result.stderr)
                 success = False
             else:
@@ -155,7 +154,7 @@ def generate_package_messages(
                     str(msg_output),
                 ]
                 subprocess.run(init_cmd, capture_output=True)
-                print(f"✓ Generated __init__.py")
+                print("✓ Generated __init__.py")
 
                 # Fix imports in generated files to use relative imports
                 fix_imports_in_directory(msg_output, package_name)
@@ -185,7 +184,7 @@ def generate_package_messages(
             result = subprocess.run(cmd, capture_output=True, text=True)
 
             if result.returncode != 0:
-                print(f"ERROR generating services:")
+                print("ERROR generating services:")
                 print(result.stderr)
                 success = False
             else:
@@ -200,7 +199,7 @@ def generate_package_messages(
                     str(srv_output),
                 ]
                 subprocess.run(init_cmd, capture_output=True)
-                print(f"✓ Generated __init__.py")
+                print("✓ Generated __init__.py")
 
                 # Fix imports in generated files to use relative imports
                 fix_imports_in_directory(srv_output, package_name)
