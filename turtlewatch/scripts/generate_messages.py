@@ -210,7 +210,7 @@ def generate_package_messages(
     # ROS installations on sys.path.
     if output_dir.exists():
         output_dir.mkdir(parents=True, exist_ok=True)
-        init_lines = [f'# Auto-generated init for {package_name}']
+        init_lines = [f"# Auto-generated init for {package_name}"]
         if msg_dir and (output_dir / "msg").exists():
             init_lines.append("from . import msg")
             init_lines.append("from .msg import *")
