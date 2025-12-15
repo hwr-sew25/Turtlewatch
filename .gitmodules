@@ -10,3 +10,6 @@
 [submodule "turtlewatch/libs/std_msgs"]
 	path = turtlewatch/libs/std_msgs
 	url = git@github.com:ros/std_msgs.git
+[submodule "turtlewatch/libs/ros_comm"]
+	path = turtlewatch/libs/ros_comm
+	url = git@github.com:ros/ros_comm.git
