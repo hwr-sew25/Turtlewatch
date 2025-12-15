@@ -49,14 +49,8 @@ Token: Copy and paste the token from your `influxdb_token.txt` \
 3. In the left menu click **Manage Databases** -> then click **Create New**
 4. Name it something e.g. `dev` and create it.
 
-### 6. Setup Login to Grafan
-Go to `http://localhost:3000` and login with: \
-Username: `admin` \
-Password: `admin` \
-You can change the password or just set it to admin again.
-
-
 #### Add InfluxDB datasource
+##### Using Explorer UI
 1. In the middle of the screen, click on **Add your first Datasource**.
 2. Select or search for **influxdb**
 3. Query language: `SQL`
@@ -65,6 +59,20 @@ You can change the password or just set it to admin again.
 6. Paste the Token from `influxdb_token.txt` in the Token field
 7. Insecure Connection: toggle to true
 8. Click **Save and Test** it should say "OK", now you can start using it
+
+The configuration should now be saved in the the db in `influxdb3_explorer/db`
+
+##### Using config.json
+1. Rename the file `./influxdb3_explorer/example.config.json` to `./influxdb3_explorer/config.json`
+2. Open it put in your real token from `influxdb_token.txt`
+3. Start/Restart the Influxdb Explorer container and it should be already there
+
+
+### 7. Setup Login to Grafan
+Go to `http://localhost:3000` and login with: \
+Username: `admin` \
+Password: `admin` \
+You can change the password or just set it to admin again.
 
 #### Import Dashboard
 1. Go to **Dashboards** → **New** → **Import**
