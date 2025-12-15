@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ... import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class QuaternionStamped(genpy.Message):
   _md5sum = "e57f1e547e0e1fd13504588ffc8334e2"
   _type = "geometry_msgs/QuaternionStamped"

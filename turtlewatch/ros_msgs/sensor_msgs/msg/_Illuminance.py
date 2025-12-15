@@ -6,7 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...std_msgs.msg import *
+import std_msgs.msg
+
 class Illuminance(genpy.Message):
   _md5sum = "8cf5febb0952fca9d650c3d11a81a188"
   _type = "sensor_msgs/Illuminance"

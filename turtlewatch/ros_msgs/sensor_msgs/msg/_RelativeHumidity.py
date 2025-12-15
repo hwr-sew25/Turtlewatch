@@ -6,7 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...std_msgs.msg import *
+import std_msgs.msg
+
 class RelativeHumidity(genpy.Message):
   _md5sum = "8730015b05955b7e992ce29a2678d90f"
   _type = "sensor_msgs/RelativeHumidity"

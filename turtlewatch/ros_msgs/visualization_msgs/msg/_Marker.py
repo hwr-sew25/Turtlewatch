@@ -7,8 +7,9 @@ import genpy
 import struct
 
 import genpy
-from ...geometry_msgs.msg import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class Marker(genpy.Message):
   _md5sum = "4048c9de2a16f4ae8e0538085ebf1b97"
   _type = "visualization_msgs/Marker"

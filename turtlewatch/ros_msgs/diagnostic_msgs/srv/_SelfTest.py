@@ -99,7 +99,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ... import *
+import diagnostic_msgs.msg
+
 class SelfTestResponse(genpy.Message):
   _md5sum = "ac21b1bab7ab17546986536c22eb34e9"
   _type = "diagnostic_msgs/SelfTestResponse"

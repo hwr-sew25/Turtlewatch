@@ -6,7 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...std_msgs.msg import *
+import std_msgs.msg
+
 class Temperature(genpy.Message):
   _md5sum = "ff71b307acdbe7c871a5a6d7ed359100"
   _type = "sensor_msgs/Temperature"

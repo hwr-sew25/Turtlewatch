@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ... import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class AccelWithCovarianceStamped(genpy.Message):
   _md5sum = "96adb295225031ec8d57fb4251b0a886"
   _type = "geometry_msgs/AccelWithCovarianceStamped"

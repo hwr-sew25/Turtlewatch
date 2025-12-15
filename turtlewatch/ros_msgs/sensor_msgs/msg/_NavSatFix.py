@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ... import *
-from ...std_msgs.msg import *
+import sensor_msgs.msg
+import std_msgs.msg
+
 class NavSatFix(genpy.Message):
   _md5sum = "2d3a8cd499b9b4a0249fb98fd05cfa48"
   _type = "sensor_msgs/NavSatFix"

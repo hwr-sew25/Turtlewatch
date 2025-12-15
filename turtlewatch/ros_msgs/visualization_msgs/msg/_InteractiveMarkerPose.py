@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...geometry_msgs.msg import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class InteractiveMarkerPose(genpy.Message):
   _md5sum = "a6e6833209a196a38d798dadb02c81f8"
   _type = "visualization_msgs/InteractiveMarkerPose"

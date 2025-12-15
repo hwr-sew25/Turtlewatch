@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...geometry_msgs.msg import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class Path(genpy.Message):
   _md5sum = "6227e2b7e9cce15051f669a5e197bbf7"
   _type = "nav_msgs/Path"

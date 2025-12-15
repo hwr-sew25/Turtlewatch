@@ -101,9 +101,10 @@ import genpy
 import struct
 
 import genpy
-from ...geometry_msgs.msg import *
-from ... import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import nav_msgs.msg
+import std_msgs.msg
+
 class GetMapResponse(genpy.Message):
   _md5sum = "6cdd0a18e0aff5b0a3ca2326a89b54ff"
   _type = "nav_msgs/GetMapResponse"

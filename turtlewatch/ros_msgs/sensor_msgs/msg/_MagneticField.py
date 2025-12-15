@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...geometry_msgs.msg import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class MagneticField(genpy.Message):
   _md5sum = "2f3b0b43eed0c9501de0fa3ff89a45aa"
   _type = "sensor_msgs/MagneticField"

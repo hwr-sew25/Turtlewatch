@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...geometry_msgs.msg import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class GridCells(genpy.Message):
   _md5sum = "b9e4f5df6d28e272ebde00a3994830f5"
   _type = "nav_msgs/GridCells"

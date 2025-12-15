@@ -6,7 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...std_msgs.msg import *
+import std_msgs.msg
+
 class FluidPressure(genpy.Message):
   _md5sum = "804dc5cea1c5306d6a2eb80b9833befe"
   _type = "sensor_msgs/FluidPressure"

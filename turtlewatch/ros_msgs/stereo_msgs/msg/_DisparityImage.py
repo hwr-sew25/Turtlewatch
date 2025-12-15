@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...sensor_msgs.msg import *
-from ...std_msgs.msg import *
+import sensor_msgs.msg
+import std_msgs.msg
+
 class DisparityImage(genpy.Message):
   _md5sum = "04a177815f75271039fa21f16acad8c9"
   _type = "stereo_msgs/DisparityImage"

@@ -7,7 +7,8 @@ import genpy
 import struct
 
 import genpy
-from ...geometry_msgs.msg import *
+import geometry_msgs.msg
+
 class MultiDOFJointTrajectoryPoint(genpy.Message):
   _md5sum = "3ebe08d1abd5b65862d50e09430db776"
   _type = "trajectory_msgs/MultiDOFJointTrajectoryPoint"
@@ -106,29 +107,29 @@ Vector3 angular
       length = len(self.transforms)
       buff.write(_struct_I.pack(length))
       for val1 in self.transforms:
-        _v29 = val1.translation
-        _x = _v29
+        _v1 = val1.translation
+        _x = _v1
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
-        _v30 = val1.rotation
-        _x = _v30
+        _v2 = val1.rotation
+        _x = _v2
         buff.write(_get_struct_4d().pack(_x.x, _x.y, _x.z, _x.w))
       length = len(self.velocities)
       buff.write(_struct_I.pack(length))
       for val1 in self.velocities:
-        _v31 = val1.linear
-        _x = _v31
+        _v3 = val1.linear
+        _x = _v3
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
-        _v32 = val1.angular
-        _x = _v32
+        _v4 = val1.angular
+        _x = _v4
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
       length = len(self.accelerations)
       buff.write(_struct_I.pack(length))
       for val1 in self.accelerations:
-        _v33 = val1.linear
-        _x = _v33
+        _v5 = val1.linear
+        _x = _v5
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
-        _v34 = val1.angular
-        _x = _v34
+        _v6 = val1.angular
+        _x = _v6
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
       _x = self
       buff.write(_get_struct_2i().pack(_x.time_from_start.secs, _x.time_from_start.nsecs))
@@ -158,13 +159,13 @@ Vector3 angular
       self.transforms = []
       for i in range(0, length):
         val1 = geometry_msgs.msg.Transform()
-        _v35 = val1.translation
-        _x = _v35
+        _v7 = val1.translation
+        _x = _v7
         start = end
         end += 24
         (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
-        _v36 = val1.rotation
-        _x = _v36
+        _v8 = val1.rotation
+        _x = _v8
         start = end
         end += 32
         (_x.x, _x.y, _x.z, _x.w,) = _get_struct_4d().unpack(str[start:end])
@@ -175,13 +176,13 @@ Vector3 angular
       self.velocities = []
       for i in range(0, length):
         val1 = geometry_msgs.msg.Twist()
-        _v37 = val1.linear
-        _x = _v37
+        _v9 = val1.linear
+        _x = _v9
         start = end
         end += 24
         (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
-        _v38 = val1.angular
-        _x = _v38
+        _v10 = val1.angular
+        _x = _v10
         start = end
         end += 24
         (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
@@ -192,13 +193,13 @@ Vector3 angular
       self.accelerations = []
       for i in range(0, length):
         val1 = geometry_msgs.msg.Twist()
-        _v39 = val1.linear
-        _x = _v39
+        _v11 = val1.linear
+        _x = _v11
         start = end
         end += 24
         (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
-        _v40 = val1.angular
-        _x = _v40
+        _v12 = val1.angular
+        _x = _v12
         start = end
         end += 24
         (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
@@ -223,29 +224,29 @@ Vector3 angular
       length = len(self.transforms)
       buff.write(_struct_I.pack(length))
       for val1 in self.transforms:
-        _v41 = val1.translation
-        _x = _v41
+        _v13 = val1.translation
+        _x = _v13
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
-        _v42 = val1.rotation
-        _x = _v42
+        _v14 = val1.rotation
+        _x = _v14
         buff.write(_get_struct_4d().pack(_x.x, _x.y, _x.z, _x.w))
       length = len(self.velocities)
       buff.write(_struct_I.pack(length))
       for val1 in self.velocities:
-        _v43 = val1.linear
-        _x = _v43
+        _v15 = val1.linear
+        _x = _v15
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
-        _v44 = val1.angular
-        _x = _v44
+        _v16 = val1.angular
+        _x = _v16
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
       length = len(self.accelerations)
       buff.write(_struct_I.pack(length))
       for val1 in self.accelerations:
-        _v45 = val1.linear
-        _x = _v45
+        _v17 = val1.linear
+        _x = _v17
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
-        _v46 = val1.angular
-        _x = _v46
+        _v18 = val1.angular
+        _x = _v18
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
       _x = self
       buff.write(_get_struct_2i().pack(_x.time_from_start.secs, _x.time_from_start.nsecs))
@@ -276,13 +277,13 @@ Vector3 angular
       self.transforms = []
       for i in range(0, length):
         val1 = geometry_msgs.msg.Transform()
-        _v47 = val1.translation
-        _x = _v47
+        _v19 = val1.translation
+        _x = _v19
         start = end
         end += 24
         (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
-        _v48 = val1.rotation
-        _x = _v48
+        _v20 = val1.rotation
+        _x = _v20
         start = end
         end += 32
         (_x.x, _x.y, _x.z, _x.w,) = _get_struct_4d().unpack(str[start:end])
@@ -293,13 +294,13 @@ Vector3 angular
       self.velocities = []
       for i in range(0, length):
         val1 = geometry_msgs.msg.Twist()
-        _v49 = val1.linear
-        _x = _v49
+        _v21 = val1.linear
+        _x = _v21
         start = end
         end += 24
         (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
-        _v50 = val1.angular
-        _x = _v50
+        _v22 = val1.angular
+        _x = _v22
         start = end
         end += 24
         (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
@@ -310,13 +311,13 @@ Vector3 angular
       self.accelerations = []
       for i in range(0, length):
         val1 = geometry_msgs.msg.Twist()
-        _v51 = val1.linear
-        _x = _v51
+        _v23 = val1.linear
+        _x = _v23
         start = end
         end += 24
         (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
-        _v52 = val1.angular
-        _x = _v52
+        _v24 = val1.angular
+        _x = _v24
         start = end
         end += 24
         (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])

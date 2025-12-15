@@ -7,9 +7,10 @@ import genpy
 import struct
 
 import genpy
-from ...geometry_msgs.msg import *
-from ... import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import nav_msgs.msg
+import std_msgs.msg
+
 class OccupancyGrid(genpy.Message):
   _md5sum = "3381f2d731d4076ec5c71b0759edbe4e"
   _type = "nav_msgs/OccupancyGrid"

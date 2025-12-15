@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ... import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class PoseStamped(genpy.Message):
   _md5sum = "d3812c3cbc69362b77dc0b19b345f8f5"
   _type = "geometry_msgs/PoseStamped"

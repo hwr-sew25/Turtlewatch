@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...geometry_msgs.msg import *
-from ... import *
+import geometry_msgs.msg
+import shape_msgs.msg
+
 class Mesh(genpy.Message):
   _md5sum = "1ffdae9486cd3316a121c578b47a85cc"
   _type = "shape_msgs/Mesh"

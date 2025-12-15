@@ -7,9 +7,10 @@ import genpy
 import struct
 
 import genpy
-from ...geometry_msgs.msg import *
-from ...std_msgs.msg import *
-from ... import *
+import geometry_msgs.msg
+import std_msgs.msg
+import visualization_msgs.msg
+
 class InteractiveMarker(genpy.Message):
   _md5sum = "dd86d22909d5a3364b384492e35c10af"
   _type = "visualization_msgs/InteractiveMarker"
@@ -389,21 +390,21 @@ float32 a
           _x = _x.encode('utf-8')
           length = len(_x)
         buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
-        _v1 = val1.orientation
-        _x = _v1
+        _v57 = val1.orientation
+        _x = _v57
         buff.write(_get_struct_4d().pack(_x.x, _x.y, _x.z, _x.w))
         _x = val1
         buff.write(_get_struct_3B().pack(_x.orientation_mode, _x.interaction_mode, _x.always_visible))
         length = len(val1.markers)
         buff.write(_struct_I.pack(length))
         for val2 in val1.markers:
-          _v2 = val2.header
-          _x = _v2.seq
+          _v58 = val2.header
+          _x = _v58.seq
           buff.write(_get_struct_I().pack(_x))
-          _v3 = _v2.stamp
-          _x = _v3
+          _v59 = _v58.stamp
+          _x = _v59
           buff.write(_get_struct_2I().pack(_x.secs, _x.nsecs))
-          _x = _v2.frame_id
+          _x = _v58.frame_id
           length = len(_x)
           if python3 or type(_x) == unicode:
             _x = _x.encode('utf-8')
@@ -417,21 +418,21 @@ float32 a
           buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
           _x = val2
           buff.write(_get_struct_3i().pack(_x.id, _x.type, _x.action))
-          _v4 = val2.pose
-          _v5 = _v4.position
-          _x = _v5
+          _v60 = val2.pose
+          _v61 = _v60.position
+          _x = _v61
           buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
-          _v6 = _v4.orientation
-          _x = _v6
+          _v62 = _v60.orientation
+          _x = _v62
           buff.write(_get_struct_4d().pack(_x.x, _x.y, _x.z, _x.w))
-          _v7 = val2.scale
-          _x = _v7
+          _v63 = val2.scale
+          _x = _v63
           buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
-          _v8 = val2.color
-          _x = _v8
+          _v64 = val2.color
+          _x = _v64
           buff.write(_get_struct_4f().pack(_x.r, _x.g, _x.b, _x.a))
-          _v9 = val2.lifetime
-          _x = _v9
+          _v65 = val2.lifetime
+          _x = _v65
           buff.write(_get_struct_2i().pack(_x.secs, _x.nsecs))
           _x = val2.frame_locked
           buff.write(_get_struct_B().pack(_x))
@@ -572,8 +573,8 @@ float32 a
           val1.name = str[start:end].decode('utf-8', 'rosmsg')
         else:
           val1.name = str[start:end]
-        _v10 = val1.orientation
-        _x = _v10
+        _v66 = val1.orientation
+        _x = _v66
         start = end
         end += 32
         (_x.x, _x.y, _x.z, _x.w,) = _get_struct_4d().unpack(str[start:end])
@@ -588,12 +589,12 @@ float32 a
         val1.markers = []
         for i in range(0, length):
           val2 = visualization_msgs.msg.Marker()
-          _v11 = val2.header
+          _v67 = val2.header
           start = end
           end += 4
-          (_v11.seq,) = _get_struct_I().unpack(str[start:end])
-          _v12 = _v11.stamp
-          _x = _v12
+          (_v67.seq,) = _get_struct_I().unpack(str[start:end])
+          _v68 = _v67.stamp
+          _x = _v68
           start = end
           end += 8
           (_x.secs, _x.nsecs,) = _get_struct_2I().unpack(str[start:end])
@@ -603,9 +604,9 @@ float32 a
           start = end
           end += length
           if python3:
-            _v11.frame_id = str[start:end].decode('utf-8', 'rosmsg')
+            _v67.frame_id = str[start:end].decode('utf-8', 'rosmsg')
           else:
-            _v11.frame_id = str[start:end]
+            _v67.frame_id = str[start:end]
           start = end
           end += 4
           (length,) = _struct_I.unpack(str[start:end])
@@ -619,29 +620,29 @@ float32 a
           start = end
           end += 12
           (_x.id, _x.type, _x.action,) = _get_struct_3i().unpack(str[start:end])
-          _v13 = val2.pose
-          _v14 = _v13.position
-          _x = _v14
+          _v69 = val2.pose
+          _v70 = _v69.position
+          _x = _v70
           start = end
           end += 24
           (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
-          _v15 = _v13.orientation
-          _x = _v15
+          _v71 = _v69.orientation
+          _x = _v71
           start = end
           end += 32
           (_x.x, _x.y, _x.z, _x.w,) = _get_struct_4d().unpack(str[start:end])
-          _v16 = val2.scale
-          _x = _v16
+          _v72 = val2.scale
+          _x = _v72
           start = end
           end += 24
           (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
-          _v17 = val2.color
-          _x = _v17
+          _v73 = val2.color
+          _x = _v73
           start = end
           end += 16
           (_x.r, _x.g, _x.b, _x.a,) = _get_struct_4f().unpack(str[start:end])
-          _v18 = val2.lifetime
-          _x = _v18
+          _v74 = val2.lifetime
+          _x = _v74
           start = end
           end += 8
           (_x.secs, _x.nsecs,) = _get_struct_2i().unpack(str[start:end])
@@ -772,21 +773,21 @@ float32 a
           _x = _x.encode('utf-8')
           length = len(_x)
         buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
-        _v19 = val1.orientation
-        _x = _v19
+        _v75 = val1.orientation
+        _x = _v75
         buff.write(_get_struct_4d().pack(_x.x, _x.y, _x.z, _x.w))
         _x = val1
         buff.write(_get_struct_3B().pack(_x.orientation_mode, _x.interaction_mode, _x.always_visible))
         length = len(val1.markers)
         buff.write(_struct_I.pack(length))
         for val2 in val1.markers:
-          _v20 = val2.header
-          _x = _v20.seq
+          _v76 = val2.header
+          _x = _v76.seq
           buff.write(_get_struct_I().pack(_x))
-          _v21 = _v20.stamp
-          _x = _v21
+          _v77 = _v76.stamp
+          _x = _v77
           buff.write(_get_struct_2I().pack(_x.secs, _x.nsecs))
-          _x = _v20.frame_id
+          _x = _v76.frame_id
           length = len(_x)
           if python3 or type(_x) == unicode:
             _x = _x.encode('utf-8')
@@ -800,21 +801,21 @@ float32 a
           buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
           _x = val2
           buff.write(_get_struct_3i().pack(_x.id, _x.type, _x.action))
-          _v22 = val2.pose
-          _v23 = _v22.position
-          _x = _v23
+          _v78 = val2.pose
+          _v79 = _v78.position
+          _x = _v79
           buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
-          _v24 = _v22.orientation
-          _x = _v24
+          _v80 = _v78.orientation
+          _x = _v80
           buff.write(_get_struct_4d().pack(_x.x, _x.y, _x.z, _x.w))
-          _v25 = val2.scale
-          _x = _v25
+          _v81 = val2.scale
+          _x = _v81
           buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
-          _v26 = val2.color
-          _x = _v26
+          _v82 = val2.color
+          _x = _v82
           buff.write(_get_struct_4f().pack(_x.r, _x.g, _x.b, _x.a))
-          _v27 = val2.lifetime
-          _x = _v27
+          _v83 = val2.lifetime
+          _x = _v83
           buff.write(_get_struct_2i().pack(_x.secs, _x.nsecs))
           _x = val2.frame_locked
           buff.write(_get_struct_B().pack(_x))
@@ -956,8 +957,8 @@ float32 a
           val1.name = str[start:end].decode('utf-8', 'rosmsg')
         else:
           val1.name = str[start:end]
-        _v28 = val1.orientation
-        _x = _v28
+        _v84 = val1.orientation
+        _x = _v84
         start = end
         end += 32
         (_x.x, _x.y, _x.z, _x.w,) = _get_struct_4d().unpack(str[start:end])
@@ -972,12 +973,12 @@ float32 a
         val1.markers = []
         for i in range(0, length):
           val2 = visualization_msgs.msg.Marker()
-          _v29 = val2.header
+          _v85 = val2.header
           start = end
           end += 4
-          (_v29.seq,) = _get_struct_I().unpack(str[start:end])
-          _v30 = _v29.stamp
-          _x = _v30
+          (_v85.seq,) = _get_struct_I().unpack(str[start:end])
+          _v86 = _v85.stamp
+          _x = _v86
           start = end
           end += 8
           (_x.secs, _x.nsecs,) = _get_struct_2I().unpack(str[start:end])
@@ -987,9 +988,9 @@ float32 a
           start = end
           end += length
           if python3:
-            _v29.frame_id = str[start:end].decode('utf-8', 'rosmsg')
+            _v85.frame_id = str[start:end].decode('utf-8', 'rosmsg')
           else:
-            _v29.frame_id = str[start:end]
+            _v85.frame_id = str[start:end]
           start = end
           end += 4
           (length,) = _struct_I.unpack(str[start:end])
@@ -1003,29 +1004,29 @@ float32 a
           start = end
           end += 12
           (_x.id, _x.type, _x.action,) = _get_struct_3i().unpack(str[start:end])
-          _v31 = val2.pose
-          _v32 = _v31.position
-          _x = _v32
+          _v87 = val2.pose
+          _v88 = _v87.position
+          _x = _v88
           start = end
           end += 24
           (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
-          _v33 = _v31.orientation
-          _x = _v33
+          _v89 = _v87.orientation
+          _x = _v89
           start = end
           end += 32
           (_x.x, _x.y, _x.z, _x.w,) = _get_struct_4d().unpack(str[start:end])
-          _v34 = val2.scale
-          _x = _v34
+          _v90 = val2.scale
+          _x = _v90
           start = end
           end += 24
           (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
-          _v35 = val2.color
-          _x = _v35
+          _v91 = val2.color
+          _x = _v91
           start = end
           end += 16
           (_x.r, _x.g, _x.b, _x.a,) = _get_struct_4f().unpack(str[start:end])
-          _v36 = val2.lifetime
-          _x = _v36
+          _v92 = val2.lifetime
+          _x = _v92
           start = end
           end += 8
           (_x.secs, _x.nsecs,) = _get_struct_2i().unpack(str[start:end])

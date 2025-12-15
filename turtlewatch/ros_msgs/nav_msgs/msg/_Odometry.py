@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...geometry_msgs.msg import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class Odometry(genpy.Message):
   _md5sum = "cd5e73d190d741a2f92e81eda573aca7"
   _type = "nav_msgs/Odometry"

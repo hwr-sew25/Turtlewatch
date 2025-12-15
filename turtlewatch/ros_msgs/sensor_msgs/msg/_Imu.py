@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...geometry_msgs.msg import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class Imu(genpy.Message):
   _md5sum = "6a62c6daae103f4ff57a132d6f95cec2"
   _type = "sensor_msgs/Imu"

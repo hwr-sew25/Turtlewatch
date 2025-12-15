@@ -6,7 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...std_msgs.msg import *
+import std_msgs.msg
+
 class Image(genpy.Message):
   _md5sum = "060021388200f6f0f447d0fcd9c64743"
   _type = "sensor_msgs/Image"

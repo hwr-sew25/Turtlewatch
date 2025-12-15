@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ... import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class WrenchStamped(genpy.Message):
   _md5sum = "d78d3cb249ce23087ade7e7d0c40cfa7"
   _type = "geometry_msgs/WrenchStamped"

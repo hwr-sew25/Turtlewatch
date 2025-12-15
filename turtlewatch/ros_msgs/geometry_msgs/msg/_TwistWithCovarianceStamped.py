@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ... import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class TwistWithCovarianceStamped(genpy.Message):
   _md5sum = "8927a1a12fb2607ceea095b2dc440a96"
   _type = "geometry_msgs/TwistWithCovarianceStamped"

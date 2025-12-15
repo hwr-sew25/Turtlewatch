@@ -7,9 +7,10 @@ import genpy
 import struct
 
 import genpy
-from ...geometry_msgs.msg import *
-from ...std_msgs.msg import *
-from ... import *
+import geometry_msgs.msg
+import std_msgs.msg
+import visualization_msgs.msg
+
 class InteractiveMarkerControl(genpy.Message):
   _md5sum = "b3c81e785788195d1840b86c28da1aac"
   _type = "visualization_msgs/InteractiveMarkerControl"

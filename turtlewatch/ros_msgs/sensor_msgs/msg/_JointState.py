@@ -6,7 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ...std_msgs.msg import *
+import std_msgs.msg
+
 class JointState(genpy.Message):
   _md5sum = "3066dcd76a6cfaef579bd0f34173e9fd"
   _type = "sensor_msgs/JointState"

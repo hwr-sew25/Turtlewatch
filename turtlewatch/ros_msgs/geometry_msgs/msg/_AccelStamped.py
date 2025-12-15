@@ -6,8 +6,9 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from ... import *
-from ...std_msgs.msg import *
+import geometry_msgs.msg
+import std_msgs.msg
+
 class AccelStamped(genpy.Message):
   _md5sum = "d8a98a5d81351b6eb0578c78557e7659"
   _type = "geometry_msgs/AccelStamped"

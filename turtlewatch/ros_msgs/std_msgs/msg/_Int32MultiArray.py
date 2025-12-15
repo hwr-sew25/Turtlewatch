@@ -6,7 +6,8 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-from . import *
+import std_msgs.msg
+
 class Int32MultiArray(genpy.Message):
   _md5sum = "1d99f79f8b325b44fee908053e9c945b"
   _type = "std_msgs/Int32MultiArray"
