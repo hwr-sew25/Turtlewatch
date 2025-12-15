@@ -1,446 +1,527 @@
 {
-    "__inputs": [
+  "__inputs": [
+    {
+      "name": "DS_INFLUXDB",
+      "label": "influxdb",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "ae3e-plotly-panel",
+      "name": "Plotly panel",
+      "version": "0.5.0"
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "12.3.0"
+    },
+    {
+      "type": "datasource",
+      "id": "influxdb",
+      "name": "InfluxDB",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
       {
-        "name": "DS_INFLUXDB",
-        "label": "influxdb",
-        "description": "",
-        "type": "datasource",
-        "pluginId": "influxdb",
-        "pluginName": "InfluxDB"
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
       }
-    ],
-    "__elements": {},
-    "__requires": [
-      {
-        "type": "panel",
-        "id": "ae3e-plotly-panel",
-        "name": "Plotly panel",
-        "version": "0.5.0"
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
       },
-      {
-        "type": "panel",
-        "id": "gauge",
-        "name": "Gauge",
-        "version": ""
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "max": 0.5,
+          "min": -0.5,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 0.2
+              },
+              {
+                "color": "red",
+                "value": 0.4
+              }
+            ]
+          },
+          "unit": "velocityms"
+        },
+        "overrides": []
       },
-      {
-        "type": "grafana",
-        "id": "grafana",
-        "name": "Grafana",
-        "version": "12.2.1"
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 0
       },
-      {
-        "type": "datasource",
-        "id": "influxdb",
-        "name": "InfluxDB",
-        "version": "1.0.0"
+      "id": 4,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "first"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      {
-        "type": "panel",
-        "id": "table",
-        "name": "Table",
-        "version": ""
-      }
-    ],
-    "annotations": {
-      "list": [
+      "pluginVersion": "12.3.0",
+      "targets": [
         {
-          "builtIn": 1,
+          "dataset": "iox",
           "datasource": {
-            "type": "grafana",
-            "uid": "-- Grafana --"
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
           },
-          "enable": true,
-          "hide": true,
-          "iconColor": "rgba(0, 211, 255, 1)",
-          "name": "Annotations & Alerts",
-          "type": "dashboard"
-        }
-      ]
-    },
-    "editable": true,
-    "fiscalYearStartMonth": 0,
-    "graphTooltip": 0,
-    "id": null,
-    "links": [],
-    "panels": [
-      {
-        "datasource": {
-          "type": "influxdb",
-          "uid": "${DS_INFLUXDB}"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "fieldMinMax": true,
-            "mappings": [],
-            "max": 0.5,
-            "min": -0.5,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "blue",
-                  "value": 0
-                },
-                {
-                  "color": "green",
-                  "value": 0
-                },
-                {
-                  "color": "yellow",
-                  "value": 0.2
-                },
-                {
-                  "color": "red",
-                  "value": 0.4
-                }
-              ]
-            },
-            "unit": "velocityms"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 6,
-          "x": 0,
-          "y": 0
-        },
-        "id": 4,
-        "options": {
-          "minVizHeight": 75,
-          "minVizWidth": 75,
-          "orientation": "auto",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time,\n    linear_x AS \"Geschwindigkeit (m/s)\",\n    angular_z AS \"Drehrate (rad/s)\"\nFROM cmd_vel\nORDER BY time DESC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
             ],
-            "fields": "",
-            "values": false
-          },
-          "showThresholdLabels": false,
-          "showThresholdMarkers": true,
-          "sizing": "auto"
-        },
-        "pluginVersion": "12.2.1",
-        "targets": [
-          {
-            "dataset": "iox",
-            "datasource": {
-              "type": "influxdb",
-              "uid": "${DS_INFLUXDB}"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT \n    time,\n    linear_x AS \"Geschwindigkeit (m/s)\",\n    angular_z AS \"Drehrate (rad/s)\"\nFROM velocity \nWHERE time >= $__timeFrom AND time <= $__timeTo\nORDER BY time ASC",
-            "refId": "A"
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
           }
-        ],
-        "title": "Geschwindigkeit & Drehung",
-        "type": "gauge"
-      },
-      {
-        "datasource": {
-          "type": "influxdb",
-          "uid": "${DS_INFLUXDB}"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "custom": {
-              "align": "auto",
-              "cellOptions": {
-                "type": "auto"
-              },
-              "footer": {
-                "reducers": []
-              },
-              "inspect": false
-            },
-            "decimals": 3,
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": 0
-                }
-              ]
-            }
-          },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "time"
-              },
-              "properties": [
-                {
-                  "id": "custom.width",
-                  "value": 180
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "X (m)"
-              },
-              "properties": [
-                {
-                  "id": "custom.width",
-                  "value": 100
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Y (m)"
-              },
-              "properties": [
-                {
-                  "id": "custom.width",
-                  "value": 100
-                }
-              ]
-            }
-          ]
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 6,
-          "x": 6,
-          "y": 0
-        },
-        "id": 5,
-        "options": {
-          "cellHeight": "sm",
-          "showHeader": true,
-          "sortBy": [
-            {
-              "desc": true,
-              "displayName": "time"
-            }
-          ]
-        },
-        "pluginVersion": "12.2.1",
-        "targets": [
-          {
-            "dataset": "iox",
-            "datasource": {
-              "type": "influxdb",
-              "uid": "${DS_INFLUXDB}"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT \n    time,\n    pose_pose_position_x AS \"X (m)\",\n    pose_pose_position_y AS \"Y (m)\",\n    pose_pose_orientation_z AS \"Orient. Z\",\n    pose_pose_orientation_w AS \"Orient. W\"\nFROM odometry \nWHERE time >= $__timeFrom AND time <= $__timeTo\nORDER BY time ASC",
-            "refId": "A"
-          }
-        ],
-        "title": "Position (aktuell)",
-        "type": "table"
-      },
-      {
-        "datasource": {
-          "type": "influxdb",
-          "uid": "${DS_INFLUXDB}"
-        },
-        "gridPos": {
-          "h": 16,
-          "w": 12,
-          "x": 12,
-          "y": 0
-        },
-        "id": 6,
-        "options": {
-          "config": {},
-          "data": [],
-          "layout": {},
-          "onclick": "console.log(data)\nwindow.updateVariables({query:{'var-project':'test'}, partial: true})",
-          "script": "// Get position data from query\nlet rawX = data.series[0]?.fields.find(f => f.name === 'y')?.values || [];  // ROS Y -> Panel X\nlet y = data.series[0]?.fields.find(f => f.name === 'x')?.values || [];     // ROS X -> Panel Y\n\n// Mirror X values (negate) to fix horizontal flip\nlet x = rawX.map(val => -val);\n\n// Base64 encoded map image\nconst mapImage = 'data:image/webp;base64,UklGRhwKAABXRUJQVlA4WAoAAAAgAAAAfwEAfwEASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggLggAABBIAJ0BKoABgAE+USiURqOioiEh9CgwcAoJaW7hd2Eb85/wB/I/xR8C/6h+T3XAdv/Wv01P2Dwz8j/4ryP/Tj6N+Un5cfEH9V/E38SfYHgBfjH8b/qPzGfEN6r/gO0Kp56AXp98f/y38p/rf+z/u/nnfo3oB3j/53/oP6p+0fqzeAN8h/r/+W9wD+H/zf/df473Mfyr++f2H9t/7L7Dvw/+Qf6z/G/ux9An8a/lP+V/tX+S/83+h////4+wD1Ufpf7A/6sff+EsXafQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY8zHvUE4TcGdGKgjVJA+RdEw7T6DHm0+gvG81QmcN+ngkzb0vBAAU73N7A084CT6mviBT2eFjfuL1YVH4O+28GPOTwBBk7Ewk0BT8XZdpjZ4tLp82VEQL/zRUmxLSyonJgmKIXbHEgbDbSWLtI3GZ33JRT6DHm0+gxqJnDSKAqVMPtbQGFOWmvSen8YDbefwtrtPoMebT5rPXZBKZMTWSPDnhUJaIjf1iDtVjEFMbPFpdPoEi3wy0x/TfNKmlTUnHB7acLd2n0GPNp9Bj0lT6mviBT2eLS6fQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY82n0GPNp9BjzafQY82n0GPNp81AAD+/9dwAAAAAAOmOFxvjXQ6bvtvogkQueK7Q1eSzpfTXvH+dBYYyfgDe77dyuxfaWy3gkKIjkYlXUUGRu+DQqEQ+4AIncHkYW37f3VTh8O6WUb2i0nPHy5Y3HdgzOMSKkrGv9AyTtMb7qwC3W9H3+8RNttA2xl1R9ceL5Xc61oBiPl3/XH67uFEvXJ1slJ+U5SFibvkwt4/pCwEaTzHrzXCy3nxXjoYQOdj8UQ6rnH0OjDrPt2HzhIFI13TLYfLDT6q6aSCImegTqARvVnUeFEFGXydx3131l3GxXEd0lik7n7+TvB4rfFarA5ern584J7kXVODj5ydqE4uS3tYD7lfmugmf3Oq3ITayi9uSv7qHr9+Oe+j2gG4EYUWJ4gOWu9fh9yX8PtDAsvBdI4Y4ng/pjb0ubK1QYRzf5MkEReVZH3ZYBTHkWsciAWKkBGk8x684600CJ4DzjKXPqUPZNY/tD7IMln0sRe478OnTwqF5R39KQcs0uYjasLsyDE0xfTQJ0/KLDCFMwXPz/z4d7MrdMwyeONvGIr/jucd5mcea3c+EZTNVYiYNzHZW9tjcZXGIFc4PEr9TZw566IWqE6qO0srFOySkE0z2tFvbhq3Gdj5jo/hjphZ3H/2G4xzscwoQhvXRS40fsee4n4NYWesCbD6GF+WEJnD16LZXQkpqOwk3BF1RbYOEwen2/GI8lEt0IGWGwSwl7AsEJcuTtHOh8nBdwaSgyzcK6FOfCJrp8REuUOAa2DgjXRrDeN1lJmehSQMjd92TAnTCUsaFVFvxZz5lxnk9npCQqnGpBr9+nxtrzei6XE0AUXP8K92QzKNYxCb7yaKl1RvWZ79IYJnQiX+R275T5cZRmZLHq0ag7Q6txuWnaC/Sb3p9dUY2gPo/8HUbeQhUHzJnMS9QYi2RsxdYapSM7SkrO8Trqk+g7wCp3ekhEDq76FhkkIRMC9JZyxrHiHzMiUgmaXn/vM2Z/V52WviL9mumIMftfkTa9gAtfvr+sve0TsMy6ioWwXz3UzvlTVrBmc1brsOucsR4UMeLGpVuUc1n4OM52w73y0sk0xpibfnTX53VCbwP5exdxvXY9Vv8l5PP7OcRImCKQ7SGEV2JN90VFYetVXQoLEA6jnvV9JsAzbUA4uc/6TxL+MQ2D8iwCD+C8QYY5G7iJUUb1LdiTkKOynSg11MD3kI335aERGS/Ke/u+KapvPBKKrHQE10alVX9cJhYWAndDYAmGe3dFs0+lTDGbDwBJr6mi35AcK4mVxQO/K9TJLY/xCS0XAIeMqUbffR7QDcCMKHkQ9ghV7VJ9WfcZbFmcs/CMXCB0UPZK7hQgCRw61yaEzZXZqjCqkDhC25xf0Vb/YEYI1USWbHfrK/ZIStKeeBrMtDybpvG8/VQcXM+zvpqdgUp8mthZXtSp+zKrz//bCy2MYjouZoqIU0c+eWFky9UZlmc4o6qC0R7AOR1G59o2VHMbefn/WtfauaU4vkOXwsOVzsT7vsZm4loFe3aMrsDO+tr4k+KNKeW7n/MoQmFLxv4ebsYEEDCASrcXjgjHkLxDSq4wjVYsT4lkgs7ROwE0hdpjPPgMxOa3F+dY9Jo34olhKR3lTWc2oTdj86c0YKVF6UQJc+i14QcqKpl83ydokj92pSbgRdQvKupUz5e2OcZeByG0TutSR7nJxmY8aZKQ8gKQCxnPlvsd8i/oosfs/NqR5tLJ919iFx0HzYH6cMaG7phjbEBgXvhPWyKIhOhwxPr9+Z7N1h8I5+SSuqTqZzAt64l1eSzOalsXO7DgEezsv/ZUhiETsT7vqwJdvRIftXT7ppo3N+3zRpj72G3u45PbG1hFxMWIQOoO6Mo2S3aRc34s4GEe9C2hqg5cvNWeaNgQiGpPqEFuGkZW4aRkwghcZea2wYbMOCb1IVuPPlx2vpwmUXmuV58XhPfCZm8nKuq11I8QCOCfyI+ZQgcFYC9s42JrSXg/xrPeffWCkPFvGq0xu+KdAAAAAAAAAAAA==';\n\nlet traces = [];\n\n// Path trace (all points)\nif (x.length > 0) {\n  traces.push({\n    x: x,\n    y: y,\n    mode: 'lines+markers',\n    type: 'scatter',\n    name: 'Roboterpfad',\n    marker: {\n      color: '#3498db',\n      size: 4\n    },\n    line: {\n      color: '#3498db',\n      width: 2\n    }\n  });\n  \n  // Current position (last point)\n  traces.push({\n    x: [x[x.length - 1]],\n    y: [y[y.length - 1]],\n    mode: 'markers',\n    type: 'scatter',\n    name: 'Aktuelle Position',\n    marker: {\n      color: '#00FF00',\n      size: 16,\n      symbol: 'circle',\n      line: {\n        color: '#ffffff',\n        width: 2\n      }\n    }\n  });\n  \n  // Start point (first point in selected time range)\n  traces.push({\n    x: [x[0]],\n    y: [y[0]],\n    mode: 'markers',\n    type: 'scatter',\n    name: 'Startpunkt',\n    marker: {\n      color: '#FF5733',\n      size: 12,\n      symbol: 'square'\n    }\n  });\n}\n\nreturn {\n  data: traces,\n  layout: {\n    autosize: true,\n    images: [\n      {\n        layer: 'below',\n        opacity: 0.8,\n        sizex: 19.2,\n        sizey: 19.2,\n        sizing: 'stretch',\n        source: mapImage,\n        x: -10,\n        xref: 'x',\n        y: 9.2,\n        yref: 'y'\n      }\n    ],\n    legend: {\n      bgcolor: 'rgba(0,0,0,0.5)',\n      font: {\n        color: '#ffffff'\n      },\n      x: 0,\n      y: 1\n    },\n    margin: {\n      b: 50,\n      l: 50,\n      r: 20,\n      t: 30\n    },\n    paper_bgcolor: 'rgba(0,0,0,0)',\n    plot_bgcolor: 'rgba(0,0,0,0)',\n    showlegend: true,\n    xaxis: {\n      gridcolor: 'rgba(255,255,255,0.2)',\n      range: [-10, 9.2],\n      showgrid: true,\n      tickfont: {\n        color: '#aaaaaa'\n      },\n      title: {\n        font: {\n          color: '#ffffff'\n        },\n        text: 'Y (Meter) - Links/Rechts'\n      },\n      zeroline: true,\n      zerolinecolor: 'rgba(255,255,255,0.4)'\n    },\n    yaxis: {\n      gridcolor: 'rgba(255,255,255,0.2)',\n      range: [-10, 9.2],\n      scaleanchor: 'x',\n      scaleratio: 1,\n      showgrid: true,\n      tickfont: {\n        color: '#aaaaaa'\n      },\n      title: {\n        font: {\n          color: '#ffffff'\n        },\n        text: 'X (Meter) - Vor/Zurück'\n      },\n      zeroline: true,\n      zerolinecolor: 'rgba(255,255,255,0.4)'\n    }\n  },\n  config: {\n    displayModeBar: true,\n    scrollZoom: true\n  }\n};"
-        },
-        "pluginVersion": "0.5.0",
-        "targets": [
-          {
-            "dataset": "iox",
-            "datasource": {
-              "type": "influxdb",
-              "uid": "${DS_INFLUXDB}"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT \n    time,\n    pose_pose_position_x AS x,\n    pose_pose_position_y AS y\nFROM odometry \nWHERE time >= $__timeFrom AND time <= $__timeTo\nORDER BY time ASC",
-            "refId": "A"
-          }
-        ],
-        "title": "Live-Map: Roboterposition (Time-Range = Reset)",
-        "type": "ae3e-plotly-panel"
-      },
-      {
-        "datasource": {
-          "type": "influxdb",
-          "uid": "${DS_INFLUXDB}"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "custom": {
-              "align": "auto",
-              "cellOptions": {
-                "type": "auto"
-              },
-              "footer": {
-                "reducers": []
-              },
-              "inspect": false
-            },
-            "decimals": 4,
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": 0
-                }
-              ]
-            }
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 8
-        },
-        "id": 2,
-        "options": {
-          "cellHeight": "sm",
-          "showHeader": true,
-          "sortBy": []
-        },
-        "pluginVersion": "12.2.1",
-        "targets": [
-          {
-            "dataset": "iox",
-            "datasource": {
-              "type": "influxdb",
-              "uid": "${DS_INFLUXDB}"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT \n    time,\n    linear_x AS \"Linear X (m/s)\",\n    angular_z AS \"Angular Z (rad/s)\"\nFROM velocity \nWHERE time >= $__timeFrom AND time <= $__timeTo\nORDER BY time ASC",
-            "refId": "A"
-          }
-        ],
-        "title": "Velocity History",
-        "type": "table"
-      },
-      {
-        "datasource": {
-          "type": "influxdb",
-          "uid": "${DS_INFLUXDB}"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "custom": {
-              "align": "auto",
-              "cellOptions": {
-                "type": "auto"
-              },
-              "footer": {
-                "reducers": []
-              },
-              "inspect": false
-            },
-            "decimals": 3,
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": 0
-                }
-              ]
-            }
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 16
-        },
-        "id": 1,
-        "options": {
-          "cellHeight": "sm",
-          "showHeader": true,
-          "sortBy": []
-        },
-        "pluginVersion": "12.2.1",
-        "targets": [
-          {
-            "dataset": "iox",
-            "datasource": {
-              "type": "influxdb",
-              "uid": "${DS_INFLUXDB}"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT \n    time,\n    pose_pose_position_x AS \"X (m)\",\n    pose_pose_position_y AS \"Y (m)\",\n    pose_pose_orientation_z AS \"Orient. Z\",\n    pose_pose_orientation_w AS \"Orient. W\"\nFROM odometry \nWHERE time >= $__timeFrom AND time <= $__timeTo\nORDER BY time ASC",
-            "refId": "A"
-          }
-        ],
-        "title": "Odometry History",
-        "type": "table"
-      }
-    ],
-    "refresh": "1s",
-    "schemaVersion": 42,
-    "tags": [
-      "turtlebot3",
-      "monitoring",
-      "ros"
-    ],
-    "templating": {
-      "list": []
+        }
+      ],
+      "title": "Geschwindigkeit & Drehung",
+      "type": "gauge"
     },
-    "time": {
-      "from": "now-1m",
-      "to": "now"
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 180
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "X (m)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Y (m)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "time"
+          }
+        ]
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time,\n    pose_pose_position_x AS \"X (m)\",\n    pose_pose_position_y AS \"Y (m)\",\n    pose_pose_orientation_z AS \"Orient. Z\",\n    pose_pose_orientation_w AS \"Orient. W\"\nFROM odom\nORDER BY time DESC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "Position (aktuell)",
+      "type": "table"
     },
-    "timepicker": {
-      "refresh_intervals": [
-        "1s",
-        "5s",
-        "10s",
-        "30s",
-        "1m"
-      ]
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "config": {},
+        "data": [],
+        "layout": {},
+        "onclick": "console.log(data)\nwindow.updateVariables({query:{'var-project':'test'}, partial: true})",
+        "script": "// Get position data from query\nlet rawX = data.series[0]?.fields.find(f => f.name === 'y')?.values || [];  // ROS Y -> Panel X\nlet y = data.series[0]?.fields.find(f => f.name === 'x')?.values || [];     // ROS X -> Panel Y\n\n// Mirror X values (negate) to fix horizontal flip\nlet x = rawX.map(val => -val);\n\n// Base64 encoded map image\nconst mapImage = 'data:image/webp;base64,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';\n\nlet traces = [];\n\n// Path trace (all points)\nif (x.length > 0) {\n  traces.push({\n    x: x,\n    y: y,\n    mode: 'lines+markers',\n    type: 'scatter',\n    name: 'Roboterpfad',\n    marker: {\n      color: '#3498db',\n      size: 4\n    },\n    line: {\n      color: '#3498db',\n      width: 2\n    }\n  });\n  \n  // Current position (last point)\n  traces.push({\n    x: [x[x.length - 1]],\n    y: [y[y.length - 1]],\n    mode: 'markers',\n    type: 'scatter',\n    name: 'Aktuelle Position',\n    marker: {\n      color: '#00FF00',\n      size: 16,\n      symbol: 'circle',\n      line: {\n        color: '#ffffff',\n        width: 2\n      }\n    }\n  });\n  \n  // Start point (first point in selected time range)\n  traces.push({\n    x: [x[0]],\n    y: [y[0]],\n    mode: 'markers',\n    type: 'scatter',\n    name: 'Startpunkt',\n    marker: {\n      color: '#FF5733',\n      size: 12,\n      symbol: 'square'\n    }\n  });\n}\n\nreturn {\n  data: traces,\n  layout: {\n    autosize: true,\n    images: [\n      {\n        layer: 'below',\n        opacity: 0.8,\n        sizex: 19.2,\n        sizey: 19.2,\n        sizing: 'stretch',\n        source: mapImage,\n        x: -10,\n        xref: 'x',\n        y: 9.2,\n        yref: 'y'\n      }\n    ],\n    legend: {\n      bgcolor: 'rgba(0,0,0,0.5)',\n      font: {\n        color: '#ffffff'\n      },\n      x: 0,\n      y: 1\n    },\n    margin: {\n      b: 50,\n      l: 50,\n      r: 20,\n      t: 30\n    },\n    paper_bgcolor: 'rgba(0,0,0,0)',\n    plot_bgcolor: 'rgba(0,0,0,0)',\n    showlegend: true,\n    xaxis: {\n      gridcolor: 'rgba(255,255,255,0.2)',\n      range: [-10, 9.2],\n      showgrid: true,\n      tickfont: {\n        color: '#aaaaaa'\n      },\n      title: {\n        font: {\n          color: '#ffffff'\n        },\n        text: 'Y (Meter) - Links/Rechts'\n      },\n      zeroline: true,\n      zerolinecolor: 'rgba(255,255,255,0.4)'\n    },\n    yaxis: {\n      gridcolor: 'rgba(255,255,255,0.2)',\n      range: [-10, 9.2],\n      scaleanchor: 'x',\n      scaleratio: 1,\n      showgrid: true,\n      tickfont: {\n        color: '#aaaaaa'\n      },\n      title: {\n        font: {\n          color: '#ffffff'\n        },\n        text: 'X (Meter) - Vor/Zurück'\n      },\n      zeroline: true,\n      zerolinecolor: 'rgba(255,255,255,0.4)'\n    }\n  },\n  config: {\n    displayModeBar: true,\n    scrollZoom: true\n  }\n};"
+      },
+      "pluginVersion": "0.5.0",
+      "targets": [
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time,\n    pose_pose_position_x AS x,\n    pose_pose_position_y AS y\nFROM odom\nORDER BY time DESC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "Live-Map: Roboterposition (Time-Range = Reset)",
+      "type": "ae3e-plotly-panel"
     },
-    "timezone": "browser",
-    "title": "TurtleBot3 Monitoring v6",
-    "uid": "turtlebot3-monitoring-v6",
-    "version": 1,
-    "weekStart": ""
-  }
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 4,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time,\n    linear_x AS \"Linear X (m/s)\",\n    angular_z AS \"Angular Z (rad/s)\"\nFROM cmd_vel\nORDER BY time DESC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "Velocity History",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    time,\n    pose_pose_position_x AS \"X (m)\",\n    pose_pose_position_y AS \"Y (m)\",\n    pose_pose_orientation_z AS \"Orient. Z\",\n    pose_pose_orientation_w AS \"Orient. W\"\nFROM odom\nORDER BY time DESC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "Odometry History",
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "1s",
+  "schemaVersion": 42,
+  "tags": [
+    "turtlebot3",
+    "monitoring",
+    "ros"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "1s",
+      "5s",
+      "10s",
+      "30s",
+      "1m"
+    ]
+  },
+  "timezone": "browser",
+  "title": "TurtleBot3 Monitoring v6",
+  "uid": "turtlebot3-monitoring-v6",
+  "version": 3,
+  "weekStart": "",
+  "id": null
+}
