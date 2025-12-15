@@ -14,6 +14,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parent
 LIBS_DIR = BASE_DIR / ".." / "libs"
 COMMON_MSGS_DIR = LIBS_DIR / "common_msgs"
+ROS_COMM_MSGS_DIR = LIBS_DIR / "ros_comm_msgs"
+ROS_COMM_CLIENTS_DIR = LIBS_DIR / "ros_comm" / "clients"
 ROS_MESSAGES_DIR = LIBS_DIR / ".." / "ros_msgs"
 GENPY_SCRIPT_MSG = LIBS_DIR / "genpy" / "scripts" / "genmsg_py.py"
 GENPY_SCRIPT_SRV = LIBS_DIR / "genpy" / "scripts" / "gensrv_py.py"
@@ -21,6 +23,7 @@ GENPY_SCRIPT_SRV = LIBS_DIR / "genpy" / "scripts" / "gensrv_py.py"
 # Package processing order (dependencies first)
 PACKAGE_ORDER = [
     "std_msgs",  # Must be first - contains Header
+    "roscpp",
     "actionlib_msgs",
     "geometry_msgs",
     "sensor_msgs",
@@ -30,6 +33,7 @@ PACKAGE_ORDER = [
     "stereo_msgs",
     "trajectory_msgs",
     "visualization_msgs",
+    "rosgraph_msgs",
 ]
 
 
@@ -40,48 +44,31 @@ def fix_imports_in_directory(directory, package_name):
     for py_file in directory.glob("_*.py"):
         content = py_file.read_text()
 
-        # Replace imports like "import geometry_msgs.msg" with relative imports
-        # When we're in a file in package_name/msg/, imports of the same package should be relative
-        if package_name == "std_msgs":
-            # std_msgs doesn't have sub-packages
+        # Prefer module imports (`import geometry_msgs.msg`) so attributes like
+        # `geometry_msgs.msg.Point` are available in generated classes.
+        packages = {
+            "std_msgs",
+            "geometry_msgs",
+            "sensor_msgs",
+            "nav_msgs",
+            "diagnostic_msgs",
+            "roscpp",
+            "actionlib_msgs",
+            "shape_msgs",
+            "stereo_msgs",
+            "trajectory_msgs",
+            "visualization_msgs",
+            "rosgraph_msgs",
+            package_name,
+        }
+
+        for pkg in packages:
             content = re.sub(
-                r"^import std_msgs\.msg\s*$",
-                "from . import *",
+                rf"^from {re.escape(pkg)}\.msg import \*$",
+                f"import {pkg}.msg",
                 content,
                 flags=re.MULTILINE,
             )
-        else:
-            # For other packages, replace imports of the same package with relative imports
-            content = re.sub(
-                rf"^import {re.escape(package_name)}\.msg\s*$",
-                "from ... import *",
-                content,
-                flags=re.MULTILINE,
-            )
-
-            # For imports of other packages, map them to relative paths
-            package_imports = {
-                "std_msgs": "...std_msgs.msg",
-                "geometry_msgs": "...geometry_msgs.msg",
-                "sensor_msgs": "...sensor_msgs.msg",
-                "nav_msgs": "...nav_msgs.msg",
-                "diagnostic_msgs": "...diagnostic_msgs.msg",
-                "actionlib_msgs": "...actionlib_msgs.msg",
-                "shape_msgs": "...shape_msgs.msg",
-                "stereo_msgs": "...stereo_msgs.msg",
-                "trajectory_msgs": "...trajectory_msgs.msg",
-                "visualization_msgs": "...visualization_msgs.msg",
-            }
-
-            # Replace imports of other packages
-            for pkg, import_path in package_imports.items():
-                if pkg != package_name:
-                    content = re.sub(
-                        rf"^import {re.escape(pkg)}\.msg\s*$",
-                        f"from {import_path} import *",
-                        content,
-                        flags=re.MULTILINE,
-                    )
 
         py_file.write_text(content)
 
@@ -92,6 +79,16 @@ def find_package_dir(package_name):
     """Find package directory in libs/common_msgs or libs/ directly."""
     # First check in common_msgs
     pkg_dir = COMMON_MSGS_DIR / package_name
+    if pkg_dir.exists():
+        return pkg_dir
+
+    # Then check in ros_comm_msgs (rosgraph_msgs, std_srvs, etc.)
+    pkg_dir = ROS_COMM_MSGS_DIR / package_name
+    if pkg_dir.exists():
+        return pkg_dir
+
+    # Then check in ros_comm/clients (roscpp messages/services)
+    pkg_dir = ROS_COMM_CLIENTS_DIR / package_name
     if pkg_dir.exists():
         return pkg_dir
 
@@ -207,6 +204,21 @@ def generate_package_messages(
 
                 # Fix imports in generated files to use relative imports
                 fix_imports_in_directory(srv_output, package_name)
+
+    # Create a root __init__.py so the package can be imported directly
+    # (e.g. `import roscpp.srv`) and to avoid collisions with any system
+    # ROS installations on sys.path.
+    if output_dir.exists():
+        output_dir.mkdir(parents=True, exist_ok=True)
+        init_lines = [f'# Auto-generated init for {package_name}']
+        if msg_dir and (output_dir / "msg").exists():
+            init_lines.append("from . import msg")
+            init_lines.append("from .msg import *")
+        if srv_dir and (output_dir / "srv").exists():
+            init_lines.append("from . import srv")
+            init_lines.append("from .srv import *")
+        init_lines.append("")
+        (output_dir / "__init__.py").write_text("\n".join(init_lines))
 
     return success
 

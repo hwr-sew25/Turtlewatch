@@ -13,3 +13,12 @@
 [submodule "turtlewatch/libs/ros_comm"]
 	path = turtlewatch/libs/ros_comm
 	url = git@github.com:ros/ros_comm.git
+[submodule "turtlewatch/libs/ros"]
+	path = turtlewatch/libs/ros
+	url = git@github.com:ros/ros.git
+[submodule "turtlewatch/libs/catkin"]
+	path = turtlewatch/libs/catkin
+	url = git@github.com:ros/catkin.git
+[submodule "turtlewatch/libs/ros_comm_msgs"]
+	path = turtlewatch/libs/ros_comm_msgs
+	url = git@github.com:ros/ros_comm_msgs.git

@@ -1,4 +1,4 @@
-from ..libs.ros_comm.clients.rospy.src import rospy
+import rospy
 import time
 from typing import Any
 

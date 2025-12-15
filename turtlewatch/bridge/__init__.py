@@ -1,30 +1,64 @@
-"""
-Bridge package initialization.
-Automatically configures Python path to use local genpy, genmsg, and ros_messages.
-This ensures the bridge works in CI without requiring system ROS packages.
-"""
+"""Configure sys.path so bundled ROS Python packages can be imported without a system ROS install."""
 
 import sys
 from pathlib import Path
 
-# Get the libs directory relative to this file
-_bridge_dir = Path(__file__).parent
-_libs_dir = _bridge_dir.parent / "libs"
 
-# Add local ros_messages to Python path (MUST be first to override system packages)
-_ros_messages_path = str(_libs_dir / "ros_messages")
-if _ros_messages_path in sys.path:
-    sys.path.remove(_ros_messages_path)
-sys.path.insert(0, _ros_messages_path)
+def _prepend(path: Path) -> None:
+    """Insert the path at the front of sys.path, removing any previous occurrence."""
+    path_str = str(path)
+    if path_str in sys.path:
+        sys.path.remove(path_str)
+    sys.path.insert(0, path_str)
 
-# Add local genmsg to Python path (override system version)
-_genmsg_path = str(_libs_dir / "genmsg" / "src")
-if _genmsg_path in sys.path:
-    sys.path.remove(_genmsg_path)
-sys.path.insert(0, _genmsg_path)
 
-# Add local genpy to Python path (override system version)
-_genpy_path = str(_libs_dir / "genpy" / "src")
-if _genpy_path in sys.path:
-    sys.path.remove(_genpy_path)
-sys.path.insert(0, _genpy_path)
+_bridge_dir = Path(__file__).resolve().parent
+_project_root = _bridge_dir.parent
+_libs_dir = _project_root / "libs"
+
+# Catkin helpers bundled in libs/.
+_prepend(_libs_dir / "catkin" / "python")
+
+# Core generation tools bundled in libs/.
+_prepend(_libs_dir / "genmsg" / "src")
+_prepend(_libs_dir / "genpy" / "src")
+
+
+# ROS runtime Python packages bundled under libs/ros_comm.
+_ros_comm_paths = [
+    _libs_dir / "ros_comm" / "clients" / "rospy" / "src",
+    _libs_dir / "ros_comm" / "clients" / "roscpp" / "src",
+    _libs_dir / "ros_comm" / "clients" / "roscpp" / "srv",
+    _libs_dir / "ros_comm" / "tools" / "rosgraph" / "src",
+    _libs_dir / "ros_comm" / "tools" / "rosmsg" / "src",
+    _libs_dir / "ros_comm" / "tools" / "rosparam" / "src",
+    _libs_dir / "ros_comm" / "tools" / "rosnode" / "src",
+    _libs_dir / "ros_comm" / "tools" / "rostopic" / "src",
+    _libs_dir / "ros_comm" / "tools" / "roslaunch" / "src",
+    _libs_dir / "ros_comm" / "tools" / "rosservice" / "src",
+    _libs_dir / "ros_comm" / "tools" / "rosbag" / "src",
+    _libs_dir / "ros_comm" / "tools" / "rosbag_storage" / "src",
+    _libs_dir / "ros_comm" / "tools" / "rosmaster" / "src",
+    _libs_dir / "ros_comm" / "tools" / "topic_tools" / "src",
+    _libs_dir / "ros_comm" / "utilities" / "message_filters" / "src",
+    _libs_dir / "ros_comm" / "utilities" / "roslz4" / "src",
+    _libs_dir / "ros_comm" / "utilities" / "roswtf" / "src",
+]
+
+for path in _ros_comm_paths:
+    if path.exists():
+        _prepend(path)
+
+# Core ROS Python support (roslib, roslang, etc.)
+_ros_core_paths = [
+    _libs_dir / "ros" / "core" / "roslib" / "src",
+    _libs_dir / "ros" / "core" / "roslang" / "src",
+]
+
+for path in _ros_core_paths:
+    if path.exists():
+        _prepend(path)
+
+# Generated ROS messages live in the repository root. Place this last so it wins
+# when a system/global ROS installation is present.
+_prepend(_project_root / "ros_msgs")
