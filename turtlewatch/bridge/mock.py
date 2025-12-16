@@ -23,38 +23,38 @@ _route_start_time: float = 0.0
 # linear_x: forward speed (m/s)
 # angular_z: rotation speed (rad/s), positive = left turn
 PREDEFINED_ROUTE = [
-    # Start: drive straight
-    (5.0, 0.3, 0.0, "straight"),
+    # Start: drive straight (fast, long distance)
+    (8.0, 0.8, 0.0, "straight"),
     # Stop
-    (2.0, 0.0, 0.0, "stop"),
+    (1.0, 0.0, 0.0, "stop"),
     # Turn left 90°
-    (3.0, 0.0, 0.5, "turn_left"),
+    (2.0, 0.0, 0.8, "turn_left"),
     # Drive straight
-    (4.0, 0.3, 0.0, "straight"),
+    (6.0, 0.8, 0.0, "straight"),
     # Stop
-    (2.0, 0.0, 0.0, "stop"),
-    # Drive in circle (forward + turning)
-    (8.0, 0.2, 0.3, "circle"),
+    (1.0, 0.0, 0.0, "stop"),
+    # Drive in large circle (forward + turning)
+    (10.0, 0.5, 0.4, "circle"),
     # Stop
-    (2.0, 0.0, 0.0, "stop"),
+    (1.0, 0.0, 0.0, "stop"),
     # Turn right 90°
-    (3.0, 0.0, -0.5, "turn_right"),
-    # Drive straight
-    (6.0, 0.3, 0.0, "straight"),
+    (2.0, 0.0, -0.8, "turn_right"),
+    # Drive straight (long)
+    (10.0, 0.8, 0.0, "straight"),
     # Stop
-    (2.0, 0.0, 0.0, "stop"),
+    (1.0, 0.0, 0.0, "stop"),
     # Drive backwards
-    (3.0, -0.2, 0.0, "backward"),
+    (4.0, -0.5, 0.0, "backward"),
     # Stop
-    (2.0, 0.0, 0.0, "stop"),
-    # Small circle other direction
-    (6.0, 0.15, -0.4, "circle_right"),
+    (1.0, 0.0, 0.0, "stop"),
+    # Large circle other direction
+    (8.0, 0.4, -0.5, "circle_right"),
     # Stop
-    (2.0, 0.0, 0.0, "stop"),
-    # Return towards center
-    (4.0, 0.25, 0.1, "curve_back"),
+    (1.0, 0.0, 0.0, "stop"),
+    # Curve back towards center
+    (6.0, 0.6, 0.2, "curve_back"),
     # Final stop
-    (3.0, 0.0, 0.0, "stop"),
+    (2.0, 0.0, 0.0, "stop"),
 ]
 
 
