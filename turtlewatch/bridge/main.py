@@ -2,9 +2,11 @@ import os
 import sys
 import threading
 from actionlib_msgs.msg import GoalStatusArray
+from dotenv import load_dotenv
 import genpy
 from influxdb_client_3 import Point
 import rospy
+from bridge.alert import AlertSystem
 from ros_msgs.geometry_msgs.msg import Twist
 import logging
 from bridge.database_client import DatabaseClient
@@ -107,25 +109,22 @@ def signal_state_callback(
     }
     measurement_name = "robot_signal_status"
 
+    if msg.state == SignalState.ERROR_CRITICAL:
+        AlertSystem.send_slack_message("C09PRS9P08K", "CRITICAL ERROR")
+
     try:
-        # Resolve the integer state to a string
         state_str = SIGNAL_STATE_MAP.get(msg.state, "UNKNOWN")
 
-        # Create point manually to inject the mapped string
         point = Point(measurement_name)
 
-        # Add base tags (e.g. robot_id)
         if tags:
             for k, v in tags.items():
                 point.tag(k, v)
 
-        # Add the mapped string as a TAG (better for filtering/grouping in Influx)
         point.tag("state_label", state_str)
 
-        # Add the raw integer as a FIELD (better for visualizing state changes over time)
         point.field("state_code", int(msg.state))
 
-        # Write to DB
         client = DatabaseClient.get_instance()
         client.write(point)
         logger.info(f"Send: {measurement_name} -> {state_str} ({msg.state})")
@@ -136,6 +135,7 @@ def signal_state_callback(
 
 if __name__ == "__main__":
     setup_logger()
+    _ = load_dotenv()
     mock = os.getenv("MOCK")
     if mock and mock.lower() == "true":
         main()
