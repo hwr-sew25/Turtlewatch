@@ -208,13 +208,15 @@ def signal_status_handler(state: dict[str, Any]) -> tuple[SignalState, dict[str,
 
 def move_status_handler(
     state: dict[str, Any],
-) -> tuple[GoalStatusArray, dict[str, Any]]:
+) -> tuple[GoalStatus, dict[str, Any]]:
     """
     Simulates a navigation goal:
     - Starts ACTIVE (moving)
     - Stays ACTIVE for a while
     - Switches to SUCCEEDED (reached goal)
     - Waits, then resets to ACTIVE (new goal)
+    
+    Returns: A single GoalStatus object (not an Array)
     """
 
     # 1. Initialize State
@@ -239,25 +241,23 @@ def move_status_handler(
             state["counter"] = 0
             state["goal_id_count"] += 1  # Generate a new Goal ID
 
-    # 3. Build Message
-    msg = GoalStatusArray()
-    msg.header = Header()
-    msg.header.stamp = genpy.Time.from_sec(time.time())
+    # 3. Build Message (Single GoalStatus)
+    msg = GoalStatus()
+    
+    # Generate timestamp for the GoalID (GoalStatus has no top-level header)
+    current_time = genpy.Time.from_sec(time.time())
 
-    # Create a single goal status object (move_base usually publishes a list)
-    status_item = GoalStatus()
-    status_item.status = state["status"]
+    msg.status = state["status"]
 
     # Create a unique GoalID
-    status_item.goal_id = GoalID()
-    status_item.goal_id.stamp = msg.header.stamp
-    status_item.goal_id.id = f"mock_goal_{state['goal_id_count']}"
+    msg.goal_id = GoalID()
+    msg.goal_id.stamp = current_time
+    msg.goal_id.id = f"mock_goal_{state['goal_id_count']}"
 
     if state["status"] == GoalStatus.ACTIVE:
-        status_item.text = "Moving to target..."
+        msg.text = "Moving to target..."
     elif state["status"] == GoalStatus.SUCCEEDED:
-        status_item.text = "Goal reached."
+        msg.text = "Goal reached."
 
-    msg.status_list = [status_item]
-
+    # Return the single message object directly
     return (msg, state)

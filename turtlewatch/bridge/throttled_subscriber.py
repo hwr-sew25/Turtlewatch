@@ -40,6 +40,8 @@ class ThrottledSubscriber[MsgType: genpy.Message]:
         return False
 
     def _internal_callback(self, msg: MsgType) -> None:
+        session = StatsTracker.get_session()
+        session.number_of_messages += 1
         # NOTE don't throttle twice
         mock = os.getenv("MOCK")
         if mock and mock.lower() == "true":

@@ -3,18 +3,20 @@ from enum import Enum
 import logging
 import time
 import uuid
+
+from ros_msgs.actionlib_msgs.msg._GoalStatus import GoalStatus
 from .database_client import InfluxDB, StatsDB
 import pyarrow as pa
 
 logger = logging.getLogger("BridgeLogger")
 
 
-class CompletionStatus(Enum):
-    PENDING = 0
-    IN_PROGRESS = 1
-    COMPLETED = 2
-    FAILED = 3
-    ABORTED = 4
+# class CompletionStatus(Enum):
+#     PENDING = 0
+#     IN_PROGRESS = 1
+#     COMPLETED = 2
+#     FAILED = 3
+#     ABORTED = 4
 
 
 @dataclass
@@ -31,7 +33,9 @@ class Session:
     start_time: int = field(default_factory=time.time_ns)
     end_time: int | None = None
     number_of_messages: int = 0
-    completion_status: CompletionStatus = CompletionStatus.PENDING
+    # NOTE change this for now, dunno what the actual status will look like
+    # completion_status: CompletionStatus = CompletionStatus.PENDING
+    completion_status: int = GoalStatus.PENDING # we need to use int here because the other thing is a literal
     navigation_metrics: NavigationMetrics = field(default_factory=NavigationMetrics)
 
 
@@ -145,7 +149,7 @@ class StatsTracker:
             s.start_time,
             s.end_time,
             s.number_of_messages,
-            s.completion_status.name,
+            s.completion_status,
             s.navigation_metrics.total_distance_meters,
             s.navigation_metrics.avg_linear_velocity,
             s.navigation_metrics.max_linear_velocity,
