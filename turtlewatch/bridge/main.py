@@ -40,6 +40,7 @@ def main():
     topics: dict[str, Callable[[genpy.Message, str, dict[str, str] | None], None]] = {
         "/cmd_vel": generic_callback,
         "/odom": generic_callback,
+        "/battery_state": generic_callback,
     }
 
     for topic_name, callback_handler in topics.items():
@@ -61,7 +62,7 @@ def generic_callback(
         )
         client = DatabaseClient.get_instance()
         client.write(point)
-        logger.info(f"Send: {msg}")
+        logger.info(f"Send: {measurement_name}")
 
     except Exception as e:
         logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
