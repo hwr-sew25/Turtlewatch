@@ -1,6 +1,7 @@
 import os
 import sys
 import threading
+import time
 from typing import Callable
 import genpy
 import rospy
@@ -88,6 +89,9 @@ if __name__ == "__main__":
         db_path = "../stats.sqlite"
     StatsDB.initialize(db_path)
     logger.info("Successfully connected to StatsDB")
+
+    StatsTracker.initialize_db_schema()
+    StatsTracker.start_new_session()
 
     if mock and mock.lower() == "true":
         main()
