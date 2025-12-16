@@ -86,17 +86,20 @@ def odom_handler(
     Map boundaries:
     - x: -7 to 7
     - y: -13 to 13
+
+    Robot drives in a smooth rectangular pattern.
     """
     # Map boundaries with margin
-    X_MIN, X_MAX = -6.0, 6.0
-    Y_MIN, Y_MAX = -12.0, 12.0
+    X_MIN, X_MAX = -5.0, 5.0
+    Y_MIN, Y_MAX = -10.0, 10.0
 
     if not state:
         state = {
             "x_pos": 0.0,
             "y_pos": 0.0,
             "theta": 0.0,  # heading angle in radians
-            "speed": 0.3,
+            "target_theta": 0.0,  # target heading for smooth turning
+            "speed": 0.1,  # slower speed for smoother movement
         }
 
     msg = Odometry()
@@ -106,23 +109,34 @@ def odom_handler(
     msg.header.frame_id = "odom"
     msg.child_frame_id = "base_link"
 
-    # Update position based on heading
     speed = state["speed"]
     theta = state["theta"]
 
-    # Calculate new position
-    new_x = state["x_pos"] + speed * math.cos(theta) * 0.1
-    new_y = state["y_pos"] + speed * math.sin(theta) * 0.1
+    # Smoothly interpolate towards target heading
+    theta_diff = state["target_theta"] - theta
+    if abs(theta_diff) > 0.01:
+        state["theta"] += theta_diff * 0.1  # smooth turning
 
-    # Check boundaries and turn if needed
-    if new_x >= X_MAX or new_x <= X_MIN or new_y >= Y_MAX or new_y <= Y_MIN:
-        # Turn randomly when hitting boundary
-        state["theta"] += math.pi / 2 + random.uniform(-0.5, 0.5)
-    else:
-        # Small random heading changes for natural movement
-        state["theta"] += random.uniform(-0.1, 0.1)
-        state["x_pos"] = new_x
-        state["y_pos"] = new_y
+    # Calculate new position
+    new_x = state["x_pos"] + speed * math.cos(state["theta"])
+    new_y = state["y_pos"] + speed * math.sin(state["theta"])
+
+    # Check boundaries and set new target heading
+    if new_x >= X_MAX:
+        state["target_theta"] = math.pi  # turn left (180°)
+        new_x = X_MAX
+    elif new_x <= X_MIN:
+        state["target_theta"] = 0.0  # turn right (0°)
+        new_x = X_MIN
+    elif new_y >= Y_MAX:
+        state["target_theta"] = -math.pi / 2  # turn down (-90°)
+        new_y = Y_MAX
+    elif new_y <= Y_MIN:
+        state["target_theta"] = math.pi / 2  # turn up (90°)
+        new_y = Y_MIN
+
+    state["x_pos"] = new_x
+    state["y_pos"] = new_y
 
     msg.pose.pose.position.x = state["x_pos"]
     msg.pose.pose.position.y = state["y_pos"]
@@ -136,7 +150,7 @@ def odom_handler(
 
     # Velocity
     msg.twist.twist.linear.x = speed
-    msg.twist.twist.angular.z = 0.2
+    msg.twist.twist.angular.z = 0.0
 
     return (msg, state)
 
