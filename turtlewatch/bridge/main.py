@@ -43,6 +43,7 @@ def main():
     topics: dict[str, Callable[[genpy.Message, str, dict[str, str] | None], None]] = {
         "/cmd_vel": generic_callback,
         "/odom": generic_callback,
+        "/battery_state": generic_callback,
     }
 
     for topic_name, callback_handler in topics.items():
@@ -88,10 +89,10 @@ if __name__ == "__main__":
     if mock and mock.lower() == "true":
         main()
         try:
-            threading.Event().wait()
+            _ = threading.Event().wait()
         except KeyboardInterrupt:
             print("Stopping...")
     else:
-        rospy.init_node("turtlewatch", anonymous=True)
+        node = rospy.init_node("turtlewatch", anonymous=True)
         main()
         rospy.spin()
