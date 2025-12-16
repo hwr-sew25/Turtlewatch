@@ -8,6 +8,7 @@ import genpy
 from ros_msgs.geometry_msgs.msg import Twist
 from ros_msgs.nav_msgs.msg import Odometry
 from ros_msgs.std_msgs.msg import Header
+from ros_msgs.sensor_msgs.msg import BatteryState
 
 from bridge.types import Seconds
 
