@@ -2,6 +2,7 @@ import os
 import sys
 import threading
 from typing import Callable
+from dotenv import load_dotenv
 import genpy
 import rospy
 from ros_msgs.geometry_msgs.msg import Twist
@@ -67,6 +68,7 @@ def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] |
         logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
 
 
+
 # NOTE Handler example
 # def cmd_vel_callback(msg: Twist, measurement_name: str, tags: dict[str, str] | None):
 #     try:
@@ -81,6 +83,7 @@ def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] |
 
 if __name__ == "__main__":
     setup_logger()
+    _ = load_dotenv()
     mock = os.getenv("MOCK")
     if mock and mock.lower() == "true":
         main()
