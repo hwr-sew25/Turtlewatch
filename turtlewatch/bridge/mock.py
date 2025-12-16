@@ -9,7 +9,7 @@ from ros_msgs.geometry_msgs.msg import Twist
 from ros_msgs.nav_msgs.msg import Odometry
 from ros_msgs.std_msgs.msg import Header
 from ros_msgs.sensor_msgs.msg import BatteryState
-from ros_msgs.actionlib_msgs.msg import GoalStatusArray, GoalStatus, GoalID
+from ros_msgs.actionlib_msgs.msg import GoalStatus, GoalID
 from ros_msgs.custom_msgs.msg import SignalState
 
 from bridge.types import Seconds
@@ -48,7 +48,6 @@ def dispatcher(
     }
 
     handler = topics.get(topic_name)
-    tags = {}
     if not handler:
         logger.error(f"Mock handler for {topic_name} not implemented yet")
     else:
@@ -215,7 +214,7 @@ def move_status_handler(
     - Stays ACTIVE for a while
     - Switches to SUCCEEDED (reached goal)
     - Waits, then resets to ACTIVE (new goal)
-    
+
     Returns: A single GoalStatus object (not an Array)
     """
 
@@ -243,7 +242,7 @@ def move_status_handler(
 
     # 3. Build Message (Single GoalStatus)
     msg = GoalStatus()
-    
+
     # Generate timestamp for the GoalID (GoalStatus has no top-level header)
     current_time = genpy.Time.from_sec(time.time())
 

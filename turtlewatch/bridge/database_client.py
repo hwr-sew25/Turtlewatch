@@ -33,6 +33,7 @@ class StatsDB:
         1. Call StatsDB.initialize("db_name") at startup.
         2. Use StatsDB.execute() or StatsDB.query() anywhere.
     """
+
     _db_name: str | None = None
 
     @classmethod
@@ -47,15 +48,16 @@ class StatsDB:
             with cls.get_connection() as conn:
                 conn.execute("SELECT 1")
         except Exception as e:
-            cls._db_name = None 
+            cls._db_name = None
             raise RuntimeError(f"Could not connect to database '{db_name}': {e}")
+
     @classmethod
     @contextmanager
     def get_connection(cls):
         """
         Context manager that yields a raw sqlite3 connection.
         Handles opening and closing the connection automatically.
-        
+
         Example:
             with StatsDB.get_connection() as conn:
                 cursor = conn.cursor()
@@ -63,7 +65,7 @@ class StatsDB:
         """
         if cls._db_name is None:
             raise RuntimeError("Run StatsDB.initialize() first")
-        
+
         conn = sqlite3.connect(cls._db_name)
         conn.row_factory = sqlite3.Row
         try:
@@ -76,15 +78,15 @@ class StatsDB:
         """
         Runs a write operation (INSERT, UPDATE, DELETE).
         Automatically commits changes.
-        
+
         Returns:
             int: The ID of the last inserted row (if applicable).
-            
+
         Example:
             user_id = StatsDB.execute("INSERT INTO users (name) VALUES (?)", ("Alice",))
         """
         with cls.get_connection() as conn:
-            with conn: # Auto-commit
+            with conn:  # Auto-commit
                 cur = conn.cursor()
                 cur.execute(sql, params)
                 return cur.lastrowid
@@ -93,10 +95,10 @@ class StatsDB:
     def query(cls, sql: str, params=()):
         """
         Runs a read operation (SELECT).
-        
+
         Returns:
             list: A list of row objects (access columns like dicts: row['id']).
-            
+
         Example:
             users = StatsDB.query("SELECT * FROM users WHERE active = ?", (1,))
             for user in users:

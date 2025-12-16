@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from enum import Enum
 import logging
 import time
 import uuid
@@ -26,16 +25,20 @@ class NavigationMetrics:
     max_linear_velocity: float = 0
     idle_time: float = 0
 
+
 @dataclass
 class Session:
     """One Session is one trip of the robot from his start point back to his start point"""
+
     id: uuid.UUID = field(default_factory=uuid.uuid4)
     start_time: int = field(default_factory=time.time_ns)
     end_time: int | None = None
     number_of_messages: int = 0
     # NOTE change this for now, dunno what the actual status will look like
     # completion_status: CompletionStatus = CompletionStatus.PENDING
-    completion_status: int = GoalStatus.PENDING # we need to use int here because the other thing is a literal
+    completion_status: int = (
+        GoalStatus.PENDING
+    )  # we need to use int here because the other thing is a literal
     navigation_metrics: NavigationMetrics = field(default_factory=NavigationMetrics)
 
 
@@ -79,7 +82,9 @@ class StatsTracker:
     def _calculate_navigation_metrics(cls):
         s = cls._current_session
         if s.start_time is None or s.end_time is None:
-            logger.warning("Cannot calculate metrics without a session start and end time")
+            logger.warning(
+                "Cannot calculate metrics without a session start and end time"
+            )
             return
 
         client = InfluxDB.get_instance()
@@ -163,4 +168,3 @@ class StatsTracker:
     @classmethod
     def get_session(cls) -> Session:
         return cls._current_session
-

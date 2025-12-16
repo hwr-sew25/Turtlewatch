@@ -42,7 +42,6 @@ def main():
         "/cmd_vel": (Twist, generic_callback),
         "/odom": (Odometry, generic_callback),
         "/battery_state": (BatteryState, generic_callback),
-
         "/move_base/status": (GoalStatusArray, move_status_callback),
         "/robot/signals/status_update": (SignalState, signal_state_callback),
     }
@@ -54,6 +53,7 @@ def main():
             callback=callback_handler,
             interval=Seconds(0.25),
         )
+
 
 def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] | None):
     measurement_name = topic_name.removeprefix("/").replace("/", "_")
@@ -89,9 +89,14 @@ def move_status_callback(msg: GoalStatus, topic_name: str, tags: dict[str, str] 
     }
 
     session = StatsTracker.get_session()
-    session.completion_status = msg.status 
+    session.completion_status = msg.status
 
-    if msg.status in [GoalStatus.ABORTED,GoalStatus.SUCCEEDED, GoalStatus.RECALLED, GoalStatus.LOST]:
+    if msg.status in [
+        GoalStatus.ABORTED,
+        GoalStatus.SUCCEEDED,
+        GoalStatus.RECALLED,
+        GoalStatus.LOST,
+    ]:
         StatsTracker.stop_current_session()
 
     try:
@@ -115,6 +120,7 @@ def move_status_callback(msg: GoalStatus, topic_name: str, tags: dict[str, str] 
 
     except Exception as e:
         logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
+
 
 def signal_state_callback(
     msg: SignalState, topic_name: str, tags: dict[str, str] | None
@@ -171,9 +177,7 @@ if __name__ == "__main__":
     with open("../influxdb_token.txt", "r") as file:
         db_token = file.read().strip()
 
-    InfluxDB.intialize(
-        host="http://localhost:8181", database="dev", token=db_token
-    )
+    InfluxDB.intialize(host="http://localhost:8181", database="dev", token=db_token)
     logger.info("Successfully connected to InfluxDB")
 
     db_path = os.getenv("STATS_DB_PATH")
