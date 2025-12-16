@@ -28,6 +28,7 @@
             fishPlugins.bass
             colcon
             virt-viewer
+            act
             # (pkgs.python312.withPackages (python-pkgs: with python-pkgs; [
             #   influxdb3-python
             #   pyopenssl

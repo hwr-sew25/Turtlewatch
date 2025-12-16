@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "influxdb3-python>=0.16.0",
+    "netifaces>=0.11.0",
     "pytest>=9.0.1",
     "pyyaml>=6.0.3",
     "rospkg>=1.6.0",
@@ -16,3 +17,13 @@ dev = [
     "basedpyright>=1.35.0",
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["bridge"]
+norecursedirs = ["libs", ".venv", ".git"]
+
+[tool.uv.extra-build-dependencies]
+file = ["catkin_pkg"]
+
+[tool.ruff]
+# Add "migrations" and "my_custom_folder" to the default ignore list
+extend-exclude = ["libs", "ros_msgs"]

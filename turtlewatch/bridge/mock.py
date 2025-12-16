@@ -5,10 +5,9 @@ import time
 from typing import Any, Callable
 
 import genpy
-from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
-from std_msgs.msg import Header
-from sensor_msgs.msg import  BatteryState
+from ros_msgs.geometry_msgs.msg import Twist
+from ros_msgs.nav_msgs.msg import Odometry
+from ros_msgs.std_msgs.msg import Header
 
 from bridge.types import Seconds
 
@@ -24,8 +23,10 @@ def mock_sub[MsgType: genpy.Message](
     # NOTE it would be more efficient if these could be asyncio coroutines
     # instead of threads but I don'want to change everything to async since
     # that stuff if managed by ROS if we are not mocking
+    # TODO this should probably be refactored to use threading.Event() instead of daemon threads
     thread = threading.Thread(
-        target=dispatcher, args=(topic_name, msg_class, callback, interval)
+        target=dispatcher, args=(topic_name, msg_class, callback, interval),
+        daemon=True
     )
     thread.start()
 
