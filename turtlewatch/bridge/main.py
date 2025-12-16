@@ -4,8 +4,7 @@ import threading
 from typing import Callable
 import genpy
 import rospy
-from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
+from ros_msgs.geometry_msgs.msg import Twist
 import logging
 from bridge.database_client import DatabaseClient
 from bridge.throttled_subscriber import ThrottledSubscriber
@@ -13,6 +12,7 @@ from bridge.utils import ros_msg_to_influx_point
 from bridge.types import Seconds
 
 logger = logging.getLogger("BridgeLogger")
+
 
 def setup_logger():
     logger.setLevel(logging.INFO)
@@ -26,6 +26,7 @@ def setup_logger():
 
     # I guess this keeps it logging to /rosout
     logger.propagate = True
+
 
 def main():
     logger.info("Connecting to InfluxDB...")
@@ -44,7 +45,7 @@ def main():
     }
 
     for topic_name, callback_handler in topics.items():
-        cmd_vel_sub = ThrottledSubscriber(
+        _ = ThrottledSubscriber(
             topic_name=topic_name,
             msg_class=Twist,
             callback=callback_handler,
@@ -52,9 +53,7 @@ def main():
         )
 
 
-def generic_callback(
-    msg: genpy.Message, topic_name: str, tags: dict[str, str] | None
-):
+def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] | None):
     measurement_name = topic_name.removeprefix("/")
     try:
         point = ros_msg_to_influx_point(

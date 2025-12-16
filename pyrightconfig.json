@@ -2,5 +2,11 @@
   "include": ["turtlewatch"],
   "venvPath": "turtlewatch",
   "venv": ".venv",
-  "reportMissingTypeStubs": false
+  "reportMissingTypeStubs": false,
+  "executionEnvironments": [
+    {
+      "root": "turtlewatch",
+      "extraPaths": ["."]
+    }
+  ]
 }

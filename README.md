@@ -1,5 +1,18 @@
 # Turtlewatch 
 
+You need to clone the repo with submodules.
+
+If you do not have a copy yet run this.
+``` bash
+git clone --recurse-submodules -j8 git@github.com:hwr-sew25/Turtlewatch.git
+```
+
+In an existing copy run this
+``` bash
+git submodule update --init --recursive -j8
+```
+
+
 ## Requirements
 1. Install uv (https://docs.astral.sh/uv/getting-started/installation/)
 2. Docker + docker compose (e.g. through Docker Engine or Docker Desktop: https://docs.docker.com/get-started/get-docker/)
@@ -116,4 +129,13 @@ uv run python -m bridge.main
 ``` sql
 select * from odometry
 ```
+
+
+
+### Generate Message files
+
+``` bash
+uv run python scripts/generate_messages.py
+```
+Output is in `libs/ros_msgs`
 
