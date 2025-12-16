@@ -50,17 +50,18 @@ def main():
         "/odom": (Odometry, generic_callback),
         "/battery_state": (BatteryState, generic_callback),
         "/move_base/status": (GoalStatusArray, generic_callback),
-
         "/robot/signals/status_update": (SignalState, signal_state_callback),
     }
 
     for topic_name, (msg_class, callback_handler) in topics_config.items():
         _ = ThrottledSubscriber(
             topic_name=topic_name,
-            msg_class=msg_class,      
-            callback=callback_handler, 
+            msg_class=msg_class,
+            callback=callback_handler,
             interval=Seconds(0.25),
-    )
+        )
+
+
 def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] | None):
     measurement_name = topic_name.removeprefix("/").replace("/", "_")
     try:
@@ -87,7 +88,9 @@ def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] |
 #         logger.error(f"[CMD_VEL] ✗ Failed to write: {e}", exc_info=True)
 
 
-def signal_state_callback(msg: SignalState, topic_name: str, tags: dict[str, str] | None):
+def signal_state_callback(
+    msg: SignalState, topic_name: str, tags: dict[str, str] | None
+):
     """
     Custom handler for SignalState.
     Maps the uint8 'state' to a string tag/field for InfluxDB.
@@ -104,14 +107,14 @@ def signal_state_callback(msg: SignalState, topic_name: str, tags: dict[str, str
         SignalState.LOW_BATTERY: "LOW_BATTERY",
     }
     measurement_name = "robot_signal_status"
-    
+
     try:
         # Resolve the integer state to a string
         state_str = SIGNAL_STATE_MAP.get(msg.state, "UNKNOWN")
 
         # Create point manually to inject the mapped string
         point = Point(measurement_name)
-        
+
         # Add base tags (e.g. robot_id)
         if tags:
             for k, v in tags.items():
@@ -119,10 +122,10 @@ def signal_state_callback(msg: SignalState, topic_name: str, tags: dict[str, str
 
         # Add the mapped string as a TAG (better for filtering/grouping in Influx)
         point.tag("state_label", state_str)
-        
+
         # Add the raw integer as a FIELD (better for visualizing state changes over time)
         point.field("state_code", int(msg.state))
-        
+
         # Write to DB
         client = DatabaseClient.get_instance()
         client.write(point)
@@ -130,6 +133,7 @@ def signal_state_callback(msg: SignalState, topic_name: str, tags: dict[str, str
 
     except Exception as e:
         logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
+
 
 if __name__ == "__main__":
     setup_logger()

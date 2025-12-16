@@ -158,18 +158,19 @@ def battery_handler(state: dict[str, Any]) -> tuple[BatteryState, dict[str, Any]
 
     return (msg, state)
 
+
 def signal_status_handler(state: dict[str, Any]) -> tuple[SignalState, dict[str, Any]]:
     """
     Cycles through a logical robot lifecycle:
     Idle -> Greeting -> Speaking -> Moving -> Stopped -> Reverse -> Error -> Low Battery
     """
-    
+
     # 1. Initialize State Logic
     if not state:
         state = {
             "step_index": 0,
             "counter": 0,
-            "duration": 5  # How many ticks to stay in each state
+            "duration": 5,  # How many ticks to stay in each state
         }
 
     # Define the sequence of states to cycle through
@@ -183,7 +184,7 @@ def signal_status_handler(state: dict[str, Any]) -> tuple[SignalState, dict[str,
         SignalState.REVERSE,
         SignalState.ERROR_MINOR,
         SignalState.LOW_BATTERY,
-        SignalState.ERROR_CRITICAL
+        SignalState.ERROR_CRITICAL,
     ]
 
     # 2. Logic to advance state over time
@@ -199,13 +200,15 @@ def signal_status_handler(state: dict[str, Any]) -> tuple[SignalState, dict[str,
     msg = SignalState()
     msg.header = Header()
     msg.header.stamp = genpy.Time.from_sec(time.time())
-    
+
     msg.state = current_enum
 
     return (msg, state)
 
 
-def move_status_handler(state: dict[str, Any]) -> tuple[GoalStatusArray, dict[str, Any]]:
+def move_status_handler(
+    state: dict[str, Any],
+) -> tuple[GoalStatusArray, dict[str, Any]]:
     """
     Simulates a navigation goal:
     - Starts ACTIVE (moving)
@@ -216,11 +219,7 @@ def move_status_handler(state: dict[str, Any]) -> tuple[GoalStatusArray, dict[st
 
     # 1. Initialize State
     if not state:
-        state = {
-            "status": GoalStatus.ACTIVE,
-            "counter": 0,
-            "goal_id_count": 1
-        }
+        state = {"status": GoalStatus.ACTIVE, "counter": 0, "goal_id_count": 1}
 
     # 2. State Machine Logic
     # Simulate moving for 20 ticks, then succeed for 10 ticks, then new goal
@@ -233,7 +232,7 @@ def move_status_handler(state: dict[str, Any]) -> tuple[GoalStatusArray, dict[st
         if state["counter"] > TIME_TO_MOVE:
             state["status"] = GoalStatus.SUCCEEDED
             state["counter"] = 0  # Reset counter for the rest phase
-            
+
     elif state["status"] == GoalStatus.SUCCEEDED:
         if state["counter"] > TIME_TO_REST:
             state["status"] = GoalStatus.ACTIVE
@@ -248,7 +247,7 @@ def move_status_handler(state: dict[str, Any]) -> tuple[GoalStatusArray, dict[st
     # Create a single goal status object (move_base usually publishes a list)
     status_item = GoalStatus()
     status_item.status = state["status"]
-    
+
     # Create a unique GoalID
     status_item.goal_id = GoalID()
     status_item.goal_id.stamp = msg.header.stamp
