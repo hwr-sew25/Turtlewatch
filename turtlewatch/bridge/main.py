@@ -4,6 +4,7 @@ import threading
 from typing import Callable
 import genpy
 import rospy
+from bridge.stats import StatsTracker
 from ros_msgs.geometry_msgs.msg import Twist
 import logging
 from bridge.database_client import InfluxDB, StatsDB
