@@ -5,7 +5,6 @@ from typing import Callable
 import genpy
 import rospy
 from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
 import logging
 from bridge.database_client import DatabaseClient
 from bridge.throttled_subscriber import ThrottledSubscriber
@@ -62,7 +61,7 @@ def generic_callback(
         )
         client = DatabaseClient.get_instance()
         client.write(point)
-        logger.info(f"Send: {measurement_name}")
+        logger.info(f"Send: {msg}")
 
     except Exception as e:
         logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
@@ -86,10 +85,10 @@ if __name__ == "__main__":
     if mock and mock.lower() == "true":
         main()
         try:
-            threading.Event().wait()
+            _ = threading.Event().wait()
         except KeyboardInterrupt:
             print("Stopping...")
     else:
-        rospy.init_node("turtlewatch", anonymous=True)
+        node = rospy.init_node("turtlewatch", anonymous=True)
         main()
         rospy.spin()
