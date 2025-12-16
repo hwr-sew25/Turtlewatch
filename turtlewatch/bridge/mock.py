@@ -26,8 +26,7 @@ def mock_sub[MsgType: genpy.Message](
     # that stuff if managed by ROS if we are not mocking
     # TODO this should probably be refactored to use threading.Event() instead of daemon threads
     thread = threading.Thread(
-        target=dispatcher, args=(topic_name, msg_class, callback, interval),
-        daemon=True
+        target=dispatcher, args=(topic_name, msg_class, callback, interval), daemon=True
     )
     thread.start()
 
