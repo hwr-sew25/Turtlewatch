@@ -1,4 +1,5 @@
 import logging
+import math
 import random
 import threading
 import time
@@ -67,12 +68,12 @@ def dispatcher(
 def cmd_vel_handler(state: dict[str, Any]) -> tuple[Twist, dict[str, Any]]:
     """Simulates a robot moving forward and turning slightly."""
     msg = Twist()
-    msg.linear.x = 0.5 + random.uniform(-0.05, 0.05)
+    msg.linear.x = 0.3 + random.uniform(-0.05, 0.05)
     msg.linear.y = 0.0
     msg.linear.z = 0.0
     msg.angular.x = 0.0
     msg.angular.y = 0.0
-    msg.angular.z = 0.1
+    msg.angular.z = 0.2 + random.uniform(-0.05, 0.05)
 
     return (msg, {})
 
@@ -80,10 +81,23 @@ def cmd_vel_handler(state: dict[str, Any]) -> tuple[Twist, dict[str, Any]]:
 def odom_handler(
     state: dict[str, Any],
 ) -> tuple[Odometry, dict[str, Any]]:
-    """Simulates odometry data (position and velocity)."""
+    """Simulates odometry data (position and velocity) within map boundaries.
+
+    Map boundaries:
+    - x: -7 to 7
+    - y: -13 to 13
+    """
+    # Map boundaries with margin
+    X_MIN, X_MAX = -6.0, 6.0
+    Y_MIN, Y_MAX = -12.0, 12.0
 
     if not state:
-        state = {"x_pos": 0.0, "y_pos": 0.0}
+        state = {
+            "x_pos": 0.0,
+            "y_pos": 0.0,
+            "theta": 0.0,  # heading angle in radians
+            "speed": 0.3,
+        }
 
     msg = Odometry()
 
@@ -92,21 +106,37 @@ def odom_handler(
     msg.header.frame_id = "odom"
     msg.child_frame_id = "base_link"
 
-    # 2. Simulate Position (Pose) - moving in a simple line for testing
-    state["x_pos"] += 0.05
+    # Update position based on heading
+    speed = state["speed"]
+    theta = state["theta"]
+
+    # Calculate new position
+    new_x = state["x_pos"] + speed * math.cos(theta) * 0.1
+    new_y = state["y_pos"] + speed * math.sin(theta) * 0.1
+
+    # Check boundaries and turn if needed
+    if new_x >= X_MAX or new_x <= X_MIN or new_y >= Y_MAX or new_y <= Y_MIN:
+        # Turn randomly when hitting boundary
+        state["theta"] += math.pi / 2 + random.uniform(-0.5, 0.5)
+    else:
+        # Small random heading changes for natural movement
+        state["theta"] += random.uniform(-0.1, 0.1)
+        state["x_pos"] = new_x
+        state["y_pos"] = new_y
+
     msg.pose.pose.position.x = state["x_pos"]
     msg.pose.pose.position.y = state["y_pos"]
     msg.pose.pose.position.z = 0.0
 
-    # Valid Quaternion (identity = no rotation)
+    # Convert heading to quaternion (rotation around z-axis)
     msg.pose.pose.orientation.x = 0.0
     msg.pose.pose.orientation.y = 0.0
-    msg.pose.pose.orientation.z = 0.0
-    msg.pose.pose.orientation.w = 1.0
+    msg.pose.pose.orientation.z = math.sin(state["theta"] / 2)
+    msg.pose.pose.orientation.w = math.cos(state["theta"] / 2)
 
-    # 3. Simulate Velocity (Twist)
-    msg.twist.twist.linear.x = 0.5
-    msg.twist.twist.angular.z = 0.0
+    # Velocity
+    msg.twist.twist.linear.x = speed
+    msg.twist.twist.angular.z = 0.2
 
     return (msg, state)
 
