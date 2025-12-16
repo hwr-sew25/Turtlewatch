@@ -3,7 +3,6 @@ import sys
 import threading
 from dotenv import load_dotenv
 from actionlib_msgs.msg import GoalStatusArray
-from dotenv import load_dotenv
 import genpy
 from influxdb_client_3 import Point
 import rospy
@@ -76,7 +75,6 @@ def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] |
 
     except Exception as e:
         logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
-
 
 
 # NOTE Handler example
