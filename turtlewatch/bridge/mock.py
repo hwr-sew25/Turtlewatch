@@ -17,7 +17,7 @@ logger = logging.getLogger("BridgeLogger")
 def mock_sub[MsgType: genpy.Message](
     topic_name: str,
     msg_class: type[genpy.Message],
-    callback: Callable[[MsgType, str, dict[str, str] | None], None],
+    callback: Callable[[MsgType], None],
     interval: Seconds,
 ) -> None:
     # NOTE it would be more efficient if these could be asyncio coroutines
@@ -34,7 +34,7 @@ def mock_sub[MsgType: genpy.Message](
 def dispatcher(
     topic_name: str,
     msg_class: type[genpy.Message],
-    callback: Callable[[genpy.Message, str, dict[str, str] | None], None],
+    callback: Callable[[genpy.Message], None],
     interval: Seconds,
 ) -> None:
     topics = {
@@ -53,7 +53,7 @@ def dispatcher(
         while True:
             # This takes the function out of the topics dict and calls it
             (msg, state) = topics[topic_name](state)
-            callback(msg, topic_name, tags)
+            callback(msg)
 
             iteration += 1
             next_time = start_time + (iteration * interval)
