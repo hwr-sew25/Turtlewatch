@@ -15,6 +15,63 @@ from bridge.types import Seconds
 
 logger = logging.getLogger("BridgeLogger")
 
+# Shared state for synchronized cmd_vel and odom
+_route_state: dict[str, Any] = {}
+_route_start_time: float = 0.0
+
+# Predefined route: list of (duration_seconds, linear_x, angular_z, description)
+# linear_x: forward speed (m/s)
+# angular_z: rotation speed (rad/s), positive = left turn
+PREDEFINED_ROUTE = [
+    # Start: drive straight
+    (5.0, 0.3, 0.0, "straight"),
+    # Stop
+    (2.0, 0.0, 0.0, "stop"),
+    # Turn left 90°
+    (3.0, 0.0, 0.5, "turn_left"),
+    # Drive straight
+    (4.0, 0.3, 0.0, "straight"),
+    # Stop
+    (2.0, 0.0, 0.0, "stop"),
+    # Drive in circle (forward + turning)
+    (8.0, 0.2, 0.3, "circle"),
+    # Stop
+    (2.0, 0.0, 0.0, "stop"),
+    # Turn right 90°
+    (3.0, 0.0, -0.5, "turn_right"),
+    # Drive straight
+    (6.0, 0.3, 0.0, "straight"),
+    # Stop
+    (2.0, 0.0, 0.0, "stop"),
+    # Drive backwards
+    (3.0, -0.2, 0.0, "backward"),
+    # Stop
+    (2.0, 0.0, 0.0, "stop"),
+    # Small circle other direction
+    (6.0, 0.15, -0.4, "circle_right"),
+    # Stop
+    (2.0, 0.0, 0.0, "stop"),
+    # Return towards center
+    (4.0, 0.25, 0.1, "curve_back"),
+    # Final stop
+    (3.0, 0.0, 0.0, "stop"),
+]
+
+
+def _get_route_command(elapsed_time: float) -> tuple[float, float, str]:
+    """Get the current velocity command based on elapsed time."""
+    total_duration = sum(cmd[0] for cmd in PREDEFINED_ROUTE)
+    # Loop the route
+    elapsed_time = elapsed_time % total_duration
+
+    current_time = 0.0
+    for duration, linear_x, angular_z, desc in PREDEFINED_ROUTE:
+        if current_time + duration > elapsed_time:
+            return (linear_x, angular_z, desc)
+        current_time += duration
+
+    return (0.0, 0.0, "stop")
+
 
 def mock_sub[MsgType: genpy.Message](
     topic_name: str,
@@ -66,91 +123,83 @@ def dispatcher(
 
 
 def cmd_vel_handler(state: dict[str, Any]) -> tuple[Twist, dict[str, Any]]:
-    """Simulates a robot moving forward and turning slightly."""
+    """Returns velocity commands from the predefined route."""
+    global _route_start_time
+
+    if not state:
+        state = {"start_time": time.time()}
+        _route_start_time = state["start_time"]
+
+    elapsed = time.time() - state["start_time"]
+    linear_x, angular_z, _ = _get_route_command(elapsed)
+
     msg = Twist()
-    msg.linear.x = 0.3 + random.uniform(-0.05, 0.05)
+    msg.linear.x = linear_x
     msg.linear.y = 0.0
     msg.linear.z = 0.0
     msg.angular.x = 0.0
     msg.angular.y = 0.0
-    msg.angular.z = 0.2 + random.uniform(-0.05, 0.05)
+    msg.angular.z = angular_z
 
-    return (msg, {})
+    return (msg, state)
 
 
 def odom_handler(
     state: dict[str, Any],
 ) -> tuple[Odometry, dict[str, Any]]:
-    """Simulates odometry data (position and velocity) within map boundaries.
+    """Calculates position based on the predefined route commands.
 
-    Map boundaries:
-    - x: -7 to 7
-    - y: -13 to 13
-
-    Robot drives in a smooth rectangular pattern.
+    Integrates velocity commands over time to compute position.
     """
-    # Map boundaries with margin
-    X_MIN, X_MAX = -5.0, 5.0
-    Y_MIN, Y_MAX = -10.0, 10.0
+    global _route_start_time
 
     if not state:
         state = {
             "x_pos": 0.0,
             "y_pos": 0.0,
-            "theta": 0.0,  # heading angle in radians
-            "target_theta": 0.0,  # target heading for smooth turning
-            "speed": 0.1,  # slower speed for smoother movement
+            "theta": 0.0,
+            "last_time": time.time(),
+            "start_time": time.time(),
         }
+        # Sync with cmd_vel start time if available
+        if _route_start_time > 0:
+            state["start_time"] = _route_start_time
 
     msg = Odometry()
-
     msg.header = Header()
     msg.header.stamp = genpy.Time.from_sec(time.time())
     msg.header.frame_id = "odom"
     msg.child_frame_id = "base_link"
 
-    speed = state["speed"]
-    theta = state["theta"]
+    # Calculate time delta
+    current_time = time.time()
+    dt = current_time - state["last_time"]
+    state["last_time"] = current_time
 
-    # Smoothly interpolate towards target heading
-    theta_diff = state["target_theta"] - theta
-    if abs(theta_diff) > 0.01:
-        state["theta"] += theta_diff * 0.1  # smooth turning
+    # Get current velocity command
+    elapsed = current_time - state["start_time"]
+    linear_x, angular_z, _ = _get_route_command(elapsed)
 
-    # Calculate new position
-    new_x = state["x_pos"] + speed * math.cos(state["theta"])
-    new_y = state["y_pos"] + speed * math.sin(state["theta"])
+    # Update heading (integrate angular velocity)
+    state["theta"] += angular_z * dt
 
-    # Check boundaries and set new target heading
-    if new_x >= X_MAX:
-        state["target_theta"] = math.pi  # turn left (180°)
-        new_x = X_MAX
-    elif new_x <= X_MIN:
-        state["target_theta"] = 0.0  # turn right (0°)
-        new_x = X_MIN
-    elif new_y >= Y_MAX:
-        state["target_theta"] = -math.pi / 2  # turn down (-90°)
-        new_y = Y_MAX
-    elif new_y <= Y_MIN:
-        state["target_theta"] = math.pi / 2  # turn up (90°)
-        new_y = Y_MIN
-
-    state["x_pos"] = new_x
-    state["y_pos"] = new_y
+    # Update position (integrate linear velocity)
+    state["x_pos"] += linear_x * math.cos(state["theta"]) * dt
+    state["y_pos"] += linear_x * math.sin(state["theta"]) * dt
 
     msg.pose.pose.position.x = state["x_pos"]
     msg.pose.pose.position.y = state["y_pos"]
     msg.pose.pose.position.z = 0.0
 
-    # Convert heading to quaternion (rotation around z-axis)
+    # Convert heading to quaternion
     msg.pose.pose.orientation.x = 0.0
     msg.pose.pose.orientation.y = 0.0
     msg.pose.pose.orientation.z = math.sin(state["theta"] / 2)
     msg.pose.pose.orientation.w = math.cos(state["theta"] / 2)
 
-    # Velocity
-    msg.twist.twist.linear.x = speed
-    msg.twist.twist.angular.z = 0.0
+    # Current velocity
+    msg.twist.twist.linear.x = linear_x
+    msg.twist.twist.angular.z = angular_z
 
     return (msg, state)
 
