@@ -9,7 +9,7 @@ from ros_msgs.geometry_msgs.msg import Twist
 from ros_msgs.nav_msgs.msg import Odometry
 from ros_msgs.std_msgs.msg import Header
 from ros_msgs.sensor_msgs.msg import BatteryState
-from ros_msgs.actionlib_msgs.msg import GoalStatusArray, GoalStatus, GoalID
+from ros_msgs.actionlib_msgs.msg import GoalStatus, GoalID
 from ros_msgs.custom_msgs.msg import SignalState
 
 from bridge.types import Seconds
@@ -20,7 +20,7 @@ logger = logging.getLogger("BridgeLogger")
 def mock_sub[MsgType: genpy.Message](
     topic_name: str,
     msg_class: type[genpy.Message],
-    callback: Callable[[MsgType, str, dict[str, str] | None], None],
+    callback: Callable[[MsgType], None],
     interval: Seconds,
 ) -> None:
     # NOTE it would be more efficient if these could be asyncio coroutines
@@ -36,7 +36,7 @@ def mock_sub[MsgType: genpy.Message](
 def dispatcher(
     topic_name: str,
     msg_class: type[genpy.Message],
-    callback: Callable[[genpy.Message, str, dict[str, str] | None], None],
+    callback: Callable[[genpy.Message], None],
     interval: Seconds,
 ) -> None:
     topics = {
@@ -48,7 +48,6 @@ def dispatcher(
     }
 
     handler = topics.get(topic_name)
-    tags = {}
     if not handler:
         logger.error(f"Mock handler for {topic_name} not implemented yet")
     else:
@@ -58,7 +57,7 @@ def dispatcher(
         while True:
             # This takes the function out of the topics dict and calls it
             (msg, state) = topics[topic_name](state)
-            callback(msg, topic_name, tags)
+            callback(msg)
 
             iteration += 1
             next_time = start_time + (iteration * interval)
@@ -208,13 +207,15 @@ def signal_status_handler(state: dict[str, Any]) -> tuple[SignalState, dict[str,
 
 def move_status_handler(
     state: dict[str, Any],
-) -> tuple[GoalStatusArray, dict[str, Any]]:
+) -> tuple[GoalStatus, dict[str, Any]]:
     """
     Simulates a navigation goal:
     - Starts ACTIVE (moving)
     - Stays ACTIVE for a while
     - Switches to SUCCEEDED (reached goal)
     - Waits, then resets to ACTIVE (new goal)
+
+    Returns: A single GoalStatus object (not an Array)
     """
 
     # 1. Initialize State
@@ -239,25 +240,23 @@ def move_status_handler(
             state["counter"] = 0
             state["goal_id_count"] += 1  # Generate a new Goal ID
 
-    # 3. Build Message
-    msg = GoalStatusArray()
-    msg.header = Header()
-    msg.header.stamp = genpy.Time.from_sec(time.time())
+    # 3. Build Message (Single GoalStatus)
+    msg = GoalStatus()
 
-    # Create a single goal status object (move_base usually publishes a list)
-    status_item = GoalStatus()
-    status_item.status = state["status"]
+    # Generate timestamp for the GoalID (GoalStatus has no top-level header)
+    current_time = genpy.Time.from_sec(time.time())
+
+    msg.status = state["status"]
 
     # Create a unique GoalID
-    status_item.goal_id = GoalID()
-    status_item.goal_id.stamp = msg.header.stamp
-    status_item.goal_id.id = f"mock_goal_{state['goal_id_count']}"
+    msg.goal_id = GoalID()
+    msg.goal_id.stamp = current_time
+    msg.goal_id.id = f"mock_goal_{state['goal_id_count']}"
 
     if state["status"] == GoalStatus.ACTIVE:
-        status_item.text = "Moving to target..."
+        msg.text = "Moving to target..."
     elif state["status"] == GoalStatus.SUCCEEDED:
-        status_item.text = "Goal reached."
+        msg.text = "Goal reached."
 
-    msg.status_list = [status_item]
-
+    # Return the single message object directly
     return (msg, state)

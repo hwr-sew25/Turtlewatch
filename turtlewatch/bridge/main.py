@@ -6,10 +6,12 @@ from dotenv import load_dotenv
 import genpy
 from influxdb_client_3 import Point
 import rospy
+from bridge.stats import StatsTracker
 from bridge.alert import AlertSystem
+from ros_msgs.actionlib_msgs.msg._GoalStatus import GoalStatus
 from ros_msgs.geometry_msgs.msg import Twist
 import logging
-from bridge.database_client import DatabaseClient
+from bridge.database_client import InfluxDB, StatsDB
 from bridge.throttled_subscriber import ThrottledSubscriber
 from bridge.utils import ros_msg_to_influx_point
 from bridge.types import Seconds
@@ -35,22 +37,12 @@ def setup_logger():
 
 
 def main():
-    logger.info("Connecting to InfluxDB...")
-
-    with open("../influxdb_token.txt", "r") as file:
-        db_token = file.read().strip()
-
-    DatabaseClient.intialize(
-        host="http://localhost:8181", database="dev", token=db_token
-    )
-    logger.info("Successfully connected to InfluxDB (database: dev)")
-
     topics_config = {
         # ros_topic_name: (MessageType, Callback function)
         "/cmd_vel": (Twist, generic_callback),
         "/odom": (Odometry, generic_callback),
         "/battery_state": (BatteryState, generic_callback),
-        "/move_base/status": (GoalStatusArray, generic_callback),
+        "/move_base/status": (GoalStatusArray, move_status_callback),
         "/robot/signals/status_update": (SignalState, signal_state_callback),
     }
 
@@ -69,7 +61,7 @@ def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] |
         point = ros_msg_to_influx_point(
             msg=msg, measurement_name=measurement_name, tags=tags
         )
-        client = DatabaseClient.get_instance()
+        client = InfluxDB.get_instance()
         client.write(point)
         logger.info(f"Send: {measurement_name}")
 
@@ -77,16 +69,57 @@ def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] |
         logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
 
 
-# NOTE Handler example
-# def cmd_vel_callback(msg: Twist, measurement_name: str, tags: dict[str, str] | None):
-#     try:
-#         point = ros_msg_to_influx_point(msg=msg, measurement_name="velocity", tags={})
-#         client = DatabaseClient.get_instance()
-#         client.write(point)
-#         logger.info("Send cmd_vel")
+def move_status_callback(msg: GoalStatus, topic_name: str, tags: dict[str, str] | None):
+    """
+    Custom handler for Move/GoalStatus.
+    Maps the uint8 'status' to a string tag/field for InfluxDB.
+    """
+    measurement_name = topic_name.removeprefix("/").replace("/", "_")
+    GOAL_STATUS_MAP = {
+        GoalStatus.PENDING: "PENDING",
+        GoalStatus.ACTIVE: "ACTIVE",
+        GoalStatus.PREEMPTED: "PREEMPTED",
+        GoalStatus.SUCCEEDED: "SUCCEEDED",
+        GoalStatus.ABORTED: "ABORTED",
+        GoalStatus.REJECTED: "REJECTED",
+        GoalStatus.PREEMPTING: "PREEMPTING",
+        GoalStatus.RECALLING: "RECALLING",
+        GoalStatus.RECALLED: "RECALLED",
+        GoalStatus.LOST: "LOST",
+    }
 
-#     except Exception as e:
-#         logger.error(f"[CMD_VEL] ✗ Failed to write: {e}", exc_info=True)
+    session = StatsTracker.get_session()
+    session.completion_status = msg.status
+
+    if msg.status in [
+        GoalStatus.ABORTED,
+        GoalStatus.SUCCEEDED,
+        GoalStatus.RECALLED,
+        GoalStatus.LOST,
+    ]:
+        StatsTracker.stop_current_session()
+
+    try:
+        # Get the string representation, default to UNKNOWN if status ID is invalid
+        state_str = GOAL_STATUS_MAP.get(msg.status, "UNKNOWN")
+
+        point = Point(measurement_name)
+
+        # Apply existing tags
+        if tags:
+            for k, v in tags.items():
+                point.tag(k, v)
+
+        # Add specific status data
+        point.tag("state_label", state_str)
+        point.field("state_code", int(msg.status))
+
+        client = InfluxDB.get_instance()
+        client.write(point)
+        logger.info(f"Send: {measurement_name} -> {state_str} ({msg.status})")
+
+    except Exception as e:
+        logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
 
 
 def signal_state_callback(
@@ -96,6 +129,7 @@ def signal_state_callback(
     Custom handler for SignalState.
     Maps the uint8 'state' to a string tag/field for InfluxDB.
     """
+    measurement_name = topic_name.removeprefix("/").replace("/", "_")
     SIGNAL_STATE_MAP = {
         SignalState.IDLE: "IDLE",
         SignalState.GREETING: "GREETING",
@@ -125,7 +159,7 @@ def signal_state_callback(
 
         point.field("state_code", int(msg.state))
 
-        client = DatabaseClient.get_instance()
+        client = InfluxDB.get_instance()
         client.write(point)
         logger.info(f"Send: {measurement_name} -> {state_str} ({msg.state})")
 
@@ -137,6 +171,24 @@ if __name__ == "__main__":
     setup_logger()
     _ = load_dotenv()
     mock = os.getenv("MOCK")
+
+    logger.info("Connecting to InfluxDB...")
+
+    with open("../influxdb_token.txt", "r") as file:
+        db_token = file.read().strip()
+
+    InfluxDB.intialize(host="http://localhost:8181", database="dev", token=db_token)
+    logger.info("Successfully connected to InfluxDB")
+
+    db_path = os.getenv("STATS_DB_PATH")
+    if db_path is None:
+        db_path = "../stats.sqlite"
+    StatsDB.initialize(db_path)
+    logger.info("Successfully connected to StatsDB")
+
+    StatsTracker.initialize_db_schema()
+    StatsTracker.start_new_session()
+
     if mock and mock.lower() == "true":
         main()
         try:
