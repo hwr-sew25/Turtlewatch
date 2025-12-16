@@ -1,7 +1,6 @@
 import os
 import sys
 import threading
-from typing import Callable
 from actionlib_msgs.msg import GoalStatusArray
 import genpy
 from influxdb_client_3 import Point
