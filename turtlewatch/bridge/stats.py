@@ -5,7 +5,7 @@ import uuid
 
 from ros_msgs.actionlib_msgs.msg._GoalStatus import GoalStatus
 from .database_client import InfluxDB, StatsDB
-import pyarrow as pa
+import pandas as pd
 
 logger = logging.getLogger("BridgeLogger")
 
@@ -80,48 +80,70 @@ class StatsTracker:
 
     @classmethod
     def _calculate_navigation_metrics(cls):
+        import numpy as np
+
         s = cls._current_session
         if s.start_time is None or s.end_time is None:
-            logger.warning(
-                "Cannot calculate metrics without a session start and end time"
-            )
+            logger.warning("Cannot calculate metrics without a session start and end time")
             return
 
         client = InfluxDB.get_instance()
 
-        queries = {
-            "total_distance_meters": f"""
-                SELECT INTEGRAL(v, 1s) AS total_distance_meters
-                FROM (
-                    SELECT MEAN("linear_x") AS v
+        try:
+            # 1. Scalar Metrics (Avg, Max)
+            # We can fetch these in one go or keep them separate. Keeping separate for clarity.
+            scalar_queries = {
+                "avg_linear_velocity": f"""
+                    SELECT MEAN("linear_x") AS avg_linear_velocity
                     FROM "cmd_vel"
                     WHERE time >= {s.start_time} AND time <= {s.end_time}
-                    GROUP BY time(1s)
-                )
-            """,
-            "avg_linear_velocity": f"""
-                SELECT MEAN("linear_x") AS avg_linear_velocity
+                """,
+                "max_linear_velocity": f"""
+                    SELECT MAX("linear_x") AS max_linear_velocity
+                    FROM "cmd_vel"
+                    WHERE time >= {s.start_time} AND time <= {s.end_time}
+                """,
+            }
+
+            for name, query in scalar_queries.items():
+                # 'dataframe' mode returns a Pandas DataFrame, which wraps NumPy
+                df: pd.DataFrame = client.query(query=query, language="influxql", mode="pandas")
+                
+                if not df.empty:
+                    # .iloc[0] gets the first row's value
+                    val = df[name].iloc[0]
+                    setattr(s.navigation_metrics, name, float(val))
+
+            dist_query = f"""
+                SELECT "linear_x"
                 FROM "cmd_vel"
                 WHERE time >= {s.start_time} AND time <= {s.end_time}
-            """,
-            "max_linear_velocity": f"""
-                SELECT MAX("linear_x") AS max_linear_velocity
-                FROM "cmd_vel"
-                WHERE time >= {s.start_time} AND time <= {s.end_time}
-            """,
-        }
+            """
+            
+            df_dist: pd.DataFrame = client.query(query=dist_query, language="influxql", mode="pandas")
 
-        try:
-            for name, query in queries.items():
-                table: pa.Table = client.query(
-                    query=query,
-                    language="influxql",
-                    mode="pyarrow",
-                )
+            if not df_dist.empty and len(df_dist) > 1:
+                # 1. Get velocity (y-axis)
+                velocity = df_dist['linear_x']
 
-                if table.num_rows > 0:
-                    value = table.column(name)[0].as_py()
-                    setattr(s.navigation_metrics, name, float(value))
+                # 2. Get time (x-axis)
+                # Ensure 'time' is datetime, even if Influx returned strings
+                timestamps = pd.to_datetime(df_dist['time'])
+                
+                # Convert to nanoseconds (int64)
+                t_nanos = timestamps.astype(np.int64)
+                
+                # Normalize to seconds relative to the start (t - t0)
+                # This gives us a clean time array: [0.0, 0.25, 0.50, 0.75 ...]
+                t_seconds = (t_nanos - t_nanos.iloc[0]) / 1e9
+
+                # 3. Calculate Integral
+                # np.trapz(y, x) calculates the area under the curve
+                distance = np.trapz(y=velocity, x=t_seconds)
+                
+                s.navigation_metrics.total_distance_meters = float(distance)
+            else:
+                s.navigation_metrics.total_distance_meters = 0.0
         except Exception as e:
             logger.error(f"Error querying InfluxDB navigation metrics: {e}")
 
