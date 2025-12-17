@@ -6,6 +6,8 @@ curl -i -X POST "$INFLUXDB_URL/api/v3/configure/database" \
   -H "Authorization: Bearer $INFLUXDB_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"db": "'"$INFLUXDB_DB_NAME"'"}'
+
+
 # --- Create InfluxDB Explorer Configuration File ---
 echo "Creating InfluxDB Explorer config file..."
 
