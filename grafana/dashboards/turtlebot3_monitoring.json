@@ -7,6 +7,14 @@
       "type": "datasource",
       "pluginId": "influxdb",
       "pluginName": "InfluxDB"
+    },
+    {
+      "name": "DS_STATS-SQLITE-DATASOURCE",
+      "label": "stats-sqlite-datasource",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "frser-sqlite-datasource",
+      "pluginName": "SQLite"
     }
   ],
   "__elements": {},
@@ -22,6 +30,12 @@
       "id": "bargauge",
       "name": "Bar gauge",
       "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "frser-sqlite-datasource",
+      "name": "SQLite",
+      "version": "3.8.2"
     },
     {
       "type": "panel",
@@ -700,6 +714,406 @@
         "x": 0,
         "y": 16
       },
+      "id": 15,
+      "panels": [],
+      "title": "Session Stats",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 17
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+          },
+          "queryText": "SELECT COUNT(*) AS total FROM sessions",
+          "queryType": "table",
+          "rawQueryText": "SELECT COUNT(*) AS total FROM sessions",
+          "refId": "A",
+          "timeColumns": ["time", "ts"]
+        }
+      ],
+      "title": "Total Sessions",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "lengthm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 17
+      },
+      "id": 17,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+          },
+          "queryText": "SELECT COALESCE(SUM(total_distance_meters), 0) AS total FROM sessions",
+          "queryType": "table",
+          "rawQueryText": "SELECT COALESCE(SUM(total_distance_meters), 0) AS total FROM sessions",
+          "refId": "A",
+          "timeColumns": ["time", "ts"]
+        }
+      ],
+      "title": "Total Distance",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 17
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+          },
+          "queryText": "SELECT COALESCE(AVG((end_time - start_time) / 1e9), 0) AS avg_duration FROM sessions WHERE end_time IS NOT NULL",
+          "queryType": "table",
+          "rawQueryText": "SELECT COALESCE(AVG((end_time - start_time) / 1e9), 0) AS avg_duration FROM sessions WHERE end_time IS NOT NULL",
+          "refId": "A",
+          "timeColumns": ["time", "ts"]
+        }
+      ],
+      "title": "Avg Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "SUCCEEDED": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "SUCCEEDED"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "ABORTED": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "ABORTED"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "ACTIVE": {
+                  "color": "blue",
+                  "index": 2,
+                  "text": "ACTIVE"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 17
+      },
+      "id": 19,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+          },
+          "queryText": "SELECT CASE completion_status WHEN 0 THEN 'PENDING' WHEN 1 THEN 'ACTIVE' WHEN 2 THEN 'PREEMPTED' WHEN 3 THEN 'SUCCEEDED' WHEN 4 THEN 'ABORTED' WHEN 5 THEN 'REJECTED' ELSE 'UNKNOWN' END AS status FROM sessions ORDER BY start_time DESC LIMIT 1",
+          "queryType": "table",
+          "rawQueryText": "SELECT CASE completion_status WHEN 0 THEN 'PENDING' WHEN 1 THEN 'ACTIVE' WHEN 2 THEN 'PREEMPTED' WHEN 3 THEN 'SUCCEEDED' WHEN 4 THEN 'ABORTED' WHEN 5 THEN 'REJECTED' ELSE 'UNKNOWN' END AS status FROM sessions ORDER BY start_time DESC LIMIT 1",
+          "refId": "A",
+          "timeColumns": ["time", "ts"]
+        }
+      ],
+      "title": "Last Session Status",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "SUCCEEDED": {
+                        "color": "green",
+                        "index": 0
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "ABORTED": {
+                        "color": "red",
+                        "index": 1
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "ACTIVE": {
+                        "color": "blue",
+                        "index": 2
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 14,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Start"
+          }
+        ]
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+          },
+          "queryText": "SELECT substr(id, 1, 8) AS \"ID\", datetime(start_time / 1e9, 'unixepoch', 'localtime') AS \"Start\", round((end_time - start_time) / 1e9, 1) AS \"Duration (s)\", number_of_messages AS \"Msgs\", CASE completion_status WHEN 0 THEN 'PENDING' WHEN 1 THEN 'ACTIVE' WHEN 2 THEN 'PREEMPTED' WHEN 3 THEN 'SUCCEEDED' WHEN 4 THEN 'ABORTED' WHEN 5 THEN 'REJECTED' ELSE 'UNKNOWN' END AS \"Status\", round(total_distance_meters, 2) AS \"Dist (m)\", round(avg_linear_velocity, 2) AS \"Avg Vel\" FROM sessions ORDER BY start_time DESC LIMIT 10",
+          "queryType": "table",
+          "rawQueryText": "SELECT substr(id, 1, 8) AS \"ID\", datetime(start_time / 1e9, 'unixepoch', 'localtime') AS \"Start\", round((end_time - start_time) / 1e9, 1) AS \"Duration (s)\", number_of_messages AS \"Msgs\", CASE completion_status WHEN 0 THEN 'PENDING' WHEN 1 THEN 'ACTIVE' WHEN 2 THEN 'PREEMPTED' WHEN 3 THEN 'SUCCEEDED' WHEN 4 THEN 'ABORTED' WHEN 5 THEN 'REJECTED' ELSE 'UNKNOWN' END AS \"Status\", round(total_distance_meters, 2) AS \"Dist (m)\", round(avg_linear_velocity, 2) AS \"Avg Vel\" FROM sessions ORDER BY start_time DESC LIMIT 10",
+          "refId": "A",
+          "timeColumns": ["time", "ts"]
+        }
+      ],
+      "title": "Session History",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
       "id": 12,
       "panels": [],
       "title": "raw datatables",
@@ -780,7 +1194,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 17
+        "y": 28
       },
       "id": 5,
       "options": {
@@ -865,7 +1279,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 17
+        "y": 28
       },
       "id": 13,
       "options": {
@@ -945,7 +1359,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 17
+        "y": 28
       },
       "id": 2,
       "options": {
@@ -1025,7 +1439,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 17
+        "y": 28
       },
       "id": 1,
       "options": {
@@ -1095,7 +1509,7 @@
   "timezone": "browser",
   "title": "TurtleBot3 Monitoring v6",
   "uid": "turtlebot3-monitoring-v6",
-  "version": 3,
+  "version": 5,
   "weekStart": "",
   "id": null
 }

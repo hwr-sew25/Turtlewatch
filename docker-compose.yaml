@@ -44,11 +44,12 @@ services:
     user: "0"
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./stats.sqlite:/var/lib/grafana/stats.sqlite:ro
     depends_on:
       - influxdb3-core
     environment:
       - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=1s
-      - GF_INSTALL_PLUGINS=ae3e-plotly-panel
+      - GF_INSTALL_PLUGINS=ae3e-plotly-panel,frser-sqlite-datasource
     restart: unless-stopped
 
 volumes:
