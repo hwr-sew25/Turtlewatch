@@ -2,7 +2,7 @@ import os
 import sys
 import threading
 from actionlib_msgs.msg import GoalStatusArray
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 import genpy
 from influxdb_client_3 import Point
 import rospy
@@ -169,7 +169,7 @@ def signal_state_callback(
 
 if __name__ == "__main__":
     setup_logger()
-    _ = load_dotenv()
+    _ = load_dotenv(find_dotenv())
     mock = os.getenv("MOCK")
 
     logger.info("Connecting to InfluxDB...")

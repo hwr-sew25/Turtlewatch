@@ -2,8 +2,11 @@ services:
   influxdb3-core:
     container_name: influxdb3-core
     image: influxdb:3-core
+    user: "0"
     ports:
       - 8181:8181
+    environment:
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
     command:
       - influxdb3
       - serve
@@ -11,15 +14,13 @@ services:
       - --object-store=file
       - --data-dir=/var/lib/influxdb3
     volumes:
-      - influxdb_data:/var/lib/influxdb3
+      - ./influxdb3-core:/var/lib/influxdb3
     healthcheck:
-      test: ["CMD-SHELL", "curl -f -H 'Authorization: Bearer $(cat /run/secrets/influxdb_token)' http://localhost:8181/health || exit 1"]
+      test: ["CMD-SHELL", "curl -f -H 'Authorization: Bearer $$INFLUXDB_TOKEN' http://localhost:8181/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
     restart: unless-stopped
-    secrets:
-        - influxdb_token
 
   explorer:
     image: influxdata/influxdb3-ui:1.4.0
@@ -32,10 +33,8 @@ services:
       - ./influxdb3_explorer/db:/db:rw
       - ./influxdb3_explorer/config:/app-root/config:ro
     environment:
-      SESSION_SECRET_KEY_FILE: /run/secrets/db_session_key
+      SESSION_SECRET_KEY: ${DB_SESSION_KEY}
     restart: unless-stopped
-    secrets:
-        - db_session_key
 
   grafana:
     image: grafana/grafana
@@ -43,20 +42,17 @@ services:
       - "3000:3000"
     user: "0"
     volumes:
-      - grafana_data:/var/lib/grafana
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - influxdb3-core
     environment:
       - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=1s
-      - GF_INSTALL_PLUGINS=ae3e-plotly-panel
+      - GF_PLUGINS_PREINSTALL=ae3e-plotly-panel
+      - INFLUXDB_DOCKER_URL=http://influxdb3-core:8181
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
     restart: unless-stopped
 
 volumes:
   influxdb_data:
   grafana_data:
-
-secrets:
-    db_session_key:
-        file: ./db_session_key.txt
-    influxdb_token:
-        file: ./influxdb_token.txt
