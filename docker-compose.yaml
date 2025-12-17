@@ -51,6 +51,7 @@ services:
       - GF_PLUGINS_PREINSTALL=ae3e-plotly-panel
       - INFLUXDB_DOCKER_URL=http://influxdb3-core:8181
       - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_DB_NAME=${INFLUXDB_DB_NAME}
     restart: unless-stopped
 
 volumes:

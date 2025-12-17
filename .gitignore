@@ -10,3 +10,4 @@ db_session_key.txt
 **/.ruff_cache
 .claude/
 **/.env
+influxdb3_explorer/config/config.json
