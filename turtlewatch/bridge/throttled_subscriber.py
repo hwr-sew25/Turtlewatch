@@ -1,10 +1,11 @@
 import os
 import time
-from typing import Callable 
+from typing import Callable
 import genpy
 import rospy
 
 from bridge.mock import mock_sub
+from bridge.stats import StatsTracker
 from bridge.types import Seconds
 
 
@@ -26,8 +27,7 @@ class ThrottledSubscriber[MsgType: genpy.Message]:
 
         mock = os.getenv("MOCK")
         if mock and mock.lower() == "true":
-            # NOTE we pass the real callback so we don't throttle twice
-            mock_sub(topic_name, msg_class, callback, interval)
+            mock_sub(topic_name, msg_class, self._internal_callback, interval)
         else:
             _ = rospy.Subscriber(topic_name, msg_class, self._internal_callback)
 
@@ -40,5 +40,12 @@ class ThrottledSubscriber[MsgType: genpy.Message]:
         return False
 
     def _internal_callback(self, msg: MsgType) -> None:
-        if self.should_run():
+        session = StatsTracker.get_session()
+        session.number_of_messages += 1
+        # NOTE don't throttle twice
+        mock = os.getenv("MOCK")
+        if mock and mock.lower() == "true":
             self.callback(msg, self.topic_name, self.tags)
+        else:
+            if self.should_run():
+                self.callback(msg, self.topic_name, self.tags)

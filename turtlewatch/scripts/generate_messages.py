@@ -15,6 +15,7 @@ LIBS_DIR = BASE_DIR / ".." / "libs"
 COMMON_MSGS_DIR = LIBS_DIR / "common_msgs"
 ROS_COMM_MSGS_DIR = LIBS_DIR / "ros_comm_msgs"
 ROS_COMM_CLIENTS_DIR = LIBS_DIR / "ros_comm" / "clients"
+CUSTOM_MSG_DIR = LIBS_DIR / "custom_msgs"
 ROS_MESSAGES_DIR = LIBS_DIR / ".." / "ros_msgs"
 GENPY_SCRIPT_MSG = LIBS_DIR / "genpy" / "scripts" / "genmsg_py.py"
 GENPY_SCRIPT_SRV = LIBS_DIR / "genpy" / "scripts" / "gensrv_py.py"
@@ -33,6 +34,7 @@ PACKAGE_ORDER = [
     "trajectory_msgs",
     "visualization_msgs",
     "rosgraph_msgs",
+    "custom_msgs",
 ]
 
 
@@ -58,6 +60,7 @@ def fix_imports_in_directory(directory, package_name):
             "trajectory_msgs",
             "visualization_msgs",
             "rosgraph_msgs",
+            "custom_msgs",
             package_name,
         }
 

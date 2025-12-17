@@ -6,3 +6,4 @@ db_session_key.txt
 **/__pycache__
 **/.ruff_cache
 .claude/
+**/.env
