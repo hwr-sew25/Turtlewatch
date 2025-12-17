@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: 'Turtlewatch'
+    orgId: 1
+    folder: '' 
+    type: file
+    disableDeletion: false
+    editable: true
+    updateIntervalSeconds: 1
+    allowUiUpdates: false
+    options:
+      path: /etc/grafana/provisioning/dashboards
