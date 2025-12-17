@@ -9,7 +9,7 @@ To get started, you need to clone the repository with its submodules.
 **For a new copy:**
 
 ```bash
-git clone --recurse-submodules -j8 git@github.com/hwr-sew25/Turtlewatch.git
+git clone --recurse-submodules -j8 git@github.com:hwr-sew25/Turtlewatch.git
 ```
 
 **For an existing copy:**
