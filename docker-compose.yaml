@@ -42,7 +42,7 @@ services:
       - "3000:3000"
     user: "0"
     volumes:
-      - ./grafana/data:/var/lib/grafana
+      - ./grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - influxdb3-core
