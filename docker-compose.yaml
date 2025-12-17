@@ -33,7 +33,7 @@ services:
       - ./influxdb3_explorer/db:/db:rw
       - ./influxdb3_explorer/config:/app-root/config:ro
     environment:
-      SESSION_SECRET_KEY: ${DB_SESSION_KEY}
+      - SESSION_SECRET_KEY=${DB_SESSION_KEY}
     restart: unless-stopped
 
   grafana:
