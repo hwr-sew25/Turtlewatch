@@ -1,7 +1,7 @@
 {
   "__inputs": [
     {
-      "name": "DS_INFLUXDB",
+      "name": "influxdb_turtlewatch",
       "label": "influxdb",
       "description": "",
       "type": "datasource",
@@ -38,7 +38,7 @@
     {
       "type": "datasource",
       "id": "influxdb",
-      "name": "InfluxDB",
+      "name": "influxdb_turtlewatch",
       "version": "1.0.0"
     },
     {
@@ -78,7 +78,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "fieldConfig": {
         "defaults": {
@@ -142,7 +142,7 @@
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",
@@ -173,7 +173,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "fieldConfig": {
         "defaults": {
@@ -259,7 +259,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",
@@ -274,7 +274,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "gridPos": {
         "h": 16,
@@ -296,7 +296,7 @@
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",
@@ -327,7 +327,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "fieldConfig": {
         "defaults": {
@@ -413,7 +413,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",
@@ -428,7 +428,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "fieldConfig": {
         "defaults": {
@@ -500,7 +500,7 @@
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",
@@ -515,7 +515,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "fieldConfig": {
         "defaults": {
@@ -579,7 +579,7 @@
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",
@@ -594,7 +594,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "fieldConfig": {
         "defaults": {
@@ -680,7 +680,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",
@@ -708,7 +708,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "fieldConfig": {
         "defaults": {
@@ -799,7 +799,7 @@
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",
@@ -830,7 +830,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "fieldConfig": {
         "defaults": {
@@ -879,7 +879,7 @@
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",
@@ -910,7 +910,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "fieldConfig": {
         "defaults": {
@@ -959,7 +959,7 @@
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",
@@ -990,7 +990,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "${DS_INFLUXDB}"
+        "uid": "influxdb_turtlewatch"
       },
       "fieldConfig": {
         "defaults": {
@@ -1039,7 +1039,7 @@
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "${DS_INFLUXDB}"
+            "uid": "influxdb_turtlewatch"
           },
           "editorMode": "code",
           "format": "table",

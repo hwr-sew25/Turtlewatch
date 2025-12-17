@@ -84,7 +84,9 @@ class StatsTracker:
 
         s = cls._current_session
         if s.start_time is None or s.end_time is None:
-            logger.warning("Cannot calculate metrics without a session start and end time")
+            logger.warning(
+                "Cannot calculate metrics without a session start and end time"
+            )
             return
 
         client = InfluxDB.get_instance()
@@ -107,8 +109,10 @@ class StatsTracker:
 
             for name, query in scalar_queries.items():
                 # 'dataframe' mode returns a Pandas DataFrame, which wraps NumPy
-                df: pd.DataFrame = client.query(query=query, language="influxql", mode="pandas")
-                
+                df: pd.DataFrame = client.query(
+                    query=query, language="influxql", mode="pandas"
+                )
+
                 if not df.empty:
                     # .iloc[0] gets the first row's value
                     val = df[name].iloc[0]
@@ -119,20 +123,22 @@ class StatsTracker:
                 FROM "cmd_vel"
                 WHERE time >= {s.start_time} AND time <= {s.end_time}
             """
-            
-            df_dist: pd.DataFrame = client.query(query=dist_query, language="influxql", mode="pandas")
+
+            df_dist: pd.DataFrame = client.query(
+                query=dist_query, language="influxql", mode="pandas"
+            )
 
             if not df_dist.empty and len(df_dist) > 1:
                 # 1. Get velocity (y-axis)
-                velocity = df_dist['linear_x']
+                velocity = df_dist["linear_x"]
 
                 # 2. Get time (x-axis)
                 # Ensure 'time' is datetime, even if Influx returned strings
-                timestamps = pd.to_datetime(df_dist['time'])
-                
+                timestamps = pd.to_datetime(df_dist["time"])
+
                 # Convert to nanoseconds (int64)
                 t_nanos = timestamps.astype(np.int64)
-                
+
                 # Normalize to seconds relative to the start (t - t0)
                 # This gives us a clean time array: [0.0, 0.25, 0.50, 0.75 ...]
                 t_seconds = (t_nanos - t_nanos.iloc[0]) / 1e9
@@ -140,7 +146,7 @@ class StatsTracker:
                 # 3. Calculate Integral
                 # np.trapz(y, x) calculates the area under the curve
                 distance = np.trapz(y=velocity, x=t_seconds)
-                
+
                 s.navigation_metrics.total_distance_meters = float(distance)
             else:
                 s.navigation_metrics.total_distance_meters = 0.0
