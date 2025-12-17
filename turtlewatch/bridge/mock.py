@@ -1,5 +1,5 @@
 import logging
-import random
+import math
 import threading
 import time
 from typing import Any, Callable
@@ -15,6 +15,63 @@ from ros_msgs.custom_msgs.msg import SignalState
 from bridge.types import Seconds
 
 logger = logging.getLogger("BridgeLogger")
+
+# Shared state for synchronized cmd_vel and odom
+_route_state: dict[str, Any] = {}
+_route_start_time: float = 0.0
+
+# Predefined route: list of (duration_seconds, linear_x, angular_z, description)
+# linear_x: forward speed (m/s)
+# angular_z: rotation speed (rad/s), positive = left turn
+PREDEFINED_ROUTE = [
+    # Start: drive straight (fast, long distance)
+    (8.0, 0.8, 0.0, "straight"),
+    # Stop
+    (1.0, 0.0, 0.0, "stop"),
+    # Turn left 90°
+    (2.0, 0.0, 0.8, "turn_left"),
+    # Drive straight
+    (6.0, 0.8, 0.0, "straight"),
+    # Stop
+    (1.0, 0.0, 0.0, "stop"),
+    # Drive in large circle (forward + turning)
+    (10.0, 0.5, 0.4, "circle"),
+    # Stop
+    (1.0, 0.0, 0.0, "stop"),
+    # Turn right 90°
+    (2.0, 0.0, -0.8, "turn_right"),
+    # Drive straight (long)
+    (10.0, 0.8, 0.0, "straight"),
+    # Stop
+    (1.0, 0.0, 0.0, "stop"),
+    # Drive backwards
+    (4.0, -0.5, 0.0, "backward"),
+    # Stop
+    (1.0, 0.0, 0.0, "stop"),
+    # Large circle other direction
+    (8.0, 0.4, -0.5, "circle_right"),
+    # Stop
+    (1.0, 0.0, 0.0, "stop"),
+    # Curve back towards center
+    (6.0, 0.6, 0.2, "curve_back"),
+    # Final stop
+    (2.0, 0.0, 0.0, "stop"),
+]
+
+
+def _get_route_command(elapsed_time: float) -> tuple[float, float, str]:
+    """Get the current velocity command based on elapsed time."""
+    total_duration = sum(cmd[0] for cmd in PREDEFINED_ROUTE)
+    # Loop the route
+    elapsed_time = elapsed_time % total_duration
+
+    current_time = 0.0
+    for duration, linear_x, angular_z, desc in PREDEFINED_ROUTE:
+        if current_time + duration > elapsed_time:
+            return (linear_x, angular_z, desc)
+        current_time += duration
+
+    return (0.0, 0.0, "stop")
 
 
 def mock_sub[MsgType: genpy.Message](
@@ -67,48 +124,83 @@ def dispatcher(
 
 
 def cmd_vel_handler(state: dict[str, Any]) -> tuple[Twist, dict[str, Any]]:
-    """Simulates a robot moving forward and turning slightly."""
+    """Returns velocity commands from the predefined route."""
+    global _route_start_time
+
+    if not state:
+        state = {"start_time": time.time()}
+        _route_start_time = state["start_time"]
+
+    elapsed = time.time() - state["start_time"]
+    linear_x, angular_z, _ = _get_route_command(elapsed)
+
     msg = Twist()
-    msg.linear.x = 0.5 + random.uniform(-0.05, 0.05)
+    msg.linear.x = linear_x
     msg.linear.y = 0.0
     msg.linear.z = 0.0
     msg.angular.x = 0.0
     msg.angular.y = 0.0
-    msg.angular.z = 0.1
+    msg.angular.z = angular_z
 
-    return (msg, {})
+    return (msg, state)
 
 
 def odom_handler(
     state: dict[str, Any],
 ) -> tuple[Odometry, dict[str, Any]]:
-    """Simulates odometry data (position and velocity)."""
+    """Calculates position based on the predefined route commands.
+
+    Integrates velocity commands over time to compute position.
+    """
+    global _route_start_time
 
     if not state:
-        state = {"x_pos": 0.0, "y_pos": 0.0}
+        state = {
+            "x_pos": 0.0,
+            "y_pos": 0.0,
+            "theta": 0.0,
+            "last_time": time.time(),
+            "start_time": time.time(),
+        }
+        # Sync with cmd_vel start time if available
+        if _route_start_time > 0:
+            state["start_time"] = _route_start_time
 
     msg = Odometry()
-
     msg.header = Header()
     msg.header.stamp = genpy.Time.from_sec(time.time())
     msg.header.frame_id = "odom"
     msg.child_frame_id = "base_link"
 
-    # 2. Simulate Position (Pose) - moving in a simple line for testing
-    state["x_pos"] += 0.05
+    # Calculate time delta
+    current_time = time.time()
+    dt = current_time - state["last_time"]
+    state["last_time"] = current_time
+
+    # Get current velocity command
+    elapsed = current_time - state["start_time"]
+    linear_x, angular_z, _ = _get_route_command(elapsed)
+
+    # Update heading (integrate angular velocity)
+    state["theta"] += angular_z * dt
+
+    # Update position (integrate linear velocity)
+    state["x_pos"] += linear_x * math.cos(state["theta"]) * dt
+    state["y_pos"] += linear_x * math.sin(state["theta"]) * dt
+
     msg.pose.pose.position.x = state["x_pos"]
     msg.pose.pose.position.y = state["y_pos"]
     msg.pose.pose.position.z = 0.0
 
-    # Valid Quaternion (identity = no rotation)
+    # Convert heading to quaternion
     msg.pose.pose.orientation.x = 0.0
     msg.pose.pose.orientation.y = 0.0
-    msg.pose.pose.orientation.z = 0.0
-    msg.pose.pose.orientation.w = 1.0
+    msg.pose.pose.orientation.z = math.sin(state["theta"] / 2)
+    msg.pose.pose.orientation.w = math.cos(state["theta"] / 2)
 
-    # 3. Simulate Velocity (Twist)
-    msg.twist.twist.linear.x = 0.5
-    msg.twist.twist.angular.z = 0.0
+    # Current velocity
+    msg.twist.twist.linear.x = linear_x
+    msg.twist.twist.angular.z = angular_z
 
     return (msg, state)
 

@@ -18,6 +18,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "basedpyright>=1.35.0",
+    "ruff>=0.14.9",
 ]
 
 [tool.pytest.ini_options]
