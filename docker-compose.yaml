@@ -42,13 +42,14 @@ services:
       - "3000:3000"
     user: "0"
     volumes:
+      - ./stats.sqlite:/var/lib/grafana/stats.sqlite:ro
       - ./grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - influxdb3-core
     environment:
       - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=1s
-      - GF_PLUGINS_PREINSTALL=ae3e-plotly-panel
+      - GF_PLUGINS_PREINSTALL=ae3e-plotly-panel,frser-sqlite-datasource
       - INFLUXDB_DOCKER_URL=http://influxdb3-core:8181
       - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
       - INFLUXDB_DB_NAME=${INFLUXDB_DB_NAME}
