@@ -2,7 +2,7 @@ import os
 import sys
 import threading
 from actionlib_msgs.msg import GoalStatusArray
-from dotenv import find_dotenv, load_dotenv
+from dotenv import load_dotenv
 import genpy
 from influxdb_client_3 import Point
 import rospy
@@ -175,22 +175,22 @@ if __name__ == "__main__":
     logger.info("Connecting to InfluxDB...")
 
     influxDB_token = os.getenv("INFLUXDB_TOKEN")
-    if not influxDB_token :
+    if not influxDB_token:
         with open("../influxdb_token.txt", "r") as file:
             influxDB_token = file.read().strip()
 
     influxDB_name = os.getenv("INFLUXDB_DB_NAME")
-    if not influxDB_name :
+    if not influxDB_name:
         influxDB_name = "dev"
 
     influxDB_url = os.getenv("INFLUXDB_URL")
-    if not influxDB_url :
-       influxDB_url = "http://localhost:8181"
+    if not influxDB_url:
+        influxDB_url = "http://localhost:8181"
     InfluxDB.intialize(host=influxDB_url, database=influxDB_name, token=influxDB_token)
     logger.info("Successfully connected to InfluxDB")
 
     db_path = os.getenv("STATS_DB_PATH")
-    if not db_path :
+    if not db_path:
         db_path = "../stats.sqlite"
     StatsDB.initialize(db_path)
     logger.info("Successfully connected to StatsDB")
