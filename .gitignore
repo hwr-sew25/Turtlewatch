@@ -1,6 +1,9 @@
 .direnv/
 influxdb3_explorer/db
 influxdb3_explorer/ssl
+influxdb3_core/
+grafana/data
+**/*.sqlite
 influxdb_token.txt
 db_session_key.txt
 **/__pycache__

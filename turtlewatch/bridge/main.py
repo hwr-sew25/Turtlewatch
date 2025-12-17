@@ -169,12 +169,12 @@ def signal_state_callback(
 
 if __name__ == "__main__":
     setup_logger()
-    _ = load_dotenv(find_dotenv())
+    _ = load_dotenv()
     mock = os.getenv("MOCK")
 
     logger.info("Connecting to InfluxDB...")
 
-    influxDB_token = os.getenv("INFUXDB_TOKEN")
+    influxDB_token = os.getenv("INFLUXDB_TOKEN")
     if not influxDB_token :
         with open("../influxdb_token.txt", "r") as file:
             influxDB_token = file.read().strip()

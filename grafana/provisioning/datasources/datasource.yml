@@ -1,0 +1,16 @@
+
+apiVersion: 1
+
+datasources:
+  - name: influxdb_turtlewatch
+    uid: influxdb_turtlewatch
+    type: influxdb
+    access: proxy
+    url: ${INFLUXDB_DOCKER_URL}
+    jsonData:
+      version: SQL
+      dbName: dev
+      httpMode: POST
+      insecureGrpc: true
+    secureJsonData:
+      token: ${INFLUXDB_TOKEN}
