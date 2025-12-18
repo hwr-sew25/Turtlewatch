@@ -1,9 +1,8 @@
-from contextlib import contextmanager
 import logging
-import sqlite3
 from influxdb_client_3 import InfluxDBClient3, write_client_options, WriteOptions
 
 logger = logging.getLogger("BridgeLogger")
+
 
 class InfluxDB:
     _client_instance: InfluxDBClient3 | None = None
@@ -38,7 +37,9 @@ class StatsDB:
             raise RuntimeError("Already initialized")
 
         cls._client_instance = InfluxDBClient3(
-            host=host, database=database, token=token, 
+            host=host,
+            database=database,
+            token=token,
         )
         logger.info("Successfully initialized to StatsDB")
 

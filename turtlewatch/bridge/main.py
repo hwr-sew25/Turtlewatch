@@ -11,7 +11,7 @@ from bridge.alert import AlertSystem
 from ros_msgs.actionlib_msgs.msg._GoalStatus import GoalStatus
 from ros_msgs.geometry_msgs.msg import Twist
 import logging
-from bridge.database_client import InfluxDB, InfluxDB, StatsDB
+from bridge.database_client import InfluxDB, StatsDB
 from bridge.throttled_subscriber import ThrottledSubscriber
 from bridge.utils import ros_msg_to_influx_point
 from bridge.types import Seconds
@@ -191,7 +191,7 @@ if __name__ == "__main__":
 
     stats_db_name = os.getenv("INFLUXDB_STATISTICS_DB_NAME")
     if not stats_db_name:
-       stats_db_name = "sessions"
+        stats_db_name = "sessions"
     StatsDB.intialize(host=influxDB_url, database=stats_db_name, token=influxDB_token)
 
     StatsTracker.start_new_session()
