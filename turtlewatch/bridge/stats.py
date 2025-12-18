@@ -42,31 +42,9 @@ class Session:
     navigation_metrics: NavigationMetrics = field(default_factory=NavigationMetrics)
 
 
-initialize_schema_query = """
-CREATE TABLE IF NOT EXISTS sessions (
-    id TEXT PRIMARY KEY,
-    start_time INTEGER NOT NULL,
-    end_time INTEGER,
-    number_of_messages INTEGER,
-    completion_status TEXT,
-    total_distance_meters REAL,
-    avg_linear_velocity REAL,
-    max_linear_velocity REAL,
-    idle_time REAL
-);
-"""
-
-
 class StatsTracker:
     # NOTE just start a sample one on startup so we don't have to care about None type
     _current_session: Session = Session()
-
-    @classmethod
-    def initialize_db_schema(cls):
-        try:
-            StatsDB.execute(initialize_schema_query)
-        except Exception as e:
-            logger.error("Error intializing schema in statsDB", e)
 
     @classmethod
     def start_new_session(cls):
@@ -155,43 +133,45 @@ class StatsTracker:
 
     @classmethod
     def update_stats_db(cls):
-        query = """
-            INSERT INTO sessions (
-                id,
-                start_time,
-                end_time,
-                number_of_messages,
-                completion_status,
-                total_distance_meters,
-                avg_linear_velocity,
-                max_linear_velocity,
-                idle_time
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(id) DO UPDATE SET
-                end_time = excluded.end_time,
-                number_of_messages = excluded.number_of_messages,
-                completion_status = excluded.completion_status,
-                total_distance_meters = excluded.total_distance_meters,
-                avg_linear_velocity = excluded.avg_linear_velocity,
-                max_linear_velocity = excluded.max_linear_velocity,
-                idle_time = excluded.idle_time;
+        """
+        Write the session summary into the StatsDB (InfluxDB v3).
         """
         s = cls._current_session
-        params = (
-            str(s.id),
-            s.start_time,
-            s.end_time,
-            s.number_of_messages,
-            s.completion_status,
-            s.navigation_metrics.total_distance_meters,
-            s.navigation_metrics.avg_linear_velocity,
-            s.navigation_metrics.max_linear_velocity,
-            s.navigation_metrics.idle_time,
-        )
+        if s.end_time is None:
+            logger.warning("Not writing stats: current session has no end_time yet")
+            return
+
         try:
-            StatsDB.execute(query, params)
+            client = StatsDB.get_instance()
+
+            # InfluxDB v3 client supports dict -> line protocol serialization
+            point = {
+                "measurement": "sessions",
+                # "tags": {
+                #     "session_id": str(s.id),
+                # },
+                "fields": {
+                    "session_id": str(s.id),
+                    "start_time": s.start_time,
+                    "end_time": s.end_time,
+                    "number_of_messages": s.number_of_messages,
+                    "completion_status": s.completion_status,
+
+                    "total_distance_meters": s.navigation_metrics.total_distance_meters,
+                    "avg_linear_velocity": s.navigation_metrics.avg_linear_velocity,
+                    "max_linear_velocity": s.navigation_metrics.max_linear_velocity,
+                    "idle_time": s.navigation_metrics.idle_time,
+                },
+                # Use end_time as the timestamp for this session record
+                "time": s.start_time,
+            }
+
+            print(point)
+            client.write(point)
+            logger.info("Saved session in StatsDB")
+
         except Exception as e:
-            logger.error("Error writing to statsDB", e)
+            logger.error(f"Error writing session to StatsDB (Influx): {e}")
 
     @classmethod
     def get_session(cls) -> Session:

@@ -11,7 +11,7 @@ from bridge.alert import AlertSystem
 from ros_msgs.actionlib_msgs.msg._GoalStatus import GoalStatus
 from ros_msgs.geometry_msgs.msg import Twist
 import logging
-from bridge.database_client import InfluxDB, StatsDB
+from bridge.database_client import InfluxDB, InfluxDB, StatsDB
 from bridge.throttled_subscriber import ThrottledSubscriber
 from bridge.utils import ros_msg_to_influx_point
 from bridge.types import Seconds
@@ -61,9 +61,9 @@ def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] |
         point = ros_msg_to_influx_point(
             msg=msg, measurement_name=measurement_name, tags=tags
         )
-        client = InfluxDB.get_instance()
+        client = influxdb.get_instance()
         client.write(point)
-        logger.info(f"Send: {measurement_name}")
+        logger.info(f"send: {measurement_name}")
 
     except Exception as e:
         logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
@@ -90,6 +90,7 @@ def move_status_callback(msg: GoalStatus, topic_name: str, tags: dict[str, str] 
 
     session = StatsTracker.get_session()
     session.completion_status = msg.status
+    logger.info(f"Received goal status: {msg.status}")
 
     if msg.status in [
         GoalStatus.ABORTED,
@@ -187,15 +188,12 @@ if __name__ == "__main__":
     if not influxDB_url:
         influxDB_url = "http://localhost:8181"
     InfluxDB.intialize(host=influxDB_url, database=influxDB_name, token=influxDB_token)
-    logger.info("Successfully connected to InfluxDB")
 
-    db_path = os.getenv("STATS_DB_PATH")
-    if not db_path:
-        db_path = "../stats.sqlite"
-    StatsDB.initialize(db_path)
-    logger.info("Successfully connected to StatsDB")
+    stats_db_name = os.getenv("INFLUXDB_DB_SESSIONS_NAME")
+    if not stats_db_name:
+       stats_db_name = "sessions"
+    StatsDB.intialize(host=influxDB_url, database=stats_db_name, token=influxDB_token)
 
-    StatsTracker.initialize_db_schema()
     StatsTracker.start_new_session()
 
     if mock and mock.lower() == "true":
