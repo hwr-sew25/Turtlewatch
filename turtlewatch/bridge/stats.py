@@ -144,19 +144,17 @@ class StatsTracker:
         try:
             client = StatsDB.get_instance()
 
-            # InfluxDB v3 client supports dict -> line protocol serialization
+            # maybe construct a point here ??
             point = {
                 "measurement": "sessions",
-                # "tags": {
-                #     "session_id": str(s.id),
-                # },
-                "fields": {
+                "tags": {
                     "session_id": str(s.id),
-                    "start_time": s.start_time,
-                    "end_time": s.end_time,
+                },
+                "fields": {
+                    "start_time": s.start_time, # no idea why these have to be strings
+                    "end_time": s.end_time,     # but else influxdb complaints
                     "number_of_messages": s.number_of_messages,
                     "completion_status": s.completion_status,
-
                     "total_distance_meters": s.navigation_metrics.total_distance_meters,
                     "avg_linear_velocity": s.navigation_metrics.avg_linear_velocity,
                     "max_linear_velocity": s.navigation_metrics.max_linear_velocity,

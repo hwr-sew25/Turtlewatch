@@ -37,9 +37,6 @@ class StatsDB:
         if cls._client_instance is not None:
             raise RuntimeError("Already initialized")
 
-        # write_options = WriteOptions(batch_size=1)
-        # wco = write_client_options(write_options=write_options)
-
         cls._client_instance = InfluxDBClient3(
             host=host, database=database, token=token, 
         )

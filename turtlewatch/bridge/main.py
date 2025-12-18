@@ -61,7 +61,7 @@ def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] |
         point = ros_msg_to_influx_point(
             msg=msg, measurement_name=measurement_name, tags=tags
         )
-        client = influxdb.get_instance()
+        client = InfluxDB.get_instance()
         client.write(point)
         logger.info(f"send: {measurement_name}")
 
@@ -180,7 +180,7 @@ if __name__ == "__main__":
         with open("../influxdb_token.txt", "r") as file:
             influxDB_token = file.read().strip()
 
-    influxDB_name = os.getenv("INFLUXDB_DB_NAME")
+    influxDB_name = os.getenv("INFLUXDB_METRICS_DB_NAME")
     if not influxDB_name:
         influxDB_name = "dev"
 
@@ -189,7 +189,7 @@ if __name__ == "__main__":
         influxDB_url = "http://localhost:8181"
     InfluxDB.intialize(host=influxDB_url, database=influxDB_name, token=influxDB_token)
 
-    stats_db_name = os.getenv("INFLUXDB_DB_SESSIONS_NAME")
+    stats_db_name = os.getenv("INFLUXDB_STATISTICS_DB_NAME")
     if not stats_db_name:
        stats_db_name = "sessions"
     StatsDB.intialize(host=influxDB_url, database=stats_db_name, token=influxDB_token)

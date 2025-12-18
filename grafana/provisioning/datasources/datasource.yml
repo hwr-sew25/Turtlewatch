@@ -9,7 +9,7 @@ datasources:
     url: ${INFLUXDB_DOCKER_URL}
     jsonData:
       version: SQL
-      dbName: ${INFLUXDB_DB_NAME}
+      dbName: ${INFLUXDB_METRICS_DB_NAME}
       httpMode: POST
       insecureGrpc: true
     secureJsonData:
@@ -22,7 +22,7 @@ datasources:
     url: ${INFLUXDB_DOCKER_URL}
     jsonData:
       version: SQL
-      dbName: ${INFLUXDB_DB_SESSION_NAME}
+      dbName: ${INFLUXDB_STATISTICS_DB_NAME}
       httpMode: POST
       insecureGrpc: true
     secureJsonData:
