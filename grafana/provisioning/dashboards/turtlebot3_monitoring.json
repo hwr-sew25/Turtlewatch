@@ -1,73 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "influxdb_turtlewatch",
-      "label": "influxdb",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "influxdb",
-      "pluginName": "InfluxDB"
-    },
-    {
-      "name": "DS_STATS-SQLITE-DATASOURCE",
-      "label": "stats-sqlite-datasource",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "frser-sqlite-datasource",
-      "pluginName": "SQLite"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "ae3e-plotly-panel",
-      "name": "Plotly panel",
-      "version": "0.5.0"
-    },
-    {
-      "type": "panel",
-      "id": "bargauge",
-      "name": "Bar gauge",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "frser-sqlite-datasource",
-      "name": "SQLite",
-      "version": "3.8.2"
-    },
-    {
-      "type": "panel",
-      "id": "gauge",
-      "name": "Gauge",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "12.3.0"
-    },
-    {
-      "type": "datasource",
-      "id": "influxdb",
-      "name": "influxdb_turtlewatch",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -87,12 +18,13 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 1,
   "links": [],
   "panels": [
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
       },
       "fieldConfig": {
         "defaults": {
@@ -150,13 +82,13 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -187,7 +119,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
       },
       "fieldConfig": {
         "defaults": {
@@ -268,12 +200,12 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -288,7 +220,11 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
       },
       "gridPos": {
         "h": 16,
@@ -310,7 +246,7 @@
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -341,7 +277,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
       },
       "fieldConfig": {
         "defaults": {
@@ -422,12 +358,12 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -442,7 +378,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
       },
       "fieldConfig": {
         "defaults": {
@@ -508,13 +444,13 @@
         "sizing": "auto",
         "valueMode": "color"
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -529,7 +465,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
       },
       "fieldConfig": {
         "defaults": {
@@ -587,13 +523,13 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -608,7 +544,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
       },
       "fieldConfig": {
         "defaults": {
@@ -689,12 +625,12 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -721,8 +657,8 @@
     },
     {
       "datasource": {
-        "type": "frser-sqlite-datasource",
-        "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_sessions"
       },
       "fieldConfig": {
         "defaults": {
@@ -735,7 +671,7 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -755,25 +691,54 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
+          "dataset": "iox",
           "datasource": {
-            "type": "frser-sqlite-datasource",
-            "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_sessions"
           },
+          "editorMode": "code",
+          "format": "table",
           "queryText": "SELECT COUNT(*) AS total FROM sessions",
           "queryType": "table",
+          "rawQuery": true,
           "rawQueryText": "SELECT COUNT(*) AS total FROM sessions",
+          "rawSql": "SELECT COUNT(\"session_id\") FROM \"sessions\";",
           "refId": "A",
-          "timeColumns": ["time", "ts"]
+          "sql": {
+            "columns": [
+              {
+                "name": "COUNT",
+                "parameters": [
+                  {
+                    "name": "session_id",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": []
+          },
+          "table": "sessions",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         }
       ],
       "title": "Total Sessions",
@@ -781,8 +746,8 @@
     },
     {
       "datasource": {
-        "type": "frser-sqlite-datasource",
-        "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_sessions"
       },
       "fieldConfig": {
         "defaults": {
@@ -796,7 +761,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -816,25 +781,61 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
+          "dataset": "iox",
           "datasource": {
-            "type": "frser-sqlite-datasource",
-            "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_sessions"
           },
+          "editorMode": "code",
+          "format": "table",
           "queryText": "SELECT COALESCE(SUM(total_distance_meters), 0) AS total FROM sessions",
           "queryType": "table",
+          "rawQuery": true,
           "rawQueryText": "SELECT COALESCE(SUM(total_distance_meters), 0) AS total FROM sessions",
+          "rawSql": "SELECT SUM(\"total_distance_meters\") FROM \"sessions\";",
           "refId": "A",
-          "timeColumns": ["time", "ts"]
+          "sql": {
+            "columns": [
+              {
+                "name": "SUM",
+                "parameters": [
+                  {
+                    "name": "total_distance_meters",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          },
+          "table": "sessions",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         }
       ],
       "title": "Total Distance",
@@ -842,8 +843,8 @@
     },
     {
       "datasource": {
-        "type": "frser-sqlite-datasource",
-        "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_sessions"
       },
       "fieldConfig": {
         "defaults": {
@@ -857,11 +858,11 @@
             "steps": [
               {
                 "color": "orange",
-                "value": null
+                "value": 0
               }
             ]
           },
-          "unit": "s"
+          "unit": "ns"
         },
         "overrides": []
       },
@@ -877,25 +878,61 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
+          "dataset": "iox",
           "datasource": {
-            "type": "frser-sqlite-datasource",
-            "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_sessions"
           },
+          "editorMode": "code",
+          "format": "table",
           "queryText": "SELECT COALESCE(AVG((end_time - start_time) / 1e9), 0) AS avg_duration FROM sessions WHERE end_time IS NOT NULL",
           "queryType": "table",
+          "rawQuery": true,
           "rawQueryText": "SELECT COALESCE(AVG((end_time - start_time) / 1e9), 0) AS avg_duration FROM sessions WHERE end_time IS NOT NULL",
+          "rawSql": "SELECT AVG(\"end_time\" - \"start_time\") FROM \"sessions\";",
           "refId": "A",
-          "timeColumns": ["time", "ts"]
+          "sql": {
+            "columns": [
+              {
+                "name": "AVG",
+                "parameters": [
+                  {
+                    "name": "",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          },
+          "table": "sessions",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         }
       ],
       "title": "Avg Duration",
@@ -903,8 +940,8 @@
     },
     {
       "datasource": {
-        "type": "frser-sqlite-datasource",
-        "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_sessions"
       },
       "fieldConfig": {
         "defaults": {
@@ -948,7 +985,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -967,25 +1004,54 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
+          "dataset": "iox",
           "datasource": {
-            "type": "frser-sqlite-datasource",
-            "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_sessions"
           },
+          "editorMode": "code",
+          "format": "table",
           "queryText": "SELECT CASE completion_status WHEN 0 THEN 'PENDING' WHEN 1 THEN 'ACTIVE' WHEN 2 THEN 'PREEMPTED' WHEN 3 THEN 'SUCCEEDED' WHEN 4 THEN 'ABORTED' WHEN 5 THEN 'REJECTED' ELSE 'UNKNOWN' END AS status FROM sessions ORDER BY start_time DESC LIMIT 1",
           "queryType": "table",
+          "rawQuery": true,
           "rawQueryText": "SELECT CASE completion_status WHEN 0 THEN 'PENDING' WHEN 1 THEN 'ACTIVE' WHEN 2 THEN 'PREEMPTED' WHEN 3 THEN 'SUCCEEDED' WHEN 4 THEN 'ABORTED' WHEN 5 THEN 'REJECTED' ELSE 'UNKNOWN' END AS status FROM sessions ORDER BY start_time DESC LIMIT 1",
+          "rawSql": "SELECT completion_status from sessions ORDER BY time DESC limit 1;",
           "refId": "A",
-          "timeColumns": ["time", "ts"]
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          },
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         }
       ],
       "title": "Last Session Status",
@@ -993,8 +1059,8 @@
     },
     {
       "datasource": {
-        "type": "frser-sqlite-datasource",
-        "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_sessions"
       },
       "fieldConfig": {
         "defaults": {
@@ -1017,7 +1083,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1089,18 +1155,42 @@
           }
         ]
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
+          "dataset": "iox",
           "datasource": {
-            "type": "frser-sqlite-datasource",
-            "uid": "${DS_STATS-SQLITE-DATASOURCE}"
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_sessions"
           },
+          "editorMode": "code",
+          "format": "table",
           "queryText": "SELECT substr(id, 1, 8) AS \"ID\", datetime(start_time / 1e9, 'unixepoch', 'localtime') AS \"Start\", round((end_time - start_time) / 1e9, 1) AS \"Duration (s)\", number_of_messages AS \"Msgs\", CASE completion_status WHEN 0 THEN 'PENDING' WHEN 1 THEN 'ACTIVE' WHEN 2 THEN 'PREEMPTED' WHEN 3 THEN 'SUCCEEDED' WHEN 4 THEN 'ABORTED' WHEN 5 THEN 'REJECTED' ELSE 'UNKNOWN' END AS \"Status\", round(total_distance_meters, 2) AS \"Dist (m)\", round(avg_linear_velocity, 2) AS \"Avg Vel\" FROM sessions ORDER BY start_time DESC LIMIT 10",
           "queryType": "table",
+          "rawQuery": true,
           "rawQueryText": "SELECT substr(id, 1, 8) AS \"ID\", datetime(start_time / 1e9, 'unixepoch', 'localtime') AS \"Start\", round((end_time - start_time) / 1e9, 1) AS \"Duration (s)\", number_of_messages AS \"Msgs\", CASE completion_status WHEN 0 THEN 'PENDING' WHEN 1 THEN 'ACTIVE' WHEN 2 THEN 'PREEMPTED' WHEN 3 THEN 'SUCCEEDED' WHEN 4 THEN 'ABORTED' WHEN 5 THEN 'REJECTED' ELSE 'UNKNOWN' END AS \"Status\", round(total_distance_meters, 2) AS \"Dist (m)\", round(avg_linear_velocity, 2) AS \"Avg Vel\" FROM sessions ORDER BY start_time DESC LIMIT 10",
+          "rawSql": "SELECT\n  *\nFrom\n  sessions;",
           "refId": "A",
-          "timeColumns": ["time", "ts"]
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          },
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
         }
       ],
       "title": "Session History",
@@ -1122,7 +1212,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
       },
       "fieldConfig": {
         "defaults": {
@@ -1207,13 +1297,13 @@
           }
         ]
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -1244,7 +1334,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
       },
       "fieldConfig": {
         "defaults": {
@@ -1287,13 +1377,13 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -1324,7 +1414,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
       },
       "fieldConfig": {
         "defaults": {
@@ -1367,13 +1457,13 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -1404,7 +1494,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "influxdb_turtlewatch"
+        "uid": "influxdb_turtlewatch_metrics"
       },
       "fieldConfig": {
         "defaults": {
@@ -1447,13 +1537,13 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "dataset": "iox",
           "datasource": {
             "type": "influxdb",
-            "uid": "influxdb_turtlewatch"
+            "uid": "influxdb_turtlewatch_metrics"
           },
           "editorMode": "code",
           "format": "table",
@@ -1509,7 +1599,5 @@
   "timezone": "browser",
   "title": "TurtleBot3 Monitoring v6",
   "uid": "turtlebot3-monitoring-v6",
-  "version": 5,
-  "weekStart": "",
-  "id": null
+  "version": 3
 }

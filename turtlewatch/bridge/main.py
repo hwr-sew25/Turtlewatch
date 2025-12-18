@@ -63,7 +63,7 @@ def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] |
         )
         client = InfluxDB.get_instance()
         client.write(point)
-        logger.info(f"Send: {measurement_name}")
+        logger.info(f"send: {measurement_name}")
 
     except Exception as e:
         logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
@@ -90,6 +90,7 @@ def move_status_callback(msg: GoalStatus, topic_name: str, tags: dict[str, str] 
 
     session = StatsTracker.get_session()
     session.completion_status = msg.status
+    logger.info(f"Received goal status: {msg.status}")
 
     if msg.status in [
         GoalStatus.ABORTED,
@@ -179,7 +180,7 @@ if __name__ == "__main__":
         with open("../influxdb_token.txt", "r") as file:
             influxDB_token = file.read().strip()
 
-    influxDB_name = os.getenv("INFLUXDB_DB_NAME")
+    influxDB_name = os.getenv("INFLUXDB_METRICS_DB_NAME")
     if not influxDB_name:
         influxDB_name = "dev"
 
@@ -187,15 +188,12 @@ if __name__ == "__main__":
     if not influxDB_url:
         influxDB_url = "http://localhost:8181"
     InfluxDB.intialize(host=influxDB_url, database=influxDB_name, token=influxDB_token)
-    logger.info("Successfully connected to InfluxDB")
 
-    db_path = os.getenv("STATS_DB_PATH")
-    if not db_path:
-        db_path = "../stats.sqlite"
-    StatsDB.initialize(db_path)
-    logger.info("Successfully connected to StatsDB")
+    stats_db_name = os.getenv("INFLUXDB_STATISTICS_DB_NAME")
+    if not stats_db_name:
+        stats_db_name = "sessions"
+    StatsDB.intialize(host=influxDB_url, database=stats_db_name, token=influxDB_token)
 
-    StatsTracker.initialize_db_schema()
     StatsTracker.start_new_session()
 
     if mock and mock.lower() == "true":

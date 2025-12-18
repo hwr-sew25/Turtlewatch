@@ -2,14 +2,27 @@
 apiVersion: 1
 
 datasources:
-  - name: influxdb_turtlewatch
-    uid: influxdb_turtlewatch
+  - name: influxdb_turtlewatch_metrics
+    uid: influxdb_turtlewatch_metrics
     type: influxdb
     access: proxy
     url: ${INFLUXDB_DOCKER_URL}
     jsonData:
       version: SQL
-      dbName: ${INFLUXDB_DB_NAME}
+      dbName: ${INFLUXDB_METRICS_DB_NAME}
+      httpMode: POST
+      insecureGrpc: true
+    secureJsonData:
+      token: ${INFLUXDB_TOKEN}
+
+  - name: influxdb_turtlewatch_sessions
+    uid: influxdb_turtlewatch_sessions
+    type: influxdb
+    access: proxy
+    url: ${INFLUXDB_DOCKER_URL}
+    jsonData:
+      version: SQL
+      dbName: ${INFLUXDB_STATISTICS_DB_NAME}
       httpMode: POST
       insecureGrpc: true
     secureJsonData:
