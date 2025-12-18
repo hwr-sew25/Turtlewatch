@@ -144,15 +144,15 @@ class StatsTracker:
         try:
             client = StatsDB.get_instance()
 
-            # maybe construct a point here ??
+            # FIXME maybe construct a point here ??
             point = {
                 "measurement": "sessions",
                 "tags": {
                     "session_id": str(s.id),
                 },
                 "fields": {
-                    "start_time": s.start_time,  # no idea why these have to be strings
-                    "end_time": s.end_time,  # but else influxdb complaints
+                    "start_time": s.start_time,  
+                    "end_time": s.end_time,  
                     "number_of_messages": s.number_of_messages,
                     "completion_status": s.completion_status,
                     "total_distance_meters": s.navigation_metrics.total_distance_meters,
