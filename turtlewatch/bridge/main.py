@@ -18,6 +18,7 @@ from bridge.types import Seconds
 from ros_msgs.nav_msgs.msg._Odometry import Odometry
 from ros_msgs.sensor_msgs.msg._BatteryState import BatteryState
 from ros_msgs.custom_msgs.msg._SignalState import SignalState
+from ros_msgs.custom_msgs.msg._SignalState import SignalState
 
 logger = logging.getLogger("BridgeLogger")
 
