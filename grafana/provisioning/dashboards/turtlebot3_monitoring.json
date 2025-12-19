@@ -82,7 +82,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -200,7 +200,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
@@ -358,7 +358,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
@@ -444,7 +444,7 @@
         "sizing": "auto",
         "valueMode": "color"
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -523,7 +523,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -625,7 +625,7 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "datasource": {
@@ -703,7 +703,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -793,7 +793,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -890,7 +890,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -1016,7 +1016,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -1155,7 +1155,7 @@
           }
         ]
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -1169,7 +1169,7 @@
           "queryType": "table",
           "rawQuery": true,
           "rawQueryText": "SELECT substr(id, 1, 8) AS \"ID\", datetime(start_time / 1e9, 'unixepoch', 'localtime') AS \"Start\", round((end_time - start_time) / 1e9, 1) AS \"Duration (s)\", number_of_messages AS \"Msgs\", CASE completion_status WHEN 0 THEN 'PENDING' WHEN 1 THEN 'ACTIVE' WHEN 2 THEN 'PREEMPTED' WHEN 3 THEN 'SUCCEEDED' WHEN 4 THEN 'ABORTED' WHEN 5 THEN 'REJECTED' ELSE 'UNKNOWN' END AS \"Status\", round(total_distance_meters, 2) AS \"Dist (m)\", round(avg_linear_velocity, 2) AS \"Avg Vel\" FROM sessions ORDER BY start_time DESC LIMIT 10",
-          "rawSql": "SELECT\n  *\nFrom\n  sessions;",
+          "rawSql": "SELECT\n  *\nFrom\n  sessions\nORDER BY time DESC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1297,7 +1297,7 @@
           }
         ]
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -1377,7 +1377,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -1457,7 +1457,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
@@ -1537,7 +1537,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.3.0",
       "targets": [
         {
           "dataset": "iox",
