@@ -2,12 +2,11 @@ import time
 from typing import Any, override
 from bridge.plugin_loader import Plugin
 from bridge.types import ExampleMessageType
-from ros_msgs.nav_msgs.msg._Odometry import Odometry
 
 
 class ExamplePlugin(Plugin[ExampleMessageType]):
     topic_name: str = "/example"
-    ros_msg_type: type[ExampleMessageType] = Odometry
+    ros_msg_type: type[ExampleMessageType] = ExampleMessageType
     is_enabled: bool = False
     tags: dict[str, str] = {}
     interval: float = 0.25
@@ -20,6 +19,6 @@ class ExamplePlugin(Plugin[ExampleMessageType]):
         if not state:
             state = {"start_time": time.time()}
 
-        msg = Odometry()
+        msg = ExampleMessageType()
 
         return (msg, state)

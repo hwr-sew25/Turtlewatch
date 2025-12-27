@@ -9,7 +9,6 @@ import genpy
 
 from bridge.database_client import InfluxDB
 from bridge.utils import ros_msg_to_influx_point
-from ros_msgs.nav_msgs.msg._Odometry import Odometry
 
 logger = logging.getLogger("BridgeLogger")
 active_plugins: list[Plugin[genpy.Message]] = []

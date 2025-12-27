@@ -8,7 +8,6 @@ from bridge.alert import AlertSystem
 from bridge.database_client import InfluxDB
 from bridge.plugin_loader import Plugin
 from ros_msgs.custom_msgs.msg._SignalState import SignalState
-from ros_msgs.nav_msgs.msg._Odometry import Odometry
 from ros_msgs.std_msgs.msg._Header import Header
 
 

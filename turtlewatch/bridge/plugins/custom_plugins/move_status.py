@@ -9,7 +9,6 @@ from bridge.plugin_loader import Plugin
 from bridge.stats import StatsTracker
 from ros_msgs.actionlib_msgs.msg._GoalID import GoalID
 from ros_msgs.actionlib_msgs.msg._GoalStatus import GoalStatus
-from ros_msgs.nav_msgs.msg._Odometry import Odometry
 
 
 class MoveStatusPlugin(Plugin[GoalStatus]):

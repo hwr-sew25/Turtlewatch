@@ -2,7 +2,6 @@ import time
 import genpy
 from typing import Any, override
 from bridge.plugin_loader import Plugin
-from ros_msgs.nav_msgs.msg._Odometry import Odometry
 from ros_msgs.sensor_msgs.msg._BatteryState import BatteryState
 from ros_msgs.std_msgs.msg._Header import Header
 

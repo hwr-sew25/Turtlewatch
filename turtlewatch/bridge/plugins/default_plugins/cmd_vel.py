@@ -1,6 +1,5 @@
 import time
 from typing import Any, override
-import genpy
 from geometry_msgs.msg import Twist
 
 from bridge.plugin_loader import Plugin
