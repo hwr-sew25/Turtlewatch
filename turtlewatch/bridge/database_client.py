@@ -13,7 +13,7 @@ class InfluxDB:
             raise RuntimeError("Already initialized")
 
         write_options = WriteOptions(batch_size=4)
-        wco = write_client_options(write_options=write_options)
+        wco = write_client_options(write_options=write_options) # pyright: ignore [reportUnknownVariableType]
 
         cls._client_instance = InfluxDBClient3(
             host=host, database=database, token=token, write_client_options=wco

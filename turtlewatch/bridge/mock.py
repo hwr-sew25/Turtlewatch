@@ -9,7 +9,7 @@ from bridge.plugin_loader import Plugin
 logger = logging.getLogger("BridgeLogger")
 
 
-def mock_subscriber[MsgType: genpy.Message](plugin: Plugin) -> None:
+def mock_subscriber(plugin: Plugin[genpy.Message]) -> None:
     # NOTE it would be more efficient if these could be asyncio coroutines
     # instead of threads but I don'want to change everything to async since
     # that stuff if managed by ROS if we are not mocking
@@ -19,7 +19,7 @@ def mock_subscriber[MsgType: genpy.Message](plugin: Plugin) -> None:
 
 
 def dispatcher(
-    plugin: Plugin,
+    plugin: Plugin[genpy.Message],
 ) -> None:
     iteration = 0
     start_time = time.time()

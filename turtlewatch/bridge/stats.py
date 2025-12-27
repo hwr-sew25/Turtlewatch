@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 import logging
 import time
+from typing import cast
 import uuid
 
 from ros_msgs.actionlib_msgs.msg._GoalStatus import GoalStatus
@@ -61,7 +62,7 @@ class StatsTracker:
         import numpy as np
 
         s = cls._current_session
-        if s.start_time is None or s.end_time is None:
+        if s.end_time is None:
             logger.warning(
                 "Cannot calculate metrics without a session start and end time"
             )
@@ -87,9 +88,9 @@ class StatsTracker:
 
             for name, query in scalar_queries.items():
                 # 'dataframe' mode returns a Pandas DataFrame, which wraps NumPy
-                df: pd.DataFrame = client.query(
-                    query=query, language="influxql", mode="pandas"
-                )
+                result = client.query(query=query, language="influxql", mode="pandas") # pyright: ignore [reportUnknownVariableType, reportUnknownMemberType]
+
+                df = cast(pd.DataFrame, result)
 
                 if not df.empty:
                     # .iloc[0] gets the first row's value
@@ -102,9 +103,8 @@ class StatsTracker:
                 WHERE time >= {s.start_time} AND time <= {s.end_time}
             """
 
-            df_dist: pd.DataFrame = client.query(
-                query=dist_query, language="influxql", mode="pandas"
-            )
+            result = client.query(query=dist_query, language="influxql", mode="pandas") # pyright: ignore [reportUnknownVariableType, reportUnknownMemberType]
+            df_dist = cast(pd.DataFrame, result)
 
             if not df_dist.empty and len(df_dist) > 1:
                 # 1. Get velocity (y-axis)
@@ -123,7 +123,7 @@ class StatsTracker:
 
                 # 3. Calculate Integral
                 # np.trapz(y, x) calculates the area under the curve
-                distance = np.trapz(y=velocity, x=t_seconds)
+                distance = np.trapezoid(y=velocity, x=t_seconds)
 
                 s.navigation_metrics.total_distance_meters = float(distance)
             else:
@@ -165,7 +165,7 @@ class StatsTracker:
             }
 
             print(point)
-            client.write(point)
+            client.write(point) # pyright: ignore [reportUnknownMemberType]
             logger.info("Saved session in StatsDB")
 
         except Exception as e:
