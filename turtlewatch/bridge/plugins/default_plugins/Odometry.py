@@ -10,7 +10,7 @@ from ros_msgs.std_msgs.msg._Header import Header
 class OdometryPlugin(Plugin[Odometry]):
     topic_name: str = "/odom"
     ros_msg_type: type[Odometry] = Odometry
-    is_enabled: bool = False
+    is_enabled: bool = True
     tags: dict[str, str] = {}
     interval: float = 0.25
 
