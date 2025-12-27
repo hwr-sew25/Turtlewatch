@@ -45,7 +45,7 @@ class Plugin[MsgType: genpy.Message](ABC):
                 msg=msg, measurement_name=measurement_name, tags=self.tags
             )
             client = InfluxDB.get_instance()
-            client.write(point) # pyright: ignore [reportUnknownMemberType]
+            client.write(point)  # pyright: ignore [reportUnknownMemberType]
 
             logger.info(f"[{self.topic_name}] Sent measurement: {measurement_name}")
 
@@ -93,11 +93,11 @@ def load_plugins():
                 module = importlib.import_module(full_module_name)
 
                 # 3. Inspect for valid Plugin classes
-                for _ , obj in inspect.getmembers(module, inspect.isclass):
+                for _, obj in inspect.getmembers(module, inspect.isclass):
                     # Must inherit from Plugin, but NOT be the Plugin class itself
                     if issubclass(obj, Plugin) and obj is not Plugin:
                         # Instantiate the plugin
-                        instance: Plugin[genpy.Message] = obj() # pyright: ignore [reportUnknownVariableType]
+                        instance: Plugin[genpy.Message] = obj()  # pyright: ignore [reportUnknownVariableType]
 
                         if instance.is_enabled:
                             logger.info(

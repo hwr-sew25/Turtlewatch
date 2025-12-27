@@ -10,7 +10,7 @@ logger = logging.getLogger("BridgeLogger")
 
 
 class AlertSystem:
-    last_alert_time : None | datetime = None
+    last_alert_time: None | datetime = None
     COOLDOWN_SECONDS: int = 60
 
     @classmethod
@@ -25,7 +25,7 @@ class AlertSystem:
         client = WebClient(token=os.environ.get("SLACK_TOKEN"), ssl=ssl_context)
 
         try:
-            result = client.chat_postMessage(channel=channel_id, text=message_text) # pyright: ignore [reportUnknownMemberType]
+            result = client.chat_postMessage(channel=channel_id, text=message_text)  # pyright: ignore [reportUnknownMemberType]
 
             cls.last_alert_time = datetime.now()
 

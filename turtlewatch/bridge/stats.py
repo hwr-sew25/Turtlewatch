@@ -88,7 +88,7 @@ class StatsTracker:
 
             for name, query in scalar_queries.items():
                 # 'dataframe' mode returns a Pandas DataFrame, which wraps NumPy
-                result = client.query(query=query, language="influxql", mode="pandas") # pyright: ignore [reportUnknownVariableType, reportUnknownMemberType]
+                result = client.query(query=query, language="influxql", mode="pandas")  # pyright: ignore [reportUnknownVariableType, reportUnknownMemberType]
 
                 df = cast(pd.DataFrame, result)
 
@@ -103,7 +103,7 @@ class StatsTracker:
                 WHERE time >= {s.start_time} AND time <= {s.end_time}
             """
 
-            result = client.query(query=dist_query, language="influxql", mode="pandas") # pyright: ignore [reportUnknownVariableType, reportUnknownMemberType]
+            result = client.query(query=dist_query, language="influxql", mode="pandas")  # pyright: ignore [reportUnknownVariableType, reportUnknownMemberType]
             df_dist = cast(pd.DataFrame, result)
 
             if not df_dist.empty and len(df_dist) > 1:
@@ -165,7 +165,7 @@ class StatsTracker:
             }
 
             print(point)
-            client.write(point) # pyright: ignore [reportUnknownMemberType]
+            client.write(point)  # pyright: ignore [reportUnknownMemberType]
             logger.info("Saved session in StatsDB")
 
         except Exception as e:

@@ -40,7 +40,7 @@ def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] |
             msg=msg, measurement_name=measurement_name, tags=tags
         )
         client = InfluxDB.get_instance()
-        client.write(point) # pyright: ignore [reportUnknownMemberType]
+        client.write(point)  # pyright: ignore [reportUnknownMemberType]
         logger.info(f"send: {measurement_name}")
 
     except Exception as e:
@@ -84,6 +84,6 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("Stopping...")
     else:
-        node = rospy.init_node("turtlewatch", anonymous=True) # pyright: ignore [reportUnknownMemberType]
+        node = rospy.init_node("turtlewatch", anonymous=True)  # pyright: ignore [reportUnknownMemberType]
         main(active_plugins)
         rospy.spin()

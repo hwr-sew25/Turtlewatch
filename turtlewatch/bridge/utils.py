@@ -3,7 +3,7 @@ import time
 from typing import Any
 
 
-def flatten_ros_message(msg: rospy.Message, prefix:str ="") -> dict[str, Any]:
+def flatten_ros_message(msg: rospy.Message, prefix: str = "") -> dict[str, Any]:
     items: dict[str, Any] = {}
 
     for slot in msg.__slots__:
@@ -14,10 +14,10 @@ def flatten_ros_message(msg: rospy.Message, prefix:str ="") -> dict[str, Any]:
             items.update(flatten_ros_message(value, key))
 
         elif isinstance(value, (list, tuple)):
-            for i, item in enumerate(value): # pyright: ignore [reportUnknownVariableType, reportUnknownArgumentType]
+            for i, item in enumerate(value):  # pyright: ignore [reportUnknownVariableType, reportUnknownArgumentType]
                 indexed_key = f"{key}[{i}]"
-                if hasattr(item, "__slots__"): # pyright: ignore [reportUnknownArgumentType]
-                    items.update(flatten_ros_message(item, indexed_key)) # pyright: ignore [reportUnknownArgumentType]
+                if hasattr(item, "__slots__"):  # pyright: ignore [reportUnknownArgumentType]
+                    items.update(flatten_ros_message(item, indexed_key))  # pyright: ignore [reportUnknownArgumentType]
                 else:
                     items[indexed_key] = item
         else:

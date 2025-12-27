@@ -65,7 +65,7 @@ class OdometryPlugin(Plugin[Odometry]):
             }
         msg = Odometry()
         msg.header = Header()
-        msg.header.stamp = genpy.Time.from_sec(time.time()) # pyright: ignore [reportUnknownMemberType]
+        msg.header.stamp = genpy.Time.from_sec(time.time())  # pyright: ignore [reportUnknownMemberType]
         msg.header.frame_id = "odom"
         msg.child_frame_id = "base_link"
 

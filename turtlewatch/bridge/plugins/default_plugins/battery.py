@@ -31,7 +31,7 @@ class BatteryPlugin(Plugin[BatteryState]):
 
         msg = BatteryState()
         msg.header = Header()
-        msg.header.stamp = genpy.Time.from_sec(time.time()) # pyright: ignore [reportUnknownMemberType]
+        msg.header.stamp = genpy.Time.from_sec(time.time())  # pyright: ignore [reportUnknownMemberType]
 
         # 2. Simulate Draining
         # Decrease percentage by 0.5% every callback

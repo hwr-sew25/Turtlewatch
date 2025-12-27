@@ -47,14 +47,14 @@ class SignalStatusPlugin(Plugin[SignalState]):
 
             if self.tags:
                 for k, v in self.tags.items():
-                    _ = point.tag(k, v) # pyright: ignore [reportUnknownMemberType]
+                    _ = point.tag(k, v)  # pyright: ignore [reportUnknownMemberType]
 
-            _ = point.tag("state_label", state_str) # pyright: ignore [reportUnknownMemberType]
+            _ = point.tag("state_label", state_str)  # pyright: ignore [reportUnknownMemberType]
 
-            _ = point.field("state_code", int(msg.state)) # pyright: ignore [reportUnknownMemberType]
+            _ = point.field("state_code", int(msg.state))  # pyright: ignore [reportUnknownMemberType]
 
             client = InfluxDB.get_instance()
-            client.write(point) # pyright: ignore [reportUnknownMemberType]
+            client.write(point)  # pyright: ignore [reportUnknownMemberType]
             self.log(f"Send: {measurement_name} -> {state_str} ({msg.state})")
 
         except Exception as e:
