@@ -3,8 +3,8 @@ import time
 import genpy
 from typing import Any, override
 from bridge.plugin_loader import Plugin
-from ros_msgs.nav_msgs.msg._Odometry import Odometry
-from ros_msgs.std_msgs.msg._Header import Header
+from nav_msgs.msg._Odometry import Odometry
+from std_msgs.msg._Header import Header
 
 
 class OdometryPlugin(Plugin[Odometry]):
@@ -54,7 +54,6 @@ class OdometryPlugin(Plugin[Odometry]):
 
         Integrates velocity commands over time to compute position.
         """
-        global _route_start_time
 
         if not state:
             state = {
@@ -66,7 +65,7 @@ class OdometryPlugin(Plugin[Odometry]):
             }
         msg = Odometry()
         msg.header = Header()
-        msg.header.stamp = genpy.Time.from_sec(time.time())
+        msg.header.stamp = genpy.Time.from_sec(time.time()) # pyright: ignore [reportUnknownMemberType]
         msg.header.frame_id = "odom"
         msg.child_frame_id = "base_link"
 

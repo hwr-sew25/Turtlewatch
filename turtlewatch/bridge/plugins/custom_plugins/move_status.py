@@ -7,8 +7,8 @@ from influxdb_client_3 import Point
 from bridge.database_client import InfluxDB
 from bridge.plugin_loader import Plugin
 from bridge.stats import StatsTracker
-from ros_msgs.actionlib_msgs.msg._GoalID import GoalID
-from ros_msgs.actionlib_msgs.msg._GoalStatus import GoalStatus
+from actionlib_msgs.msg._GoalID import GoalID
+from actionlib_msgs.msg._GoalStatus import GoalStatus
 
 
 class MoveStatusPlugin(Plugin[GoalStatus]):

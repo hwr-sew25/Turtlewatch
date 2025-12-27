@@ -1,5 +1,5 @@
 import logging
-from influxdb_client_3 import InfluxDBClient3, write_client_options, WriteOptions
+from influxdb_client_3 import InfluxDBClient3, write_client_options, WriteOptions # pyright: ignore [reportUnknownVariableType]
 
 logger = logging.getLogger("BridgeLogger")
 

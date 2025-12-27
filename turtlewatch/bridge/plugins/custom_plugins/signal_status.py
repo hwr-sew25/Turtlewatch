@@ -8,7 +8,7 @@ from bridge.alert import AlertSystem
 from bridge.database_client import InfluxDB
 from bridge.plugin_loader import Plugin
 from ros_msgs.custom_msgs.msg._SignalState import SignalState
-from ros_msgs.std_msgs.msg._Header import Header
+from std_msgs.msg._Header import Header
 
 
 class SignalStatusPlugin(Plugin[SignalState]):
@@ -47,14 +47,14 @@ class SignalStatusPlugin(Plugin[SignalState]):
 
             if self.tags:
                 for k, v in self.tags.items():
-                    point.tag(k, v)
+                    _ = point.tag(k, v) # pyright: ignore [reportUnknownMemberType]
 
-            point.tag("state_label", state_str)
+            _ = point.tag("state_label", state_str) # pyright: ignore [reportUnknownMemberType]
 
-            point.field("state_code", int(msg.state))
+            _ = point.field("state_code", int(msg.state)) # pyright: ignore [reportUnknownMemberType]
 
             client = InfluxDB.get_instance()
-            client.write(point)
+            client.write(point) # pyright: ignore [reportUnknownMemberType]
             self.log(f"Send: {measurement_name} -> {state_str} ({msg.state})")
 
         except Exception as e:

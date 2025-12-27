@@ -2,8 +2,8 @@ import time
 import genpy
 from typing import Any, override
 from bridge.plugin_loader import Plugin
-from ros_msgs.sensor_msgs.msg._BatteryState import BatteryState
-from ros_msgs.std_msgs.msg._Header import Header
+from sensor_msgs.msg._BatteryState import BatteryState
+from std_msgs.msg._Header import Header
 
 
 class BatteryPlugin(Plugin[BatteryState]):
@@ -31,7 +31,7 @@ class BatteryPlugin(Plugin[BatteryState]):
 
         msg = BatteryState()
         msg.header = Header()
-        msg.header.stamp = genpy.Time.from_sec(time.time())
+        msg.header.stamp = genpy.Time.from_sec(time.time()) # pyright: ignore [reportUnknownMemberType]
 
         # 2. Simulate Draining
         # Decrease percentage by 0.5% every callback
