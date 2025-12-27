@@ -151,8 +151,8 @@ class StatsTracker:
                     "session_id": str(s.id),
                 },
                 "fields": {
-                    "start_time": s.start_time,  
-                    "end_time": s.end_time,  
+                    "start_time": s.start_time,
+                    "end_time": s.end_time,
                     "number_of_messages": s.number_of_messages,
                     "completion_status": s.completion_status,
                     "total_distance_meters": s.navigation_metrics.total_distance_meters,
