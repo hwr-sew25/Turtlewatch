@@ -10,8 +10,8 @@ logger = logging.getLogger("BridgeLogger")
 
 
 class AlertSystem:
-    last_alert_time = None
-    COOLDOWN_SECONDS = 60
+    last_alert_time: None | datetime = None
+    COOLDOWN_SECONDS: int = 60
 
     @classmethod
     def send_slack_message(cls, channel_id: str, message_text: str):
@@ -25,7 +25,7 @@ class AlertSystem:
         client = WebClient(token=os.environ.get("SLACK_TOKEN"), ssl=ssl_context)
 
         try:
-            result = client.chat_postMessage(channel=channel_id, text=message_text)
+            result = client.chat_postMessage(channel=channel_id, text=message_text)  # pyright: ignore [reportUnknownMemberType]
 
             cls.last_alert_time = datetime.now()
 

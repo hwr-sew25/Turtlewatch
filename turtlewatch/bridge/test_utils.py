@@ -1,5 +1,6 @@
 from ros_msgs.geometry_msgs.msg import Pose
 from bridge.utils import flatten_ros_message, ros_msg_to_influx_point
+import pytest
 
 
 def test_flatten_ros_message():
@@ -27,7 +28,7 @@ def test_flatten_ros_message():
     assert flat == flat_correct
 
 
-def test_ros_msg_to_influx_point(monkeypatch):
+def test_ros_msg_to_influx_point(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr("time.time_ns", lambda: 1765540015249344480)
 
     pose = Pose()

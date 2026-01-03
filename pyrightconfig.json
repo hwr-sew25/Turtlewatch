@@ -3,10 +3,15 @@
   "venvPath": "turtlewatch",
   "venv": ".venv",
   "reportMissingTypeStubs": false,
+  "reportUnnecessaryTypeIgnoreComment": true,
+  "reportAny": false,
+  "reportExplicitAny": false,
   "executionEnvironments": [
     {
       "root": "turtlewatch",
-      "extraPaths": ["."]
+      "extraPaths": [
+        "libs/genpy/src",
+      ]
     }
   ]
 }

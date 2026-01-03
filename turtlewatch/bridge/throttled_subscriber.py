@@ -1,40 +1,33 @@
 import os
 import time
-from typing import Callable
 import genpy
 import rospy
 
-from bridge.mock import mock_sub
+from bridge.mock import mock_subscriber
+from bridge.plugin_loader import Plugin
 from bridge.stats import StatsTracker
-from bridge.types import Seconds
 
 
 class ThrottledSubscriber[MsgType: genpy.Message]:
     def __init__(
         self,
-        topic_name: str,
-        msg_class: type[MsgType],
-        callback: Callable[[MsgType, str, dict[str, str] | None], None],
-        interval: Seconds,
-        tags: dict[str, str] | None = None,
+        plugin: Plugin[genpy.Message],
     ):
-        self.topic_name: str = topic_name
-        self.msg_class: type[MsgType] = msg_class
-        self.callback: Callable[[MsgType, str, dict[str, str] | None], None] = callback
+        self.plugin: Plugin[genpy.Message] = plugin
         self.last_time: float = time.time()
-        self.interval: Seconds = interval
-        self.tags: dict[str, str] | None = tags
 
         mock = os.getenv("MOCK")
         if mock and mock.lower() == "true":
-            mock_sub(topic_name, msg_class, self._internal_callback, interval)
+            mock_subscriber(plugin)
         else:
-            _ = rospy.Subscriber(topic_name, msg_class, self._internal_callback)
+            _ = rospy.Subscriber(
+                plugin.topic_name, plugin.ros_msg_type, self._internal_callback
+            )
 
     def should_run(self) -> bool:
         """Returns True if the action should run again based on system time."""
         now = time.time()
-        if now - self.last_time >= self.interval:
+        if now - self.last_time >= self.plugin.interval:
             self.last_time = now
             return True
         return False
@@ -45,7 +38,7 @@ class ThrottledSubscriber[MsgType: genpy.Message]:
         # NOTE don't throttle twice
         mock = os.getenv("MOCK")
         if mock and mock.lower() == "true":
-            self.callback(msg, self.topic_name, self.tags)
+            self.plugin.callback(msg)
         else:
             if self.should_run():
-                self.callback(msg, self.topic_name, self.tags)
+                self.plugin.callback(msg)
