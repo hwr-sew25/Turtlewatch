@@ -5,11 +5,11 @@ from dotenv import load_dotenv
 import genpy
 import rospy
 from bridge import plugin_loader
+from bridge.publishers import register_publishers
 from bridge.stats import StatsTracker
 import logging
 from bridge.database_client import InfluxDB, StatsDB
 from bridge.throttled_subscriber import ThrottledSubscriber
-from bridge.utils import ros_msg_to_influx_point
 
 logger = logging.getLogger("BridgeLogger")
 
@@ -31,20 +31,6 @@ def setup_logger():
 def main(active_plugins: list[plugin_loader.Plugin[genpy.Message]]):
     for plugin in active_plugins:
         _ = ThrottledSubscriber[genpy.Message](plugin=plugin)
-
-
-def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] | None):
-    measurement_name = topic_name.removeprefix("/").replace("/", "_")
-    try:
-        point = ros_msg_to_influx_point(
-            msg=msg, measurement_name=measurement_name, tags=tags
-        )
-        client = InfluxDB.get_instance()
-        client.write(point)  # pyright: ignore [reportUnknownMemberType]
-        logger.info(f"send: {measurement_name}")
-
-    except Exception as e:
-        logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
 
 
 if __name__ == "__main__":
@@ -78,12 +64,17 @@ if __name__ == "__main__":
     StatsTracker.start_new_session()
 
     if mock and mock.lower() == "true":
+        # MOCKING
         main(active_plugins)
         try:
             _ = threading.Event().wait()
         except KeyboardInterrupt:
             print("Stopping...")
+        # END MOCKING
     else:
+        # PRODUCTION
         node = rospy.init_node("turtlewatch", anonymous=True)  # pyright: ignore [reportUnknownMemberType]
+        register_publishers()
         main(active_plugins)
         rospy.spin()
+        # END PRODUCTION
