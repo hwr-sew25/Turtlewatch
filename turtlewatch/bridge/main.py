@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import genpy
 import rospy
 from bridge import plugin_loader
+from bridge.publishers import register_publishers
 from bridge.stats import StatsTracker
 import logging
 from bridge.database_client import InfluxDB, StatsDB
@@ -26,7 +27,6 @@ def setup_logger():
 
     # I guess this keeps it logging to /rosout
     logger.propagate = True
-
 
 def main(active_plugins: list[plugin_loader.Plugin[genpy.Message]]):
     for plugin in active_plugins:
@@ -63,12 +63,17 @@ if __name__ == "__main__":
     StatsTracker.start_new_session()
 
     if mock and mock.lower() == "true":
+        # MOCKING 
         main(active_plugins)
         try:
             _ = threading.Event().wait()
         except KeyboardInterrupt:
             print("Stopping...")
+        # END MOCKING
     else:
+        # PRODUCTION
         node = rospy.init_node("turtlewatch", anonymous=True)  # pyright: ignore [reportUnknownMemberType]
+        register_publishers()
         main(active_plugins)
         rospy.spin()
+        # END PRODUCTION
