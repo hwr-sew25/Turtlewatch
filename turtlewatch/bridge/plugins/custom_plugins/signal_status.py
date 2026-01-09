@@ -7,10 +7,12 @@ from influxdb_client_3 import Point
 from bridge.alert import AlertSystem
 from bridge.database_client import InfluxDB
 from bridge.plugin_loader import Plugin
+from bridge.utils import ros_msg_to_influx_point
 from ros_msgs.custom_msgs.msg._SignalState import SignalState
 from ros_msgs.custom_msgs.msg._SignalStatusUpdate import SignalStatusUpdate
 from std_msgs.msg._Header import Header
 
+logger = logging.getLogger("BridgeLogger")
 
 class SignalStatusPlugin(Plugin[SignalStatusUpdate]):
     """
@@ -43,15 +45,7 @@ class SignalStatusPlugin(Plugin[SignalStatusUpdate]):
 
     @override
     def callback(self, msg: SignalStatusUpdate):
-        measurement_name = "robot_signal_status"
-
-        # Use names if provided, otherwise fall back to mapping
-        current_label = msg.current_state_name or self.STATE_LABELS.get(
-            msg.current_state, "UNKNOWN"
-        )
-        previous_label = msg.previous_state_name or self.STATE_LABELS.get(
-            msg.previous_state, "UNKNOWN"
-        )
+        measurement_name = self.topic_name.removeprefix("/").replace("/", "_")
 
         if msg.current_state in (
             SignalState.ERROR_MAJOR,
@@ -59,30 +53,23 @@ class SignalStatusPlugin(Plugin[SignalStatusUpdate]):
             SignalState.ERROR_MINOR_NAV,
         ):
             AlertSystem.send_slack_message(
-                "C09PRS9P08K", f"Signal error: {current_label} ({msg.current_state})"
+                "C09PRS9P08K", f"Signal error: {msg.current_state_name}, Error: {msg.info}"
             )
 
         try:
-            point = Point(measurement_name)
-
-            for k, v in self.tags.items():
-                point.tag(k, v)
-
-            point.tag("current_label", current_label)
-            point.tag("previous_label", previous_label)
-            point.field("current_state", int(msg.current_state))
-            point.field("previous_state", int(msg.previous_state))
-            point.field("info", msg.info or "")
-
-            client = InfluxDB.get_instance()
-            client.write(point)  # pyright: ignore[reportUnknownMemberType]
-            self.log(
-                f"Send: {measurement_name} -> {current_label} ({msg.current_state}) "
-                f"prev={previous_label} ({msg.previous_state})"
+            point = ros_msg_to_influx_point(
+                msg=msg, measurement_name=measurement_name, tags=self.tags
             )
+            client = InfluxDB.get_instance()
+            client.write(point)  # pyright: ignore [reportUnknownMemberType]
+
+            logger.info(f"[{self.topic_name}] Sent measurement: {measurement_name}")
 
         except Exception as e:
-            self.log(f"Failed to write {measurement_name}: {e}")
+            logger.error(
+                f"[{self.topic_name}] Failed to write {measurement_name}: {e}",
+                exc_info=True,
+            )
 
     @override
     def mock_generator(
