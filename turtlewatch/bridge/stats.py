@@ -11,14 +11,6 @@ import pandas as pd
 logger = logging.getLogger("BridgeLogger")
 
 
-# class CompletionStatus(Enum):
-#     PENDING = 0
-#     IN_PROGRESS = 1
-#     COMPLETED = 2
-#     FAILED = 3
-#     ABORTED = 4
-
-
 @dataclass
 class NavigationMetrics:
     total_distance_meters: float = 0

@@ -32,21 +32,6 @@ def main(active_plugins: list[plugin_loader.Plugin[genpy.Message]]):
     for plugin in active_plugins:
         _ = ThrottledSubscriber[genpy.Message](plugin=plugin)
 
-
-def generic_callback(msg: genpy.Message, topic_name: str, tags: dict[str, str] | None):
-    measurement_name = topic_name.removeprefix("/").replace("/", "_")
-    try:
-        point = ros_msg_to_influx_point(
-            msg=msg, measurement_name=measurement_name, tags=tags
-        )
-        client = InfluxDB.get_instance()
-        client.write(point)  # pyright: ignore [reportUnknownMemberType]
-        logger.info(f"send: {measurement_name}")
-
-    except Exception as e:
-        logger.error(f"Failed to write {measurement_name}: {e}", exc_info=True)
-
-
 if __name__ == "__main__":
     setup_logger()
     _ = load_dotenv()
