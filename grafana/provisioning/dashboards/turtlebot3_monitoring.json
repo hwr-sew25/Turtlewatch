@@ -1265,7 +1265,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": ["lastNotNull"],
-          "fields": "",
+          "fields": "/^current_state_name$/",
           "values": false
         },
         "showPercentChange": false,
@@ -1474,7 +1474,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": ["lastNotNull"],
-          "fields": "",
+          "fields": "/^info$/",
           "values": false
         },
         "showPercentChange": false,
