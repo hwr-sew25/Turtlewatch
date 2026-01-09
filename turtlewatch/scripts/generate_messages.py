@@ -94,7 +94,23 @@ def find_package_dir(package_name):
     if pkg_dir.exists():
         return pkg_dir
 
-    # Then check in libs directly (for std_msgs)
+    # Special-case: allow custom_msgs packages to live in a nested folder
+    # under libs/custom_msgs (e.g., libs/custom_msgs/signal_msgs/msg/*).
+    if package_name == "custom_msgs" and CUSTOM_MSG_DIR.exists():
+        # Use direct msg folder if it exists
+        direct_msg_dir = CUSTOM_MSG_DIR / "msg"
+        direct_srv_dir = CUSTOM_MSG_DIR / "srv"
+        if direct_msg_dir.exists() or direct_srv_dir.exists():
+            return CUSTOM_MSG_DIR
+
+        # Otherwise pick the first child directory that contains msg/srv files
+        for subdir in CUSTOM_MSG_DIR.iterdir():
+            if not subdir.is_dir():
+                continue
+            if (subdir / "msg").exists() or (subdir / "srv").exists():
+                return subdir
+
+    # Then check in libs directly (for std_msgs and other top-levels)
     pkg_dir = LIBS_DIR / package_name
     if pkg_dir.exists():
         return pkg_dir
@@ -106,9 +122,9 @@ def generate_package_messages(
     package_name, msg_dir, srv_dir, output_dir, include_paths
 ):
     """Generate Python code for a single package's messages and services."""
-    print("\n{'=' * 60}")
+    print("\n" + "=" * 60)
     print(f"Processing package: {package_name}")
-    print("{'=' * 60}")
+    print("=" * 60)
 
     success = True
 
