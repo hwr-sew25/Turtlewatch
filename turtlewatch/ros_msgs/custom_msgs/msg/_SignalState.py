@@ -9,25 +9,37 @@ import struct
 import std_msgs.msg
 
 class SignalState(genpy.Message):
-  _md5sum = "95a233dde7d897e118e2dd26427b3c0e"
+  _md5sum = "a7c00b2da6c3e020403b0dee2117351a"
   _type = "custom_msgs/SignalState"
   _has_header = True  # flag to mark the presence of a Header object
-  _full_text = """# FILE: msg/SignalState.msg
-
-# --- ENUM DEFINITIONS (Constants) ---
-uint8 IDLE=0
-uint8 GREETING=1
-uint8 SPEAKING=2
-uint8 MOVING=3
-uint8 STOPPED=4
-uint8 REVERSE=5
-uint8 ERROR_MINOR=6
-uint8 ERROR_CRITICAL=7
-uint8 LOW_BATTERY=8
-
-# --- MESSAGE FIELDS ---
+  _full_text = """# Aktueller Signalzustand des Roboters
+# Published auf: /signals/current_state
+# Team: Signals
 Header header
-uint8 state
+# State-ID (entspricht SignalState Enum)
+uint8 state_id
+# State-Name als String für Debugging
+string state_name
+# LED aktiv?
+bool led_active
+# Audio aktiv?
+bool audio_active
+# Konstanten für state_id
+uint8 GREETING = 0
+uint8 IDLE = 1
+uint8 BUSY = 2
+uint8 STOP_BUSY = 3
+uint8 ERROR_MINOR_STUCK = 4
+uint8 ERROR_MINOR_NAV = 5
+uint8 ROOM_NOT_FOUND = 6
+uint8 ERROR_MAJOR = 7
+uint8 LOW_BATTERY = 8
+uint8 MOVE = 9
+uint8 START_MOVE = 10
+uint8 STOP_MOVE = 11
+uint8 GOAL_REACHED = 12
+uint8 REVERSE = 13
+uint8 SPEAKING = 14
 ================================================================================
 MSG: std_msgs/Header
 # Standard metadata for higher-level stamped data types.
@@ -45,18 +57,24 @@ time stamp
 string frame_id
 """
   # Pseudo-constants
-  IDLE = 0
-  GREETING = 1
-  SPEAKING = 2
-  MOVING = 3
-  STOPPED = 4
-  REVERSE = 5
-  ERROR_MINOR = 6
-  ERROR_CRITICAL = 7
+  GREETING = 0
+  IDLE = 1
+  BUSY = 2
+  STOP_BUSY = 3
+  ERROR_MINOR_STUCK = 4
+  ERROR_MINOR_NAV = 5
+  ROOM_NOT_FOUND = 6
+  ERROR_MAJOR = 7
   LOW_BATTERY = 8
+  MOVE = 9
+  START_MOVE = 10
+  STOP_MOVE = 11
+  GOAL_REACHED = 12
+  REVERSE = 13
+  SPEAKING = 14
 
-  __slots__ = ['header','state']
-  _slot_types = ['std_msgs/Header','uint8']
+  __slots__ = ['header','state_id','state_name','led_active','audio_active']
+  _slot_types = ['std_msgs/Header','uint8','string','bool','bool']
 
   def __init__(self, *args, **kwds):
     """
@@ -66,7 +84,7 @@ string frame_id
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       header,state
+       header,state_id,state_name,led_active,audio_active
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -77,11 +95,20 @@ string frame_id
       # message fields cannot be None, assign default values for those that are
       if self.header is None:
         self.header = std_msgs.msg.Header()
-      if self.state is None:
-        self.state = 0
+      if self.state_id is None:
+        self.state_id = 0
+      if self.state_name is None:
+        self.state_name = ''
+      if self.led_active is None:
+        self.led_active = False
+      if self.audio_active is None:
+        self.audio_active = False
     else:
       self.header = std_msgs.msg.Header()
-      self.state = 0
+      self.state_id = 0
+      self.state_name = ''
+      self.led_active = False
+      self.audio_active = False
 
   def _get_types(self):
     """
@@ -103,8 +130,16 @@ string frame_id
         _x = _x.encode('utf-8')
         length = len(_x)
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
-      _x = self.state
+      _x = self.state_id
       buff.write(_get_struct_B().pack(_x))
+      _x = self.state_name
+      length = len(_x)
+      if python3 or type(_x) == unicode:
+        _x = _x.encode('utf-8')
+        length = len(_x)
+      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+      _x = self
+      buff.write(_get_struct_2B().pack(_x.led_active, _x.audio_active))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -134,7 +169,22 @@ string frame_id
         self.header.frame_id = str[start:end]
       start = end
       end += 1
-      (self.state,) = _get_struct_B().unpack(str[start:end])
+      (self.state_id,) = _get_struct_B().unpack(str[start:end])
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      start = end
+      end += length
+      if python3:
+        self.state_name = str[start:end].decode('utf-8', 'rosmsg')
+      else:
+        self.state_name = str[start:end]
+      _x = self
+      start = end
+      end += 2
+      (_x.led_active, _x.audio_active,) = _get_struct_2B().unpack(str[start:end])
+      self.led_active = bool(self.led_active)
+      self.audio_active = bool(self.audio_active)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -155,8 +205,16 @@ string frame_id
         _x = _x.encode('utf-8')
         length = len(_x)
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
-      _x = self.state
+      _x = self.state_id
       buff.write(_get_struct_B().pack(_x))
+      _x = self.state_name
+      length = len(_x)
+      if python3 or type(_x) == unicode:
+        _x = _x.encode('utf-8')
+        length = len(_x)
+      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+      _x = self
+      buff.write(_get_struct_2B().pack(_x.led_active, _x.audio_active))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -187,7 +245,22 @@ string frame_id
         self.header.frame_id = str[start:end]
       start = end
       end += 1
-      (self.state,) = _get_struct_B().unpack(str[start:end])
+      (self.state_id,) = _get_struct_B().unpack(str[start:end])
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      start = end
+      end += length
+      if python3:
+        self.state_name = str[start:end].decode('utf-8', 'rosmsg')
+      else:
+        self.state_name = str[start:end]
+      _x = self
+      start = end
+      end += 2
+      (_x.led_active, _x.audio_active,) = _get_struct_2B().unpack(str[start:end])
+      self.led_active = bool(self.led_active)
+      self.audio_active = bool(self.audio_active)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -196,6 +269,12 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
+_struct_2B = None
+def _get_struct_2B():
+    global _struct_2B
+    if _struct_2B is None:
+        _struct_2B = struct.Struct("<2B")
+    return _struct_2B
 _struct_3I = None
 def _get_struct_3I():
     global _struct_3I
