@@ -10,7 +10,6 @@ from bridge.stats import StatsTracker
 import logging
 from bridge.database_client import InfluxDB, StatsDB
 from bridge.throttled_subscriber import ThrottledSubscriber
-from bridge.utils import ros_msg_to_influx_point
 
 logger = logging.getLogger("BridgeLogger")
 
@@ -28,9 +27,11 @@ def setup_logger():
     # I guess this keeps it logging to /rosout
     logger.propagate = True
 
+
 def main(active_plugins: list[plugin_loader.Plugin[genpy.Message]]):
     for plugin in active_plugins:
         _ = ThrottledSubscriber[genpy.Message](plugin=plugin)
+
 
 if __name__ == "__main__":
     setup_logger()
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     StatsTracker.start_new_session()
 
     if mock and mock.lower() == "true":
-        # MOCKING 
+        # MOCKING
         main(active_plugins)
         try:
             _ = threading.Event().wait()

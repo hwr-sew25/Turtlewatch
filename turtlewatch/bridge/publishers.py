@@ -1,4 +1,4 @@
-""" Publisher module
+"""Publisher module
 
 Usage:
     from bridge.publishers import register_publishers, get_publisher, Publisher
@@ -14,6 +14,7 @@ Usage:
         msg.voltage = 12.5
         pub.publish(msg)
 """
+
 from __future__ import annotations
 from enum import Enum
 import logging
@@ -24,8 +25,10 @@ logger = logging.getLogger("BridgeLogger")
 
 _publishers: dict[Publisher, rospy.Publisher] = {}
 
+
 class Publisher(Enum):
     BATTERY_STATE = "monitoring/battery_state"
+
 
 def register_publishers() -> None:
     """
@@ -33,16 +36,19 @@ def register_publishers() -> None:
     """
     # NOTE would be nicer to have it in the plugins but since we only need 1-2 publishers,
     # i don't care
-    _publishers[Publisher.BATTERY_STATE] = rospy.Publisher(Publisher.BATTERY_STATE.value, BatteryState, queue_size=10)
-    logger.warning(f"Registered publisher: Key: battery_state -> Topic: battery_state")
+    _publishers[Publisher.BATTERY_STATE] = rospy.Publisher(
+        Publisher.BATTERY_STATE.value, BatteryState, queue_size=10
+    )
+    logger.warning("Registered publisher: Key: battery_state -> Topic: battery_state")
+
 
 def get_publisher(key: Publisher) -> rospy.Publisher | None:
     """
-    Retrieves a publisher by its key. 
+    Retrieves a publisher by its key.
     Returns None if the publisher does not exist
     """
     if key not in _publishers:
         logger.warning(f"Publisher {key} does not exist.")
         return None
-    
+
     return _publishers[key]
