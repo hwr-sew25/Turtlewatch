@@ -9,9 +9,10 @@
   "executionEnvironments": [
     {
       "root": "turtlewatch",
-      "extraPaths": [
-        "libs/genpy/src",
-      ]
+    "extraPaths": [
+      "libs/genpy/src",
+    ]
+
     }
   ]
 }
