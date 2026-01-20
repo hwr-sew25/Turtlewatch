@@ -38,7 +38,12 @@ PACKAGE_ORDER = [
 ]
 
 
-def fix_imports_in_directory(directory, package_name):
+def fix_imports_in_directory(
+    directory,
+    package_name,
+    extra_packages=None,
+    import_aliases=None,
+):
     """Fix imports in generated Python files to use relative imports."""
     print(f"Fixing imports in {directory}...")
 
@@ -63,11 +68,14 @@ def fix_imports_in_directory(directory, package_name):
             "custom_msgs",
             package_name,
         }
+        if extra_packages:
+            packages.update(extra_packages)
 
         for pkg in packages:
+            import_pkg = import_aliases.get(pkg, pkg) if import_aliases else pkg
             content = re.sub(
                 rf"^from {re.escape(pkg)}\.msg import \*$",
-                f"import {pkg}.msg",
+                f"import {import_pkg}.msg",
                 content,
                 flags=re.MULTILINE,
             )
@@ -94,22 +102,6 @@ def find_package_dir(package_name):
     if pkg_dir.exists():
         return pkg_dir
 
-    # Special-case: allow custom_msgs packages to live in a nested folder
-    # under libs/custom_msgs (e.g., libs/custom_msgs/signal_msgs/msg/*).
-    if package_name == "custom_msgs" and CUSTOM_MSG_DIR.exists():
-        # Use direct msg folder if it exists
-        direct_msg_dir = CUSTOM_MSG_DIR / "msg"
-        direct_srv_dir = CUSTOM_MSG_DIR / "srv"
-        if direct_msg_dir.exists() or direct_srv_dir.exists():
-            return CUSTOM_MSG_DIR
-
-        # Otherwise pick the first child directory that contains msg/srv files
-        for subdir in CUSTOM_MSG_DIR.iterdir():
-            if not subdir.is_dir():
-                continue
-            if (subdir / "msg").exists() or (subdir / "srv").exists():
-                return subdir
-
     # Then check in libs directly (for std_msgs and other top-levels)
     pkg_dir = LIBS_DIR / package_name
     if pkg_dir.exists():
@@ -118,8 +110,61 @@ def find_package_dir(package_name):
     return None
 
 
+def iter_custom_message_packages():
+    """Yield custom message package directories and names."""
+    if not CUSTOM_MSG_DIR.exists():
+        return
+
+    direct_msg_dir = CUSTOM_MSG_DIR / "msg"
+    direct_srv_dir = CUSTOM_MSG_DIR / "srv"
+    if direct_msg_dir.exists() or direct_srv_dir.exists():
+        yield "custom_msgs", CUSTOM_MSG_DIR
+        return
+
+    for subdir in sorted(CUSTOM_MSG_DIR.iterdir(), key=lambda path: path.name):
+        if not subdir.is_dir():
+            continue
+        if (subdir / "msg").exists() or (subdir / "srv").exists():
+            yield subdir.name, subdir
+
+
+def custom_output_dir(package_name):
+    if package_name == "custom_msgs":
+        return ROS_MESSAGES_DIR / "custom_msgs"
+    return ROS_MESSAGES_DIR / "custom_msgs" / package_name
+
+
+def write_custom_msgs_init(package_names):
+    if not package_names:
+        return
+
+    custom_root = ROS_MESSAGES_DIR / "custom_msgs"
+    custom_root.mkdir(parents=True, exist_ok=True)
+
+    package_list = sorted(package_names)
+    init_lines = [
+        "# Auto-generated init for custom_msgs",
+        "import importlib",
+        "import sys",
+        "",
+        f"__all__ = {package_list!r}",
+        "",
+        "for name in __all__:",
+        '    module = importlib.import_module(f"{__name__}.{name}")',
+        "    sys.modules[name] = module",
+        "",
+    ]
+    (custom_root / "__init__.py").write_text("\n".join(init_lines))
+
+
 def generate_package_messages(
-    package_name, msg_dir, srv_dir, output_dir, include_paths
+    package_name,
+    msg_dir,
+    srv_dir,
+    output_dir,
+    include_paths,
+    extra_import_packages=None,
+    extra_import_aliases=None,
 ):
     """Generate Python code for a single package's messages and services."""
     print("\n" + "=" * 60)
@@ -176,7 +221,12 @@ def generate_package_messages(
                 print("✓ Generated __init__.py")
 
                 # Fix imports in generated files to use relative imports
-                fix_imports_in_directory(msg_output, package_name)
+                fix_imports_in_directory(
+                    msg_output,
+                    package_name,
+                    extra_packages=extra_import_packages,
+                    import_aliases=extra_import_aliases,
+                )
 
     # Generate services
     if srv_dir and srv_dir.exists():
@@ -221,7 +271,12 @@ def generate_package_messages(
                 print("✓ Generated __init__.py")
 
                 # Fix imports in generated files to use relative imports
-                fix_imports_in_directory(srv_output, package_name)
+                fix_imports_in_directory(
+                    srv_output,
+                    package_name,
+                    extra_packages=extra_import_packages,
+                    import_aliases=extra_import_aliases,
+                )
 
     # Create a root __init__.py so the package can be imported directly
     # (e.g. `import roscpp.srv`) and to avoid collisions with any system
@@ -248,6 +303,22 @@ def main():
     # Build include paths (accumulate as we process packages)
     include_paths = {}
 
+    custom_package_dirs = list(iter_custom_message_packages())
+    custom_package_names = {name for name, _ in custom_package_dirs}
+    custom_include_paths = {
+        name: str(path / "msg")
+        for name, path in custom_package_dirs
+        if (path / "msg").exists()
+    }
+
+    write_custom_msgs_init(custom_package_names)
+
+    custom_import_aliases = {
+        name: ("custom_msgs" if name == "custom_msgs" else f"custom_msgs.{name}")
+        for name in custom_package_names
+    }
+    has_custom_subpackages = any(name != "custom_msgs" for name in custom_package_names)
+
     # Process each package
     for package_name in PACKAGE_ORDER:
         package_dir = find_package_dir(package_name)
@@ -260,6 +331,9 @@ def main():
 
         msg_dir = package_dir / "msg"
         srv_dir = package_dir / "srv"
+        if package_name == "custom_msgs" and has_custom_subpackages:
+            print("⚠ Skipping top-level custom_msgs (subpackages present)")
+            continue
         output_dir = ROS_MESSAGES_DIR / package_name
 
         # Add current package to include paths BEFORE generating
@@ -274,6 +348,36 @@ def main():
             srv_dir if srv_dir.exists() else None,
             output_dir,
             include_paths,
+            extra_import_packages=custom_package_names,
+            extra_import_aliases=custom_import_aliases,
+        )
+
+        if not success:
+            print(f"\n⚠ Package {package_name} had errors, but continuing...")
+
+    for package_name, package_dir in custom_package_dirs:
+        if package_name in PACKAGE_ORDER:
+            continue
+
+        print(f"Found {package_name} at: {package_dir}")
+
+        msg_dir = package_dir / "msg"
+        srv_dir = package_dir / "srv"
+        output_dir = custom_output_dir(package_name)
+
+        if msg_dir.exists():
+            include_paths[package_name] = str(msg_dir)
+
+        include_paths.update(custom_include_paths)
+
+        success = generate_package_messages(
+            package_name,
+            msg_dir if msg_dir.exists() else None,
+            srv_dir if srv_dir.exists() else None,
+            output_dir,
+            include_paths,
+            extra_import_packages=custom_package_names,
+            extra_import_aliases=custom_import_aliases,
         )
 
         if not success:
@@ -285,6 +389,8 @@ def main():
     print("\nGenerated Python packages are in:")
     print(f"  {ROS_MESSAGES_DIR}/")
     for package_name in PACKAGE_ORDER:
+        if package_name == "custom_msgs" and has_custom_subpackages:
+            continue
         output_dir = ROS_MESSAGES_DIR / package_name
         if output_dir.exists():
             msg_count = (
@@ -298,6 +404,25 @@ def main():
                 else 0
             )
             print(f"    {package_name}: {msg_count} messages, {srv_count} services")
+
+    for package_name, _ in custom_package_dirs:
+        if package_name in PACKAGE_ORDER:
+            continue
+        output_dir = custom_output_dir(package_name)
+        if output_dir.exists():
+            msg_count = (
+                len(list((output_dir / "msg").glob("_*.py")))
+                if (output_dir / "msg").exists()
+                else 0
+            )
+            srv_count = (
+                len(list((output_dir / "srv").glob("_*.py")))
+                if (output_dir / "srv").exists()
+                else 0
+            )
+            print(
+                f"    custom_msgs/{package_name}: {msg_count} messages, {srv_count} services"
+            )
 
 
 if __name__ == "__main__":
