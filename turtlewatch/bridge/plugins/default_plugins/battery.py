@@ -1,7 +1,10 @@
+import os
 import time
 import genpy
 from typing import Any, override
+
 from bridge.plugin_loader import Plugin
+from bridge.publishers import Publisher, get_publisher
 from sensor_msgs.msg._BatteryState import BatteryState
 from std_msgs.msg._Header import Header
 
@@ -12,6 +15,33 @@ class BatteryPlugin(Plugin[BatteryState]):
     is_enabled: bool = True
     tags: dict[str, str] = {}
     interval: float = 0.25
+
+
+## neue battery logik (volt to percent)
+    _voltage_min: float = 11.0
+    _voltage_max: float = 12.3
+    _voltage_range: float = _voltage_max - _voltage_min
+
+    def _calculate_percent(self, voltage: float) -> int:
+        raw_percent = ((voltage - self._voltage_min) / self._voltage_range) * 100
+        return max(0, min(100, int(raw_percent)))
+
+    @override
+    def callback(self, msg: BatteryState) -> None:
+        voltage = msg.voltage
+        if voltage is None:
+            return
+
+        percent_value = self._calculate_percent(voltage)
+        msg.percentage = percent_value / 100.0
+
+        mock = os.getenv("MOCK")
+        if not mock or mock.lower() != "true":
+            publisher = get_publisher(Publisher.BATTERY_STATE)
+            if publisher:
+                publisher.publish(msg)
+
+        super().callback(msg)
 
     @override
     def mock_generator(
@@ -40,9 +70,11 @@ class BatteryPlugin(Plugin[BatteryState]):
         state["voltage"] -= 0.01
 
         # 3. Reset logic (infinite loop simulation)
-        if state["percentage"] <= 0.0:
+        percent_value = self._calculate_percent(state["voltage"])
+        state["percentage"] = percent_value / 100.0
+        if percent_value <= 0:
             state["percentage"] = 1.0
-            state["voltage"] = 12.3
+            state["voltage"] = self._voltage_max
 
         # 4. Populate Message Fields
         msg.voltage = state["voltage"]
