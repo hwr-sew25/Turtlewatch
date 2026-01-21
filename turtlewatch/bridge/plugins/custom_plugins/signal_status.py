@@ -7,9 +7,9 @@ from bridge.alert import AlertSystem
 from bridge.database_client import InfluxDB
 from bridge.plugin_loader import Plugin
 from bridge.utils import ros_msg_to_influx_point
-from ros_msgs.custom_msgs.msg._SignalState import SignalState
-from ros_msgs.custom_msgs.msg._SignalStatusUpdate import SignalStatusUpdate
-from std_msgs.msg._Header import Header
+from std_msgs.msg import Header
+from ros_msgs.custom_msgs.signal.msg._SignalState import SignalState
+from ros_msgs.custom_msgs.signal.msg._SignalStatusUpdate import SignalStatusUpdate
 
 logger = logging.getLogger("BridgeLogger")
 
