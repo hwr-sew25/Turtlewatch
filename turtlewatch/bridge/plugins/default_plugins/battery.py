@@ -13,6 +13,25 @@ class BatteryPlugin(Plugin[BatteryState]):
     tags: dict[str, str] = {}
     interval: float = 0.25
 
+    full_voltage: float = 12.3
+    empty_voltage: float = 9.0
+
+    @override
+    def callback(self, msg: BatteryState) -> None:
+        voltage_range = self.full_voltage - self.empty_voltage
+        if voltage_range <= 0:
+            self.log("Invalid battery voltage range.")
+            return
+
+        if msg.voltage <= 0:
+            msg.percentage = 0.0
+        else:
+            normalized_voltage = (msg.voltage - self.empty_voltage) / voltage_range
+            percentage = max(0.0, min(1.0, normalized_voltage))
+            msg.percentage = round(percentage, 4)
+
+        super().callback(msg)
+
     @override
     def mock_generator(
         self, state: dict[str, Any]
@@ -25,8 +44,7 @@ class BatteryPlugin(Plugin[BatteryState]):
         # 1. Initialize State if it's the first run
         if not state:
             state = {
-                "percentage": 1.0,  # 1.0 = 100%
-                "voltage": 12.3,  # Typical full charge for a 3S LiPo
+                "voltage": self.full_voltage,  # Typical full charge for a 3S LiPo
             }
 
         msg = BatteryState()
@@ -34,19 +52,14 @@ class BatteryPlugin(Plugin[BatteryState]):
         msg.header.stamp = genpy.Time.from_sec(time.time())  # pyright: ignore [reportUnknownMemberType]
 
         # 2. Simulate Draining
-        # Decrease percentage by 0.5% every callback
-        state["percentage"] -= 0.005
-        # Simulate voltage drop roughly proportional to percentage
         state["voltage"] -= 0.01
 
         # 3. Reset logic (infinite loop simulation)
-        if state["percentage"] <= 0.0:
-            state["percentage"] = 1.0
-            state["voltage"] = 12.3
+        if state["voltage"] <= self.empty_voltage:
+            state["voltage"] = self.full_voltage
 
         # 4. Populate Message Fields
         msg.voltage = state["voltage"]
-        msg.percentage = state["percentage"]
         msg.current = -1.5  # Negative current indicates discharging
         msg.charge = 4.0  # Ah current capacity
         msg.capacity = 4.0  # Ah total capacity

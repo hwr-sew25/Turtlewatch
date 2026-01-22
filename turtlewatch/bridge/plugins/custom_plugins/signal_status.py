@@ -1,17 +1,12 @@
-import logging
 import time
 import genpy
 from typing import Any, override
 
 from bridge.alert import AlertSystem
-from bridge.database_client import InfluxDB
 from bridge.plugin_loader import Plugin
-from bridge.utils import ros_msg_to_influx_point
 from std_msgs.msg import Header
 from ros_msgs.custom_msgs.signal.msg._SignalState import SignalState
 from ros_msgs.custom_msgs.signal.msg._SignalStatusUpdate import SignalStatusUpdate
-
-logger = logging.getLogger("BridgeLogger")
 
 
 class SignalStatusPlugin(Plugin[SignalStatusUpdate]):
@@ -44,9 +39,7 @@ class SignalStatusPlugin(Plugin[SignalStatusUpdate]):
     }
 
     @override
-    def callback(self, msg: SignalStatusUpdate):
-        measurement_name = self.topic_name.removeprefix("/").replace("/", "_")
-
+    def callback(self, msg: SignalStatusUpdate) -> None:
         if msg.current_state in (
             SignalState.ERROR_MAJOR,
             SignalState.ERROR_MINOR_STUCK,
@@ -57,20 +50,7 @@ class SignalStatusPlugin(Plugin[SignalStatusUpdate]):
                 f"Signal error: {msg.current_state_name}, Error: {msg.info}",
             )
 
-        try:
-            point = ros_msg_to_influx_point(
-                msg=msg, measurement_name=measurement_name, tags=self.tags
-            )
-            client = InfluxDB.get_instance()
-            client.write(point)  # pyright: ignore [reportUnknownMemberType]
-
-            logger.info(f"[{self.topic_name}] Sent measurement: {measurement_name}")
-
-        except Exception as e:
-            logger.error(
-                f"[{self.topic_name}] Failed to write {measurement_name}: {e}",
-                exc_info=True,
-            )
+        super().callback(msg)
 
     @override
     def mock_generator(
