@@ -8,7 +8,7 @@ from std_msgs.msg._Header import Header
 
 
 class NavStatusPlugin(Plugin[NavStatus]):
-    topic_name: str = "/movement/nav_status"
+    topic_name: str = "/navbot/nav_status"
     ros_msg_type: type[NavStatus] = NavStatus
     is_enabled: bool = True
     tags: dict[str, str] = {}
