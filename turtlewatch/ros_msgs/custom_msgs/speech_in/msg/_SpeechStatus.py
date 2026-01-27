@@ -9,12 +9,14 @@ import struct
 import std_msgs.msg
 
 class SpeechStatus(genpy.Message):
-  _md5sum = "68e76b6c9d2c947a2e944aed8ac5da94"
+  _md5sum = "7a3d8e0542054c5fd4c4ea2cfa480ae8"
   _type = "speech_in/SpeechStatus"
   _has_header = True  # flag to mark the presence of a Header object
   _full_text = """Header header
 string level
 string message
+string event
+string transcript
 ================================================================================
 MSG: std_msgs/Header
 # Standard metadata for higher-level stamped data types.
@@ -31,8 +33,8 @@ time stamp
 #Frame this data is associated with
 string frame_id
 """
-  __slots__ = ['header','level','message']
-  _slot_types = ['std_msgs/Header','string','string']
+  __slots__ = ['header','level','message','event','transcript']
+  _slot_types = ['std_msgs/Header','string','string','string','string']
 
   def __init__(self, *args, **kwds):
     """
@@ -42,7 +44,7 @@ string frame_id
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       header,level,message
+       header,level,message,event,transcript
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -57,10 +59,16 @@ string frame_id
         self.level = ''
       if self.message is None:
         self.message = ''
+      if self.event is None:
+        self.event = ''
+      if self.transcript is None:
+        self.transcript = ''
     else:
       self.header = std_msgs.msg.Header()
       self.level = ''
       self.message = ''
+      self.event = ''
+      self.transcript = ''
 
   def _get_types(self):
     """
@@ -89,6 +97,18 @@ string frame_id
         length = len(_x)
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
       _x = self.message
+      length = len(_x)
+      if python3 or type(_x) == unicode:
+        _x = _x.encode('utf-8')
+        length = len(_x)
+      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+      _x = self.event
+      length = len(_x)
+      if python3 or type(_x) == unicode:
+        _x = _x.encode('utf-8')
+        length = len(_x)
+      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+      _x = self.transcript
       length = len(_x)
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
@@ -139,6 +159,24 @@ string frame_id
         self.message = str[start:end].decode('utf-8', 'rosmsg')
       else:
         self.message = str[start:end]
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      start = end
+      end += length
+      if python3:
+        self.event = str[start:end].decode('utf-8', 'rosmsg')
+      else:
+        self.event = str[start:end]
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      start = end
+      end += length
+      if python3:
+        self.transcript = str[start:end].decode('utf-8', 'rosmsg')
+      else:
+        self.transcript = str[start:end]
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -166,6 +204,18 @@ string frame_id
         length = len(_x)
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
       _x = self.message
+      length = len(_x)
+      if python3 or type(_x) == unicode:
+        _x = _x.encode('utf-8')
+        length = len(_x)
+      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+      _x = self.event
+      length = len(_x)
+      if python3 or type(_x) == unicode:
+        _x = _x.encode('utf-8')
+        length = len(_x)
+      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+      _x = self.transcript
       length = len(_x)
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
@@ -217,6 +267,24 @@ string frame_id
         self.message = str[start:end].decode('utf-8', 'rosmsg')
       else:
         self.message = str[start:end]
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      start = end
+      end += length
+      if python3:
+        self.event = str[start:end].decode('utf-8', 'rosmsg')
+      else:
+        self.event = str[start:end]
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      start = end
+      end += length
+      if python3:
+        self.transcript = str[start:end].decode('utf-8', 'rosmsg')
+      else:
+        self.transcript = str[start:end]
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill

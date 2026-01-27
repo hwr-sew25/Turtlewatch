@@ -2,7 +2,7 @@
 import importlib
 import sys
 
-__all__ = ['movement', 'signal', 'speech_in']
+__all__ = ['movement', 'signal', 'speech_in', 'speech_out']
 
 for name in __all__:
     module = importlib.import_module(f"{__name__}.{name}")
