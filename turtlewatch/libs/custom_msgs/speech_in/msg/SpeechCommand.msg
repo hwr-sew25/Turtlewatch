@@ -1,4 +1,5 @@
 Header header
-string command
 string target
-int32 floor
+string room_id
+string floor
+string wing
