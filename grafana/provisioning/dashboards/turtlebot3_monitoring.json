@@ -62,7 +62,7 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 9,
+        "w": 8,
         "x": 0,
         "y": 0
       },
@@ -179,7 +179,7 @@
       "gridPos": {
         "h": 4,
         "w": 4,
-        "x": 7,
+        "x": 8,
         "y": 0
       },
       "id": 9,
@@ -227,9 +227,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 16,
-        "w": 13,
-        "x": 13,
+        "h": 12,
+        "w": 12,
+        "x": 12,
         "y": 0
       },
       "id": 6,
@@ -337,7 +337,7 @@
       "gridPos": {
         "h": 4,
         "w": 4,
-        "x": 7,
+        "x": 8,
         "y": 4
       },
       "id": 10,
@@ -414,7 +414,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 6,
         "w": 2,
         "x": 0,
         "y": 6
@@ -502,8 +502,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 5,
+        "h": 6,
+        "w": 6,
         "x": 2,
         "y": 6
       },
@@ -604,7 +604,7 @@
       "gridPos": {
         "h": 4,
         "w": 4,
-        "x": 7,
+        "x": 8,
         "y": 8
       },
       "id": 11,
@@ -878,7 +878,23 @@
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "true": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "\u2713"
+                },
+                "false": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "\u2717"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -887,8 +903,7 @@
                 "value": null
               }
             ]
-          },
-          "unit": "dateTimeFromNow"
+          }
         },
         "overrides": []
       },
@@ -900,7 +915,7 @@
       },
       "id": 29,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
@@ -908,7 +923,7 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^time$/",
+          "fields": "/^data$/",
           "values": false
         },
         "showPercentChange": false,
@@ -925,7 +940,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT time FROM display_start_druecken ORDER BY time DESC LIMIT 1",
+          "rawSql": "SELECT data FROM display_start_druecken ORDER BY time DESC LIMIT 1",
           "refId": "A"
         }
       ],
@@ -942,7 +957,23 @@
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "true": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "\u2713"
+                },
+                "false": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "\u2717"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -951,8 +982,7 @@
                 "value": null
               }
             ]
-          },
-          "unit": "dateTimeFromNow"
+          }
         },
         "overrides": []
       },
@@ -964,7 +994,7 @@
       },
       "id": 30,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
@@ -972,7 +1002,7 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^time$/",
+          "fields": "/^data$/",
           "values": false
         },
         "showPercentChange": false,
@@ -989,7 +1019,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT time FROM display_stop_druecken ORDER BY time DESC LIMIT 1",
+          "rawSql": "SELECT data FROM display_stop_druecken ORDER BY time DESC LIMIT 1",
           "refId": "A"
         }
       ],
