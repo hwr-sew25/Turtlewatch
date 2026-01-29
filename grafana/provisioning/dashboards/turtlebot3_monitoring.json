@@ -62,7 +62,7 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 7,
+        "w": 9,
         "x": 0,
         "y": 0
       },
@@ -229,7 +229,7 @@
       "gridPos": {
         "h": 16,
         "w": 13,
-        "x": 11,
+        "x": 13,
         "y": 0
       },
       "id": 6,
@@ -869,12 +869,140 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "dateTimeFromNow"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 13
+      },
+      "id": 29,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^time$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_metrics"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT time FROM display_start_druecken ORDER BY time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Start gedr\u00fcckt",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "dateTimeFromNow"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 13
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^time$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_metrics"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT time FROM display_stop_druecken ORDER BY time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Stop gedr\u00fcckt",
+      "type": "stat"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 18
       },
       "id": 15,
       "panels": [],
@@ -909,7 +1037,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 17
+        "y": 18
       },
       "id": 16,
       "options": {
@@ -999,7 +1127,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 17
+        "y": 18
       },
       "id": 17,
       "options": {
@@ -1096,7 +1224,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 17
+        "y": 18
       },
       "id": 18,
       "options": {
@@ -1222,7 +1350,7 @@
         "h": 4,
         "w": 6,
         "x": 18,
-        "y": 17
+        "y": 18
       },
       "id": 19,
       "options": {
@@ -1368,7 +1496,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 21
+        "y": 22
       },
       "id": 14,
       "options": {
@@ -1428,7 +1556,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 28
       },
       "id": 20,
       "panels": [],
@@ -1528,7 +1656,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 28
+        "y": 29
       },
       "id": 21,
       "options": {
@@ -1667,7 +1795,7 @@
         "h": 4,
         "w": 12,
         "x": 6,
-        "y": 28
+        "y": 29
       },
       "id": 22,
       "options": {
@@ -1734,7 +1862,7 @@
         "h": 4,
         "w": 3,
         "x": 18,
-        "y": 28
+        "y": 29
       },
       "id": 23,
       "options": {
@@ -1798,7 +1926,7 @@
         "h": 4,
         "w": 3,
         "x": 21,
-        "y": 28
+        "y": 29
       },
       "id": 24,
       "options": {
@@ -1872,7 +2000,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 33
       },
       "id": 25,
       "options": {
@@ -1908,7 +2036,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 39
       },
       "id": 12,
       "panels": [],
@@ -1990,7 +2118,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 39
+        "y": 40
       },
       "id": 5,
       "options": {
@@ -2075,7 +2203,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 39
+        "y": 40
       },
       "id": 13,
       "options": {
@@ -2155,7 +2283,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 39
+        "y": 40
       },
       "id": 2,
       "options": {
@@ -2235,7 +2363,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 39
+        "y": 40
       },
       "id": 1,
       "options": {
