@@ -650,6 +650,603 @@
         "x": 0,
         "y": 12
       },
+      "id": 31,
+      "panels": [],
+      "title": "Movement",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "READY"
+                },
+                "1": {
+                  "color": "blue",
+                  "index": 1,
+                  "text": "MOVING"
+                },
+                "2": {
+                  "color": "green",
+                  "index": 2,
+                  "text": "ARRIVED"
+                },
+                "3": {
+                  "color": "orange",
+                  "index": 3,
+                  "text": "WAITING SPEECH"
+                },
+                "4": {
+                  "color": "purple",
+                  "index": 4,
+                  "text": "RETURNING"
+                },
+                "5": {
+                  "color": "green",
+                  "index": 5,
+                  "text": "AT START"
+                },
+                "6": {
+                  "color": "red",
+                  "index": 6,
+                  "text": "EMERGENCY"
+                },
+                "7": {
+                  "color": "red",
+                  "index": 7,
+                  "text": "FAILED"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 13
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^state$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_metrics"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT state FROM navbot_nav_status ORDER BY time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Nav Status",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 13
+      },
+      "id": 33,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^target_id$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_metrics"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT target_id FROM navbot_nav_status ORDER BY time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Target ID",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 13
+      },
+      "id": 34,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^state_label$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_metrics"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT state_label FROM move_base_status ORDER BY time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Move Base Status",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 13
+      },
+      "id": 35,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^detail$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_metrics"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT detail FROM navbot_nav_status ORDER BY time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Nav Detail",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 36,
+      "panels": [],
+      "title": "Speech",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 18
+      },
+      "id": 37,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^command$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_metrics"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT command FROM speech_command ORDER BY time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Speech Command",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 18
+      },
+      "id": 38,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^target$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_metrics"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT target FROM speech_command ORDER BY time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Speech Target",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "info": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "INFO"
+                },
+                "warning": {
+                  "color": "orange",
+                  "index": 1,
+                  "text": "WARNING"
+                },
+                "error": {
+                  "color": "red",
+                  "index": 2,
+                  "text": "ERROR"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 18
+      },
+      "id": 39,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^level$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_metrics"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT level FROM speech_output ORDER BY time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Speech Level",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb_turtlewatch_metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 18
+      },
+      "id": 40,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^message$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb_turtlewatch_metrics"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT message FROM speech_output ORDER BY time DESC LIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "Speech Message",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
       "id": 26,
       "panels": [],
       "title": "Display",
@@ -753,7 +1350,7 @@
         "h": 4,
         "w": 8,
         "x": 0,
-        "y": 13
+        "y": 23
       },
       "id": 27,
       "options": {
@@ -832,7 +1429,7 @@
         "h": 4,
         "w": 4,
         "x": 8,
-        "y": 13
+        "y": 23
       },
       "id": 28,
       "options": {
@@ -911,7 +1508,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 13
+        "y": 23
       },
       "id": 29,
       "options": {
@@ -990,7 +1587,7 @@
         "h": 4,
         "w": 6,
         "x": 18,
-        "y": 13
+        "y": 23
       },
       "id": 30,
       "options": {
@@ -1032,7 +1629,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 38
       },
       "id": 15,
       "panels": [],
@@ -1067,7 +1664,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 18
+        "y": 39
       },
       "id": 16,
       "options": {
@@ -1157,7 +1754,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 18
+        "y": 39
       },
       "id": 17,
       "options": {
@@ -1254,7 +1851,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 18
+        "y": 39
       },
       "id": 18,
       "options": {
@@ -1380,7 +1977,7 @@
         "h": 4,
         "w": 6,
         "x": 18,
-        "y": 18
+        "y": 39
       },
       "id": 19,
       "options": {
@@ -1526,7 +2123,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 43
       },
       "id": 14,
       "options": {
@@ -1586,7 +2183,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 27
       },
       "id": 20,
       "panels": [],
@@ -1686,7 +2283,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 29
+        "y": 28
       },
       "id": 21,
       "options": {
@@ -1825,7 +2422,7 @@
         "h": 4,
         "w": 12,
         "x": 6,
-        "y": 29
+        "y": 28
       },
       "id": 22,
       "options": {
@@ -1892,7 +2489,7 @@
         "h": 4,
         "w": 3,
         "x": 18,
-        "y": 29
+        "y": 28
       },
       "id": 23,
       "options": {
@@ -1956,7 +2553,7 @@
         "h": 4,
         "w": 3,
         "x": 21,
-        "y": 29
+        "y": 28
       },
       "id": 24,
       "options": {
@@ -2030,7 +2627,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 32
       },
       "id": 25,
       "options": {
@@ -2066,7 +2663,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 39
+        "y": 49
       },
       "id": 12,
       "panels": [],
@@ -2148,7 +2745,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 40
+        "y": 50
       },
       "id": 5,
       "options": {
@@ -2233,7 +2830,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 40
+        "y": 50
       },
       "id": 13,
       "options": {
@@ -2313,7 +2910,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 40
+        "y": 50
       },
       "id": 2,
       "options": {
@@ -2393,7 +2990,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 40
+        "y": 50
       },
       "id": 1,
       "options": {
