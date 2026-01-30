@@ -1379,7 +1379,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT * FROM current_screen",
+          "rawSql": "SELECT * FROM current_screen ORDER BY time DESC",
           "refId": "A"
         }
       ],
