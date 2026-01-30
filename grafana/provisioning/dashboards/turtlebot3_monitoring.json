@@ -1360,7 +1360,7 @@
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "first"
           ],
           "fields": "/^data$/",
           "values": false
