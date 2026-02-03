@@ -69,6 +69,18 @@ Once all services are running, you can verify the setup:
     ```
     You should then see data appearing on the Grafana dashboard.
 
+## Plugin Architecture
+
+The Python bridge uses a lightweight plugin system to map ROS topics to InfluxDB measurements.
+
+-   **Locations:** Plugins live in `turtlewatch/bridge/plugins/default_plugins` and `turtlewatch/bridge/plugins/custom_plugins`. The default plugins only use standard ROS message types, while custom plugins are for data or topics defined by other teams that are not ROS defaults.
+-   **Discovery:** `bridge.plugin_loader.load_plugins()` imports every module in those folders, instantiates each `Plugin` subclass, and keeps only `is_enabled = True` instances.
+-   **Execution:** `bridge.main` wires each active plugin into a `ThrottledSubscriber`, which either subscribes to the ROS topic or runs the plugin's `mock_generator` when `MOCK=TRUE`.
+-   **Defaults:** `Plugin.callback()` converts the ROS message into an InfluxDB point via `ros_msg_to_influx_point`, using `topic_name` as the measurement name and `tags` for metadata.
+-   **Examples:** Copy the example plugins in `turtlewatch/bridge/plugins/default_plugins/example.py` and `turtlewatch/bridge/plugins/custom_plugins/example.py` to get started.
+
+To add a new plugin, create a new module in one of the plugin folders, subclass `Plugin`, define `topic_name`, `ros_msg_type`, `interval`, `tags`, and implement `mock_generator` (override `callback` only if you need custom processing).
+
 ## Running the Example
 
 Now you can run the example to see Turtlewatch in action.
